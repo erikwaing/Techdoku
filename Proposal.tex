@@ -6,13 +6,13 @@
 \usepackage{amsmath}
 \usepackage{verbatim}
 \usepackage[margin=0.9in]{geometry}
-%\usepackage{amsfonts}
-%\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsthm}
 \usepackage{subfigure}
 \usepackage{mathtools}
 %\usepackage{caption}
 %\usepackage{subcaption}
-%\usepackage{cite}
+\usepackage{cite}
 \usepackage{hyperref}
 \usepackage{url}
 \urlstyle{same}
@@ -25,13 +25,13 @@
 \let\c@fact=\c@theorem
 \makeatother
 
-\let\realendproof=\endproof
-\def\endproof{\hspace*{\fill}$\Box$\realendproof}
-\date{}							% Activate to display a given date or no date
+%\let\realendproof=\endproof
+%\def\end proof{\hspace*{\fill}$\Box$\realendproof}
+\date{October 29th, 2014}							% Activate to display a given date or no date
 
 \begin{document}
 
-\title{Techdoku}
+\title{Techdoku is NP-Complete, or: Why is reading \textit{The Tech} so hard?}
 \titlerunning{Techdoku}
 
 \author{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
@@ -41,10 +41,46 @@
 
 % the affiliations are given next; don't give your e-mail address
 % unless you accept that it will be published
-\institute{
-\protect\url{{fermima, ?? ,eaw}@mit.edu}}
+\institute{Massachusetts Institute of Technology}
+\protect\url{{fermima, arielsc ,eaw}@mit.edu}
 
 \maketitle
 
+Techdoku, also known as Calcudoku or Mathdoku, is a popular paper and pencil puzzle featured regularly on MIT's newspaper \textit{The Tech}. These puzzles were introduced in 2004 by Tetsuya Miyamoto, a Japanese math teacher. As with most paper and pencil puzzles, a Techdoku consists of grid of cells and a set of rules on how to fill these cells. Initially, no cells are filled out. The objective of the game is to fill out all the cells in compliance to the rules. 
+
+The motivation to study this problem comes from its similarity with other paper and pencil puzzles known to be NP-Complete such as Sudoku, Slither Link and Light Up. 
+
+\section{How to Play Techdoku}
+
+A Techdoku puzzle consists of an $n \times n$ grid such that each cell belongs to one bold outlined set of cells, known as a cage. Each cage contains a basic arithmetic operation $(+, - , \times, \div )$ and a positive integer. The objective is to fill up the grid using the numbers $1$ to $n$ such that 
+
+\begin{itemize}
+	\item Every row contains the numbers $1$ to $n$
+	\item Every column contains the numbers $1$ to $n$
+	\item The numbers on each cage achieve the value by using the operation in the cage. 
+\end{itemize}
+
+The last rule has some ambiguity when it comes to non-commutative operations. In these cases, we successively perform the operation between the largest number in the cage and all other numbers in the cage. The final result must then equal the value of the cage. For instance, if there's a cage with 4 cells and the pair $(-, 2)$ then a valid set of values for the cells could be $(7, 1, 1, 3)$ since $7 - 1 - 1 - 3 = 2$. Single-cell cages are also allowed. In these cases, no operation is necessary. 
+
+\section{The Decision Problem}
+
+The question we are interested in analyzing is the following: Given an instance of a Techdoku puzzle of size $n$, is there a valid solution? 
+
+We present in this paper a proof that this problem is NP-Complete. It is clear that Techdoku is in NP, since if we are given a solution we can check whether or not all the constraints are satisfied in polynomial time. We will present a proof that Techdoku is NP-Hard using a reduction from 3-Partition. It follows from this that Techdoku is NP-Complete. 
+
+\lemma{The special case of 3-Partition where the $3n$ integers $a_1, a_2, ... , a_{3n}$ are all distinct is strongly NP-Hard.}
+
+\proof{We refer the reader to http://www.sciencedirect.com/science/article/pii/S0167637708000552. (will include this in bibliography later)}
+
+\theorem{Techdoku is NP-Hard}
+
+\proof{We will reduce Techdoku from the special case of 3-Partition mentioned above. Suppose we are given an instance of 3-Partition with $3n$ distinct integers. Without loss of generality, assume that they are positive. Let $N = \max a_i$. Consider the following instance of Techdoku. Create an $N \times N$ grid. Let the top $N-1 \times N$ portion of the grid be a cell with operation $+$ and value $N(N-1)^2/2$. For the last row, add single-cell contiguous cages whose values are $k \in [3n]$ but there is no $i$ such that $a_i = k$. For the remaining cells, create cages horizontal cages of three cells such that they all have the $+$ operation and value $t = \sum a_i /n$.
+
+If there is a solution to our instance of 3-Partition, we can construct a solution to Techdoku. The single-cell cages are forced. The last row can be determined by the sets of triples provided by 3-Partition. The remainder of the puzzle can be filled with shifting the last row by one cell until we reach the first row. This will guarantee that every number appers on each row and column exactly once. Moreover, the large cage is trivially satisfied. 
+
+If there is no solution to our instance of 3-Partition, there will be no solution to our instance of Techdoku. We are forced to use the numbers $a_1, ... ,a_{3n}$ in the remaining cells of the last row. The cages are triples of numbers that add up to $t = \sum a_i/n$. Since there is no way to partition the $a_i$ into $n$ groups of 3 that add up to $t$, we won't have a solution to the Techdoku puzzle. 
+}
+
+\section{Future Directions}
 
 \end{document}  
