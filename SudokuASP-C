@@ -1,0 +1,101 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm}
+%,fullpage}
+\usepackage{graphicx}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newenvironment{definition}[1][Definition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\title{6.890 Project Notes}
+\author{Ariel Schvartzman}
+
+\begin{document}
+\maketitle
+
+\section{Number Place} 
+
+Number Place, or Sudoku, is a Japanese paper and pencil puzzle that consists of a $n^2 \times n^2$ grid, with some entries filled in with numbers in the range $1$ through $n^2$. There are $n^2$ disjoint $n \times n$ blocks whose bonudaries are bolded. We will refer to $n$ as the order of a Number Place. The goal of the puzzle is to fill in each blank square of the grid such that in every column, row or bolded square the numbers $1$ through $n^2$ appear exactly once. We are interested in determining when a partially filled Number Place has a solution. 
+ 
+\subsection{NP-Completeness and ASP-Completness of Number Place}
+
+We assume the reader has familiarity with the classes NP and ASP. In this section we will show a proof (due to Yato and Seta) that Number Place is ASP-Complete. This directly implies it must also be NP-Complete. The reduction will be done from Latin Squares, a problem we have shown to be ASP-Complete previously on this paper. We will present a mapping from partially filled Latin Squares of size $n$ to partially filled in Number Place of order $n$.  
+
+Before showing the main result, we will exhibit a particular way to fill a Number Place puzzle. Next, we will show how this particular solution can be related to Latin Squares. Finally, we will show an explicit mapping from an instance of Latin Square to one of Number Place. For simplicity, throughout this argument we will be using numbers in the range $0$ through $n^2 - 1$. We will refer to the entry on the $i$-th row and $j$-th column of a Number Place puzzle as $S(i,j)$.
+
+\begin{proposition}
+Let $S_0$ be defined as
+
+$$S_0 (i,j) = ((i \mod n) n + \lfloor i/n \rfloor + j) \mod n^2. $$
+
+Then $S_0$ represents a solution to an order $n$ Number Place. 
+
+\end{proposition} 
+
+\begin{proof}
+We will show that each column, row and block satisfy the Number Place constraints. Let $i_1 = (i \mod n)$ and $i_2 = \lfloor i/n \rfloor$. A pair $(i_1, i_2)$ uniquely represents a row or column of the Number Place. In fact, we can think of $(i_1, i_2)$ as the representation of $i$ in base $n$. This implies each number in the range from $0$ to $n^2 -1$ is uniquely represent by a pair $(i_1, i_2)$ and vice versa. In these terms, we have that 
+
+$$ S_0 (i, j) = (i_1 n + i_2 + j_2 n + j_1) \mod n^2 $$
+
+Consider a row $i$. Suppose we have two entries such that $S(i,j) = S(i, j')$. This would imply $j_1 + n j_2 \equiv j'_1 + n j'_2 \mod n^2$. Recall that $j_1, j_2 < n$. This implies that $j = j'$. A similar argument can be applied for the columns. Consider now fixing a block by having $i_2, j_2$ fixed. Suppose we have two entries such that $S(i,j)=S(i',j')$. This means  that $i_1 n + j_1 \equiv i'_1 n + j'_1$. This implies that $i_1 = i'_1, j_1 = j'_1$ and hence $(i,j) = (i', j')$. Therefore, $S_0$ defines a valid solution to a Number Place of order $n$. 
+
+\end{proof}
+
+\begin{lemma}
+
+Let $S$ be a Number Place puzzle of order $n$ such that
+
+\begin{displaymath}
+   S(i,j) = \left\{
+     \begin{array}{lr}
+       \perp & : (i,j) \in B\\
+       S_0 (i,j) & : \text{otherwise}
+     \end{array}
+   \right.
+\end{displaymath}
+
+where $B = \{ (i,j) | i < n \text{ and } (j \equiv 0) \mod n \}$. Then a square $S'$ obtained by filling in the blanks of $S$ is a solution to $S$ if and only if 
+
+\begin{itemize}
+	\item For any $(i,j) \in B$, $S'(i,j) \equiv 0 \mod n$
+	\item A square $L$ defined by $L(i, j/n) = S'(i,j)/n$ for all $(i, j) \in B$ is a Latin Square.  
+\end{itemize} 
+
+\end{lemma} 
+
+\begin{proof} 
+
+First of all, notice that if $(i, j) \in B$ then $j_1 = 0$ by definition. Therefore, $L(i, j/n) = L(i, j_2)$. 
+
+In this case, we only need to pay attention to the cells of $B$. We will show that the row and column constraints of a Latin Square are satisfied. From the row constraints of $S'$, we know that if $S'(i,j) = S'(i,j')$ then $j = j'$. Since we are only considering $B$ we know that $j = j' \iff j_2 = j'_2$ and $S'(i,j) = S'(i,j') \iff L(i, j_2) = L(i, j'_2)$. This ultimately shows that $L(i, j_2) = L(i, j'_2) \implies j_2 = j'_2$, which is exactly the row constraint of a Latin Square. We can argue similarly for the columns. 
+
+We can also show that the block constraints of $S'$ do not add complexity to the problem. In fact, they are equivalent to the column constraints. Therefore, the proof follows. 
+
+\end{proof} 
+
+We are now ready to show the main results of this section.
+
+\begin{theorem} Finding a solution to an instance of Number Place is ASP-Complete. \end{theorem}
+
+\begin{proof} We will show an ASP reduction from Latin Squares and argue that it can be done in polynomial time. 
+
+Suppose we are given a Latin Square $L$ of order $n$. We will construct a Number Place instance of order $n$ as follows: 
+
+\begin{displaymath}
+   S(i,j) = \left\{
+     \begin{array}{lr}
+       \perp & : (i,j) \in B, L(i, j/n) = \perp \\
+       L(i, j/n) n & : (i,j) \in B, L(i, j/n) \neq \perp \\
+       S_0 (i,j) & : \text{otherwise}
+     \end{array}
+   \right.
+\end{displaymath}
+
+This construction can be done in polynomial time. In addition, from our previous analysis we know that any solution of $L$ has a unique corresponding solution of $S$. Therefore, we get a polynomial time ASP reduction. 
+
+\end{proof}
+
+\end{document}
