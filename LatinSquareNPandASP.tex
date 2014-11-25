@@ -21,11 +21,13 @@
 \begin{document}
 \maketitle
 
-\section{Overview}
+\section{Original Paper Overview}
 
 An order $n$ Latin square is an $n \times n$ array where each entry is an element from the set $\{1,\dots,n\}$. Each row and column ontains each element exactly once. The problem of completing a partial Latin square is NP-complete. This is proven in two steps. First, the authors show a correspondnce between the problem of completing Latin squares and the graph-theoretical problem of partitioning tripartite graph into triangles, which they show is NP-complete. After that, the authors use techniques by Hall [citation 5 in this pper] and Ryser [citation 13] to reduce triangle-partition of tripartite graphs to completion.
 
-\section{The Defect Graph}
+\section{Background Ideas}
+
+\subsection{The Defect Graph}
 
 Given a partial Latin square $P$ of order $n$, a \emph{defect} of the latin square is the graph $G(P) = (V,E)$ where
 \begin{align*}
@@ -42,7 +44,7 @@ E = &\{(r_i,c_j) | \text{ the }(i,j)\text{ square of }P\text{ is empty}\} \\
 
 This defect graph is a tripartite graph that has a triangle-partition if and only if $P$ is a Latin square that can be completed.
 
-\section{Latin Frameworks}
+\subsection{Latin Frameworks}
 
 In this section, we introduce the idea of a Latin framework for a tripartite graph. The intuition is as follows: under certain constraints, the Latin framework of a graph is a partial Latin square such that the original graph is the defect of this Latin square.
 
@@ -87,13 +89,18 @@ Now we are ready to prove the main result.
 
 It remains to show NP-hardness. We do this via reduction from the triangle partition problem. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we use Theorem 3 from the Latin frameworks section to write down a latin framework $LF(G;2n,2n,2n)$ in polynomial time. Since the Latin framework is constructed so that $G$ is a defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial latin square $LF(G;2n,2n,2n)$. This completes the proof.
 
+\section{ASP-hardness}
+
+We claim that the above proofs can give us an ASP-hardness result for completing a partial Latin square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin square $P$.
+
 \section{Appendix}
 
 Here, we prove the claim that deciding whether a tripartite graph has a triangle partition is NP-complete.
 
 \emph{Proof: } Membership in NP follows from the fact that the triangle partition itself can be used as a certificate that constructing a partition is possible.
 
-It remains to show NP-hardness. FINISH THIS SECTION.
+It remains to show NP-hardness. 
 
-Lemma 2.
+Here, we also prove Lemma 2 that claim that we can add rows and columns to a Latin framework.
+
 \end{document}
