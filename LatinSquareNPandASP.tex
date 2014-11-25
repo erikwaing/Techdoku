@@ -1,0 +1,99 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}    % needed for including graphics e.g. EPS, PS
+\topmargin -1.5cm        % read Lamport p.163
+\oddsidemargin -0.04cm   % read Lamport p.163
+\evensidemargin -0.04cm  % same as oddsidemargin but for left-hand pages
+\textwidth 16.59cm
+\textheight 21.94cm 
+%\pagestyle{empty}       % Uncomment if don't want page numbers
+\parskip 7.2pt           % sets spacing between paragraphs
+%\renewcommand{\baselinestretch}{1.5} % Uncomment for 1.5 spacing between lines
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{verbatim}
+\usepackage{blkarray}
+\parindent 0pt		 % sets leading space for paragraphs
+\author{Fermi Ma}
+\title{The Complexity of Completing Partial Latin Squares}
+\newcommand{\x}{\overline{x}}
+\newcommand{\fc}{\frac{x_C}{N}}
+
+\begin{document}
+\maketitle
+
+\section{Overview}
+
+An order $n$ Latin square is an $n \times n$ array where each entry is an element from the set $\{1,\dots,n\}$. Each row and column ontains each element exactly once. The problem of completing a partial Latin square is NP-complete. This is proven in two steps. First, the authors show a correspondnce between the problem of completing Latin squares and the graph-theoretical problem of partitioning tripartite graph into triangles, which they show is NP-complete. After that, the authors use techniques by Hall [citation 5 in this pper] and Ryser [citation 13] to reduce triangle-partition of tripartite graphs to completion.
+
+\section{The Defect Graph}
+
+Given a partial Latin square $P$ of order $n$, a \emph{defect} of the latin square is the graph $G(P) = (V,E)$ where
+\begin{align*}
+V = &\{r_i | \text{ row }i\text{ contains an empty square}\} \\
+&\cup \{c_j | \text{ column }j\text{ contains an empty square}\} \\
+&\cup \{e_k | \text{ element }k\text{ appears in fewer than }n\text{ squares}\}
+\end{align*}
+and 
+\begin{align*}
+E = &\{(r_i,c_j) | \text{ the }(i,j)\text{ square of }P\text{ is empty}\} \\
+&\cup \{(r_i,e_k) | \text{ row }i\text{ does not contain element }k\} \\
+&\cup \{(c_j.e_k) | \text{ column }j\text{ does not contain }k\}
+\end{align*}
+
+This defect graph is a tripartite graph that has a triangle-partition if and only if $P$ is a Latin square that can be completed.
+
+\section{Latin Frameworks}
+
+In this section, we introduce the idea of a Latin framework for a tripartite graph. The intuition is as follows: under certain constraints, the Latin framework of a graph is a partial Latin square such that the original graph is the defect of this Latin square.
+
+Given a tripartite graph $G = (V,E)$ with tripartition $V_1 \cup V_2 \cup V_3$, we label the vertices in $V_1$ as $r_1,r_2,\dots,r_{|V_1|}$, the vertices in $V_2$ as $c_1,c_2,\dots,c_{|V_2|}$, and the vertices in $V_3$ as $e_1,e_2,\dots,e_{|V_3|}$. It does not matter which vertex in each $V_i$ gets which label.
+
+A Latin framework for such a $G = (V_1 \cup V_2 \cup V_3,E)$, denoted $LF(G;r,s,t)$ is an $r \times s$ array where each entry is either empty, or in the set $\{1,2,\dots,t\}$. Each row and column contains each element at most once, and the following additional constraints must be satisfied by $LF(G;r,s,t)$:
+\begin{enumerate}
+\item If $G$ contains the edge $(r_i,c_j)$, the $(i,j)$ entry is empty. If the edge is not present, the $(i,j)$ entry must be filled with an element from $\{1,2,\dots,t\}$
+\item If $G$ contains the edge $(r_i,e_k)$, row $i$ does not contain $k$.
+\item If $G$ contains the edge $(c_j,e_k)$, column $j$ does not contain $k$
+\end{enumerate}
+
+Observe that when $r = s = t$, $G$ is the defect of $LF(G;r,r,r)$. 
+
+We now give the following results.
+
+\textbf{Lemma 1:} For $G = (V_1 \cup V_2 \cup V_3,E)$, there exists a Latin framework $LF(G;n,n,2n)$ where $n = |V_1| + |V_2| + |V_3|$.
+
+\emph{Proof:} We let $LF(G;n,n,2n)$ be the $n \times n$ array where the $(i,j)$ entry is empty if $(r_i,c_j \in E)$, and contains $1 + n + ((i+j) \mod n)$ if $(r_i,c_j \not\in E)$.
+
+\textbf{Lemma 2:} Given a Latin framework $LF(G;n,k,2n)$ where $n \leq k \leq 2n$, we can extend this to a Latin framework $LF(G;n,k+1,2n)$.
+
+\emph{Proof:} See appendix
+
+\textbf{Theorem 1:} For $G = (V_1 \cup V_2 \cup V_3,E)$, there exists a Latin framework $LF(G;2n,2n,2n)$ where $n = |V_1| + |V_2| + |V_3|$.
+
+\emph{Proof:} We use Lemma 1 to write down $LF(G;n,n,2n)$. We use a repeated application of Lemma 2 to add $n$ columns to get $LF(G;n,2n,2n)$, and then we transpose the machinery from Lemma 2 to add $n$ rows to get $LF(G;2n,2n,2n)$.
+
+\section{NP-completeness of Completing Partial Latin Squares}
+
+We consider the problem of finding triangle partitions in a tripartite graph. First, we make the following observation about this problem. Call a tripartite graph uniform if every node has an equal number of neighbors in each of the other two partitions. A tripartite graph does not have a triangle partition if it is not uniform. 
+
+\textbf{Theorem 2:} Deciding whether a tripartite graph has a triangle partition is NP-complete.
+
+\emph{Proof:} See appendix.
+
+Now we are ready to prove the main result.
+
+\textbf{Theorem 3:} Deciding whether a partial Latin square can be completed is NP-complete.
+
+\emph{Proof:} Membership in NP follows from the fact that the completed Latin square can be used as a certificate that a partial Latin square can be completed.
+
+It remains to show NP-hardness. We do this via reduction from the triangle partition problem. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we use Theorem 3 from the Latin frameworks section to write down a latin framework $LF(G;2n,2n,2n)$ in polynomial time. Since the Latin framework is constructed so that $G$ is a defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial latin square $LF(G;2n,2n,2n)$. This completes the proof.
+
+\section{Appendix}
+
+Here, we prove the claim that deciding whether a tripartite graph has a triangle partition is NP-complete.
+
+\emph{Proof: } Membership in NP follows from the fact that the triangle partition itself can be used as a certificate that constructing a partition is possible.
+
+It remains to show NP-hardness. FINISH THIS SECTION.
+
+Lemma 2.
+\end{document}
