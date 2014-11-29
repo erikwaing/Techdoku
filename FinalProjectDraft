@@ -9,6 +9,7 @@
 \usepackage{amsfonts}
 \usepackage{subfigure}
 \usepackage{mathtools}
+\usepackage{float}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{cite}
@@ -57,11 +58,13 @@ We assume the reader has familiarity with these classes. In particular, it is wo
 
 In this paper we combine results from several papers and study the connection between these puzzles and graph theoretical problems. The ultimate goal is to obtain a chain of reductions starting from a well known ASP-Complete problem and show that Number Place, Latin Squares and Calcudoku are both NP-Complete and ASP-Complete. The ASP-Completeness results follow from the fact that the NP-Completeness reductions are parsimonious. 
 
-In section 1, we define all the we will be interested in presenting. In section 2, we introduce some edge partition problems. We show that the Edge Partition problem is NP-Complete by reducing it to 3-SAT. We will then exhibit a connection between the Triangle Partition problem, a special case, and Latin Squares. We will show that this chain of reductions is parsimonious, showing that Latin Squares is ASP-Complete. In section 2, we show a parsimonious reduction from Latin Squares to Number Place, showing that it is ASP-Complete. In section 3, we present a different paper and pencil puzzle, Cross Sum, and show that it is also ASP-Complete. In section 4, we introduce Calcudoku and show it is NP-Complete by reducing it to a special case of 3-Partition. 
+In section 1, we define all the we will be interested in presenting. In section 2, we introduce some edge partition problems. We show that the Edge Partition problem is NP-Complete by reducing it to 3-SAT. We will then exhibit a connection between the Triangle Partition problem, a special case, and Latin Squares. We will show that this chain of reductions is parsimonious, showing that Latin Squares is ASP-Complete. In section 3, we show a parsimonious reduction from Triangle Partition to Latin Squares, showing that it is ASP-Complete. In section 4, we present a parsimonious reduction from Latin Squares to Number Place, and show that it is also ASP-Complete. In section 5, we introduce Cross-Sum and show it is NP-Complete by reducing it to ???. In section 6, we introduce Calcudoku and show that it is NP-Complete by reducing to a special case of 3-Partition.
 
 At the time of writing, the authors are still interested in determining whether or not Calcudoku is ASP-Complete. 
 
 \section{Preliminaries} 
+
+In this section we will define the puzzles. We will refer to them and their respective decision problems interchangeably. 
 
 \textbf{Latin Squares:} In Latin Squares, we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. 
 \newline
@@ -71,15 +74,13 @@ At the time of writing, the authors are still interested in determining whether 
 \newline
 \textbf{Cross Sum:} 
 
-\section{Proving Latin Squares is NP-Complete}
-
-\subsection{Edge Partition Problems}
+\section{Edge Partition problems.}
 
 In this section, we will introduce Edge Partition problems and show that they are NP-Hard by reducing from 3SAT. We will then focus on a special case, Triangle Partition. This problem will be fundamental in our understanding of Latin Squares. 
 
 In the Edge Partition problem EP$_n$ we are given a graph $G = (V, E)$. We want to determine if there is a partition of the edges such that each part induces a subgraph isomorphic to $K_n$. For example, if $G = K_n$ then we can always trivially partition the edge set into one part. If we are given a graph $G = (V, E)$ where the degree of any vertex is less than $n-1$, then the answer will always be no. It is worth noting that if $n = 2$ we can solve the problem in polynomial time. It is equivalent to deterring whether a graph is bipartite. Therefore, we will only focus on the cases where $n \geq 3$. 
 
-\subsubsection{Proof Overview that EP$_n$ is NP-Hard}
+\subsection{Proof Overview that EP$_n$ is NP-Hard}
 
 In order to show that EP$_n$ is NP-hard, we will reduce from 3SAT. We will introduce a certain type of graph that can be partitioned in exactly 2 ways. These graphs will represent the "objects" in a 3-CNF formula: the variables, and each literal in the formula. 
 
@@ -94,7 +95,7 @@ A simple visualization of an association of edges might be the following. Suppos
 			     (0, 1); (0,0) \end{array} \]
   is the same edge in graph. Visually, this means taking the two graphs $A$ and $B$, stacking them on top of each other, and then "glueing" the unit square together in both graphs. 
 
-\subsubsection{A special graph, $H_{n,p}$}
+\subsection{A special graph, $H_{n,p}$}
 
 We will define a graph $H_{n,p} = (V_{n,p}, E_{n,p})$ which will act as the main gadget for the reduction from 3SAT to EP$_{n}$. The property that we want is that the graph has exactly two ways to be partitioned into edges. One partition will be the assignment of True, and the other partition will be the assignment of False. 
 
@@ -211,7 +212,7 @@ The same argument holds for $-K$. This means that the partition of a single $K_n
 
 Now we will let $T$-partitions of $H_{n,p}$ correspond to the edge $e$ connecting $0$ and $x = (1, -1, 0, \dots, 0)$ being part of $K$ and $F$-partitions of $H_{n,p}$ correspond to the edge $e$ being part of $-K$. Note that by Lemma~\ref{lem:distinctpart}, these are two mutually exclusive partitions of $H_{n,p}$.
 
-\subsection{Triangle Partition}
+\subsection{A Special Case: Triangle Partition}
 
 Triangle Partition is a special case of Edge Partition that arises when we let $n = 3$. We can think of the graph as looking like perfect triangle packing of smaller equilateral triangles, with some additional edges on the sides.
 
@@ -368,7 +369,7 @@ Therefore, if the 3SAT formula has a satisfying assignment, then we make $U_i$ b
 If there is a valid edge partition into triangles, then exactly one of $C_{i,l}$ is a $T$-partition for each $i$, which means that at least one literal is set to true. So we let variable the $i$th variable be true if $U_i$ is a $T$-partition, and false otherwise. 
 \end{proof}
 
-\section{Solving Partial Latin Squares is NP-Complete}
+\section{Latin Squares}
 
 In this section, we will use the result that EP$_3$ is NP-Complete in order to show the same is true for Latin Squares. After that, we use techniques by Hall [citation 5 in this pper] and Ryser [citation 13] to reduce Triangle Partition of tripartite graphs to completion.
 
@@ -433,7 +434,7 @@ For $G = (V_1 \cup V_2 \cup V_3,E)$, there exists a Latin framework $LF(G;2n,2n,
 We use Lemma 1 to write down $LF(G;n,n,2n)$. We use a repeated application of Lemma 2 to add $n$ columns to get $LF(G;n,2n,2n)$, and then we transpose the machinery from Lemma 2 to add $n$ rows to get $LF(G;2n,2n,2n)$.
 \end{proof}
 
-\section{NP-completeness of Completing Partial Latin Squares}
+\subsection{Solving Partial Latin Squares is NP-Complete}
 
 We consider the problem of finding triangle partitions in a tripartite graph. First, we make the following observation about this problem. Call a tripartite graph uniform if every node has an equal number of neighbors in each of the other two partitions. A tripartite graph does not have a triangle partition if it is not uniform.
 
@@ -468,6 +469,13 @@ $$ S_0 (i, j) = (i_1 n + i_2 + j_2 n + j_1) \mod n^2 $$
 Consider a row $i$. Suppose we have two entries such that $S(i,j) = S(i, j')$. This would imply $j_1 + n j_2 \equiv j'_1 + n j'_2 \mod n^2$. Recall that $j_1, j_2 < n$. This implies that $j = j'$. A similar argument can be applied for the columns. Consider now fixing a block by having $i_2, j_2$ fixed. Suppose we have two entries such that $S(i,j)=S(i',j')$. This means that $i_1 n + j_1 \equiv i'_1 n + j'_1$. This implies that $i_1 = i'_1, j_1 = j'_1$ and hence $(i,j) = (i', j')$. Therefore, $S_0$ defines a valid solution to a Number Place of order $n$.
 \end{proof}
 
+\begin{figure}[H]
+\label{fig:S0_example}
+\centering
+\includegraphics[scale=0.25]{S0_example}
+\caption{Example of $S_0$ on a board of order 3.}
+\end{figure}
+
 \begin{lemma}
 Let $S$ be a Number Place puzzle of order $n$ such that
 \begin{displaymath}
@@ -496,6 +504,13 @@ We can also show that the block constraints of $S'$ do not add complexity to the
 
 \end{proof}
 
+\begin{figure}[H]
+\label{fig:S_example}
+\centering
+\includegraphics[scale=0.25]{S_example}
+\caption{Example of $S$ on a board of order 3.}
+\end{figure}
+
 We are now ready to show the main results of this section.
 \begin{theorem} Finding a solution to an instance of Number Place is ASP-Complete. \end{theorem}
 
@@ -512,6 +527,20 @@ S_0 (i,j) & : \text{otherwise}
 \end{displaymath}
 This construction can be done in polynomial time. In addition, from our previous analysis we know that any solution of $L$ has a unique corresponding solution of $S$. Therefore, we get a polynomial time ASP reduction.
 \end{proof}
+
+\begin{figure}[H]
+\label{fig:partialLS}
+\centering
+\includegraphics[scale=0.25]{partialLS}
+\caption{Example of partial Latin Square of order 3.}
+\end{figure}
+
+\begin{figure}[H]
+\label{fig:partialNP}
+\centering
+\includegraphics[scale=0.25]{partialNP}
+\caption{Example of corresponding partial Number Place on a board of order 3.}
+\end{figure}
 
 \bibliographystyle{plain}
 \bibliography{references}
