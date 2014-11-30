@@ -61,7 +61,7 @@ Without loss of generality, lets assume that non-deterministic Turing machines (
 
 The \emph{size} of a partial certificate, is the number of tape cells with a 0 or 1 written. Note that in the class NP, a certificate specifies exactly which branch of the computation a NTM took toward an answer. This means that a modified NTM with input being a certificate will run like a deterministic turing machine. 
 
-We are focused on algorithms for computing the smallest partial certificate which yield accepting branches. 
+We are focused on algorithms for computing the smallest partial certificate which yield accepting branches.
 
 \begin{definition}
 HIP is the class of function problems where given a non-deterministic Turing machine that runs in polynomial time, it computes the smallest partial certificate, where the modified NTM with that partial certificate has only one accepting branch.
@@ -107,6 +107,8 @@ We will make a SAT instance in HIP as follows:
 \item Output: smallest assignment of the variables with only one superset of the satisfying assignment.
 \end{itemize}
 
+I make another minor assumption, saying that a state writes down unique values on the tape. 
+
 \begin{theorem}
 SAT is HIP-complete.
 \end{theorem}
@@ -114,11 +116,37 @@ SAT is HIP-complete.
 \begin{proof}
 We know that SAT is in HIP since we can have the NTM which non-deterministically picks an assignment of the variables, one at a time, and then checks to see if the boolean formula is satisfied. If it is, it accepts, otherwise, it rejects. 
 
-In order to show that SAT is HIP-hard, we analyze the reduction from Cook-Levin. We look at the proof of the Cook-Levin theorem from \cite{Garey}. Note that there are 10 type of clauses. We list the type of clauses and show why they are not in the smallest certificate, the only type of clause that needs to be in the certificate is the one that specifies which branch of the computation a NTM takes. 
+In order to show that SAT is HIP-hard, we analyze the reduction from Cook-Levin. We know that there is a SAT formula which corresponds bijectively to an execution of a branch of computation of a NTM. Suppose the NTM runs in $p(n)$ steps, where $p$ is a polynomial.
 
-\begin{enumerate}
-\item
-\end{enumerate}
+Suppose we have the smallest partial certificate for SAT, then we can assume there are at most $p(n)$ variables. 
+
+Suppose that the smallest SAT partial certificate has an assignment for something which is false. Then we can either remove it, or set it to true. This is because looking at the clauses of \cite{Garey}, a variable being false does not immediately imply the assignment of another variable. On the other hand, a variable being set to true implies that many other variables be set to false. Therefore, we can assume that the only variables in the smallest SAT partial certificate are set to true.
+
+Likewise, a state variable or a head variable need not imply other variables, but the corresponding tape variables does imply the head and state variable. Therefore, we can also assume that only the tape variables are present in the smallest partial certificate.
+
+The tape variables that are set to true in the partial certificate indicate exactly which branch of the computation one should take. Therefore, the smallest SAT partial certificate gives the smallest partial certificate for a NTM to a unique accepting branch. Thus, SAT is HIP-complete.
+\end{proof}
+
+\begin{theorem}
+3SAT is HIP-complete.
+\end{theorem}
+
+The reduction from SAT to 3SAT is taken from \url{http://zoo.cs.yale.edu/classes/cs468/HW1-Solutions.pdf}.
+
+\begin{proof}
+Membership in HIP follows from SAT. 
+
+In order to show that its HIP-complete, we reduce from SAT. We can assume without loss of generality that the SAT formula is a conjuction of clauses, which are disjunctions. Suppose that we have a set of clauses $\{ C_i \}$, then I transform the clauses by succesively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
+\[ g(C) = \left\{ \begin{array}{cc} C & k \leq 3 \\
+						    (z_1 \vee x_1 \vee x_2) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee \overline{x_2}) \wedge (\overline{z_1} \vee x_3 \vee ... \vee x_k) & \text{ otherwise }\end{array} \right. \] 
+Note that if the SAT formula is satisfiable, then the 3SAT formula is satisfiable, and if the 3SAT formula is satisfiable, then the SAT formula is satisfiable. 
+
+Now suppose $z_i$ is in the smallest partial certificate of 3SAT. There are two cases:
+\begin{itemize}
+\item $z_i$ is set to false. In this case, we know that either $x_1$ or $x_2$ is set to true. So we can try as an instance the 3SAT formula where each of these is set to true in succession. One of these will have a smallest partial certificate which is the same size as the previous one, since the value of $z_i$ is implied by one of $x_1$ or $x_2$. Therefore, we can include that $x_1$ or $x_2$ and remove $z$.
+\item $z_i$ is set to true. Then $\overline{z_i}$ is false, which means that whichever $\overline{z_i}$ ends up being a part of in the clause will mean that one of two of the following will be true. We can again try both of them sequentially and note that one will have a smallest partial certificate which is of the same size. So we can remove $z_i$ and replace it by one of the others. 
+\end{itemize}
+Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are at most added variables as there are clauses plus variables, we can do this polynomially many times and arrive at a partial certificate of the 3SAT formula which works for the SAT formula as well.
 \end{proof}
 
 \bibliographystyle{plain}
