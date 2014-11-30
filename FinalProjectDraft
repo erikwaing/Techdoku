@@ -472,7 +472,7 @@ Consider a row $i$. Suppose we have two entries such that $S(i,j) = S(i, j')$. T
 \begin{figure}[H]
 \label{fig:S0_example}
 \centering
-\includegraphics[scale=0.25]{S0_example}
+\includegraphics[scale=0.25]{sudoku-2.png}
 \caption{Example of $S_0$ on a board of order 3.}
 \end{figure}
 
@@ -507,7 +507,7 @@ We can also show that the block constraints of $S'$ do not add complexity to the
 \begin{figure}[H]
 \label{fig:S_example}
 \centering
-\includegraphics[scale=0.25]{S_example}
+\includegraphics[scale=0.25]{sudoku-4.png}
 \caption{Example of $S$ on a board of order 3.}
 \end{figure}
 
@@ -529,16 +529,16 @@ This construction can be done in polynomial time. In addition, from our previous
 \end{proof}
 
 \begin{figure}[H]
-\label{fig:partialLS}
+\label{fig:sudok}
 \centering
-\includegraphics[scale=0.25]{partialLS}
+\includegraphics[scale=0.25]{sudoku-3.png}
 \caption{Example of partial Latin Square of order 3.}
 \end{figure}
 
 \begin{figure}[H]
 \label{fig:partialNP}
 \centering
-\includegraphics[scale=0.25]{partialNP}
+\includegraphics[scale=0.25]{sudoku-1.png}
 \caption{Example of corresponding partial Number Place on a board of order 3.}
 \end{figure}
 
