@@ -1,0 +1,127 @@
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{amsfonts}
+\usepackage{subfigure}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\urlstyle{same}
+\newcommand{\keywords}[1]{\par\addvspace\baseline skip
+\noindent\keywordname\enspace\ignorespaces#1}
+\newcommand{\x}{\overline{x}}
+\newcommand{\fc}{\frac{x_C}{N}}
+
+\setcounter{secnumdepth}{5} 
+
+\makeatletter
+\let\c@lemma=\c@theorem
+\let\c@corollary=\c@theorem
+\let\c@fact=\c@theorem
+\makeatother
+
+%\let\realendproof=\endproof
+%\def\end proof{\hspace*{\fill}$\Box$\realendproof}
+\date{October 29th, 2014}							% Activate to display a given date or no date 
+
+\begin{document}
+
+\title{Hardest Instance Problems}
+\titlerunning{}
+
+\author{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+%
+\authorrunning{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{Massachusetts Institute of Technology}
+
+\maketitle
+
+I introduce the class of function problems HIP which is supposed to capture finding the ``hardest instance" of a problem. This is especially important for puzzle makers, since they want to make the hardest puzzles for people. 
+
+\section{Definition}
+
+Suppose we have two people: a puzzle-maker $M$ and a puzzle-solver $S$. $M$ will work to make a pencil-and-paper puzzle really hard, which it will print on a newspaper; however, it knows that $M$ must write the solution to the puzzle in the back of the newspaper. $M$ wants to make sure that if $S$ solves it, it can correctly verify that it has solved it by looking at the solution. 
+
+Therefore, $M$ wants to create an instance that is very hard to solve, yet still has a \emph{unique} solution. This will motivate the definition for the class HIP. 
+
+Without loss of generality, lets assume that non-deterministic Turing machines (NTMs) has at most $2$ non-deterministic choices. In other words, the computation tree has branching factor at most 2.  We will make a modified non-deterministic Turing machine with the additional input which we will call a \emph{partial certificate}. A partial certificate will work as a hints. A partial certificate is a tape, where cells can either be blank, 0, or 1. Whenever our modified NTM runs, it also reads the next tape cell in the parial certificate. If the cell is blank, it proceeds as it would. If the cell says 0, then instead of behaving non-deterministically, it will take the left branch of the computation. Likewise, if it reads a 1, it will take the right-branch of the computation.
+
+The \emph{size} of a partial certificate, is the number of tape cells with a 0 or 1 written. Note that in the class NP, a certificate specifies exactly which branch of the computation a NTM took toward an answer. This means that a modified NTM with input being a certificate will run like a deterministic turing machine. 
+
+We are focused on algorithms for computing the smallest partial certificate which yield accepting branches. 
+
+\begin{definition}
+HIP is the class of function problems where given a non-deterministic Turing machine that runs in polynomial time, it computes the smallest partial certificate, where the modified NTM with that partial certificate has only one accepting branch.
+\end{definition}
+
+Here are some examples:
+\begin{enumerate}
+\item 3SAT: \begin{itemize}
+	\item Instance: a 3SAT formula
+	\item Output: smallest assignment of variables, such that the formula is satisfiable in only one way.
+		\end{itemize}
+\item Latin Squares: \begin{itemize}
+				\item Instance: an instance of latin square
+				\item Output: smallest partial solution where the Latin square is finished in only one way
+				\end{itemize}
+\item Sudoku: \begin{itemize}
+				\item Instance: an instance of Sudoku
+				\item Output: smallest filled solution where Soduku is uniquely solvable.
+\end{itemize}
+\end{enumerate}
+
+Ideally, our puzzle maker, $M$, would get an idea of a puzzle, make it, and then run it through a HIP algorithm. On receipt of the partial certificate, it adds the values that it needs, and then the puzzle maker can be confident that the puzzle solver $S$ will only solve it the same way that $M$ solved it.
+
+Additionally, $M$ can run the algorithm on an empty input, thus asking the question what is the smallest amount of information that I need to give in order for the puzzle to be uniquely solvable. In otherwords, we can ask:
+\begin{itemize}
+\item What is the smallest Sudoku that is uniquely solvable?
+\item What is the smallest Latin square that is uniquely solvable? In this case, this also specifies the smallest number of relations that one must give to specify a quasigroup of a given size? (a question that may be interesting for algebraists)
+\end{itemize}
+
+\section{How this fits?}
+
+So we can ask, how does HIP fit in terms of the complexity landscape? One can note that the corresponding decision problems for HIP, \emph{does there exists a partial certificate size less than $k$?}, seems to be NP-hard. Since if we can find a partial certificate of size equal to the runtime of the NTM, then we can solve the problem.
+
+However, it is not clear whether these problems are in NP. Suppose we had a partial certificate, that partial certificate might be extremely short. Then in order to verify that the partial certificate is in fact a partial certificate, we might still need to check exponentially many branches!
+
+Finding some problems that are complete for this class of problems gives some indication that polynomial time algorithms for finding partial certificates do not exists.
+
+\section{Complete Problems}
+
+We will make a SAT instance in HIP as follows:
+\begin{itemize}
+\item Instance: a boolean formula
+\item Output: smallest assignment of the variables with only one superset of the satisfying assignment.
+\end{itemize}
+
+\begin{theorem}
+SAT is HIP-complete.
+\end{theorem}
+
+\begin{proof}
+We know that SAT is in HIP since we can have the NTM which non-deterministically picks an assignment of the variables, one at a time, and then checks to see if the boolean formula is satisfied. If it is, it accepts, otherwise, it rejects. 
+
+In order to show that SAT is HIP-hard, we analyze the reduction from Cook-Levin. We look at the proof of the Cook-Levin theorem from \cite{Garey}. Note that there are 10 type of clauses. We list the type of clauses and show why they are not in the smallest certificate, the only type of clause that needs to be in the certificate is the one that specifies which branch of the computation a NTM takes. 
+
+\begin{enumerate}
+\item
+\end{enumerate}
+\end{proof}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}  
