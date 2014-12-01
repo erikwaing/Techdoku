@@ -1,0 +1,97 @@
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{amsfonts}
+\usepackage{subfigure}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\urlstyle{same}
+\newcommand{\keywords}[1]{\par\addvspace\baseline skip
+\noindent\keywordname\enspace\ignorespaces#1}
+\newcommand{\x}{\overline{x}}
+\newcommand{\fc}{\frac{x_C}{N}}
+
+\setcounter{secnumdepth}{5} 
+
+\makeatletter
+\let\c@lemma=\c@theorem
+\let\c@corollary=\c@theorem
+\let\c@fact=\c@theorem
+\makeatother
+
+%\let\realendproof=\endproof
+%\def\end proof{\hspace*{\fill}$\Box$\realendproof}
+\date{October 29th, 2014}							% Activate to display a given date or no date 
+
+\begin{document}
+
+\title{ASP-Completeness of Kakuro}
+\titlerunning{}
+
+\author{Fermi Ma}
+%
+
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{Massachusetts Institute of Technology}
+
+\maketitle
+
+This document proves ASP-completeness of the game of Kakuro. It cites ``Complexity and Completeness of Finding Another Solution and Its Application to Puzzles" by Takayuki Yato and Takahiro Seta. Link at http://www-imai.is.s.u-tokyo.ac.jp/~yato/data2/SIGAL87-2.pdf
+
+Consider the game of Kakuro, which is defined as follows:
+
+A Kakuro game board is an $m$ by $n$ rectangular grid with black squares and white squares. The white squares are typically arranged so that all the white squares form a contiguous unit. For each row or column of at least 2 consecutive white squares of maximal length (at either end of the row there is a neighboring black square), a sum is specified. The goal of the game is to fill in all the white squares with integers from 1 to 9 so that the numbers in each row and column add up to the specified sum, and so that no consecutive row or column of white squares contains a specific number more than once.
+
+We have the following theorem.
+
+\begin{theorem}
+\label{KakuroASP}
+The problem of finding a solution to a specific instance of Kakuro is ASP-complete.
+\end{theorem}
+
+Before we prove this theorem, we first state some preliminary definitions and claims that will provide the tools used for the proof.
+
+\begin{definition}
+A mixed graph is any graph with both undirected and directed edges.
+\end{definition}
+
+\begin{lemma}
+Any planar mixed graph with maximum degree $3$ and $n$ vertices can be embedded into an $O(n)$ by $O(n)$ grid in polynomial time.
+\end{lemma}
+
+We omit the proof of this lemma, as it is not particularly illuminating.
+
+\begin{definition}
+A Hamiltonian subgraph of a graph $G = (V,E)$ is a subgraph $G' = (V',E')$ of $G$ with $V' \subseteq V$ and edge set $E' = \{(u,v) \in E | u,v \in V'\}$ where $G'$ contains a Hamiltonian cycle.
+\end{definition}
+
+\begin{theorem}
+The problem of finding a partition of a mixed graph $G$ with maximum degree 3 into Hamiltonian subgraphs is ASP-complete. We refer to this problem as Max Degree 3 Hamiltonian Partition (MD3HP).
+\end{theorem}
+
+The proof of this is given in [Yato and Seta citation].\\
+
+Now we are ready to prove Theorem~\ref{KakuroASP}
+
+\begin{proof}
+Membership in FNP follows from the fact that we can nondeterministically guess the values to place in each white square, and then verify the solution in polynomial time by simply checking each row and column.
+
+We show an ASP reduction from Max Degree 3 Hamiltonian Partition to the problem of finding a Kakuro puzzle solution. To perform this reduction, we first take an instance 
+\end{proof}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}  
