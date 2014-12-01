@@ -73,9 +73,9 @@ Here are some examples:
 	\item Instance: a 3SAT formula
 	\item Output: smallest assignment of variables, such that the formula is satisfiable in only one way.
 		\end{itemize}
-\item Latin Squares: \begin{itemize}
-				\item Instance: an instance of latin square
-				\item Output: smallest partial solution where the Latin square is finished in only one way
+\item Hamiltonian path: \begin{itemize}
+				\item Instance: a graph and a (possibly empty) list of edges
+				\item Output: smallest subset of edges with a unique superset which forms a Hamiltonian path.
 				\end{itemize}
 \item Sudoku: \begin{itemize}
 				\item Instance: an instance of Sudoku
@@ -99,7 +99,19 @@ However, it is not clear whether these problems are in NP. Suppose we had a part
 
 Finding some problems that are complete for this class of problems gives some indication that polynomial time algorithms for finding partial certificates do not exists.
 
-\section{Complete Problems}
+\subsection{Framework for reducing}
+
+We will show that some problems are SPC-complete by doing reductions. Our reductions will take the following framework:\\
+Suppose we wanted to solve problem $A$, and we can make oracle calls to problem $B$, then the first thing is
+\begin{enumerate}
+\item come up with a parsimonious transformation $f: A \rightarrow B$
+\item make a call to $B$ with ``corresponding" input to $A$. That is, if we want to solve $A$ with a SPC including certain things, then we include the corresponding gadgets in $B$.
+\item transform the partial certificate for $B$ into another partial certificate for $B$ of the same size, where the information on the partial certificate of $B$ maps nicely to information in a partial certificate of $A$.
+\item continue doing this until you have such information for everything in the partial certificate. This will rely heavily on what the problem ``implies" other things in the problem.
+\item Now transform the partial certificate of $B$ into a partial certificate of $A$. Since the reduction is parsimonious, this will result in a unique solution. If $A$ had a smaller partial certificate, then that smaller partial certificate would also yield a smaller partial certificate of $B$.
+\end{enumerate}
+
+\section{The Analog to Cook-Levin Theorem}
 
 We will make a SAT instance in SPC as follows:
 \begin{itemize}
@@ -120,11 +132,13 @@ In order to show that SAT is SPC-hard, we analyze the reduction from Cook-Levin.
 
 Suppose we have the smallest partial certificate for SAT, then we can assume there are at most $p(n)$ variables. 
 
-Suppose that the smallest SAT partial certificate has an assignment for something which is false. Then we can either remove it, or set it to true. This is because looking at the clauses of \cite{Garey}, a variable being false does not immediately imply the assignment of another variable. On the other hand, a variable being set to true implies that many other variables be set to false. Therefore, we can assume that the only variables in the smallest SAT partial certificate are set to true.
+Suppose that the smallest SAT partial certificate has an assignment for something which is false. Then we know that this variable is either head position variable, a tape cell variable, or a state variable. By the SAT formula, there must be at least one of these variables in the formula which is true. So we can try the smallest partial certificate where the false variable is missing, and instead we replace it with a true variable. We know that the true variable directly implies the small variable, which means that there exists one smallest partial certificate which is the same size and yields the same unique solution. Once we find it, we can use this smallest partial certificate, which contain the same assignments, except that we have removed a false variable and introduced a true variable. 
 
-Likewise, a state variable or a head variable need not imply other variables, but the corresponding tape variables does imply the head and state variable. Therefore, we can also assume that only the tape variables are present in the smallest partial certificate.
+So we can assume without loss of generality that all variables are set to true. Since the procedure above takes polynomial time.
 
-The tape variables that are set to true in the partial certificate indicate exactly which branch of the computation one should take. Therefore, the smallest SAT partial certificate gives the smallest partial certificate for a NTM to a unique accepting branch. Thus, SAT is SPC-complete.
+Likewise, a state variable or a head variable need not imply other variables, but the corresponding tape variables does imply the head and state variable. We know that if we have a tape variable set, it will imply the state and head variables. Therefore, we can also assume that only the tape variables are present in the smallest partial certificate by doing a similar procedure to the above mentioned.
+
+Since the tape variables imply the state and the head position, by knowing the tape variables, we know the choices of certain branches of the computation to take non-deterministically. Since it is the smallest partial certificate for SAT, this will be the smallest partial certificate for the NTM. Thus, SAT is SPC-complete.
 \end{proof}
 
 \begin{theorem}
@@ -148,6 +162,34 @@ Now suppose $z_i$ is in the smallest partial certificate of 3SAT. There are two 
 \end{itemize}
 Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are at most added variables as there are clauses plus variables, we can do this polynomially many times and arrive at a partial certificate of the 3SAT formula which works for the SAT formula as well.
 \end{proof}
+
+\section{Other Complete Problems}
+
+\subsection{Triangle Partition}
+
+Now we define the SPC version of Triangle Paritition, which is a step of the way in proving Sudoku being SPC-complete. 
+\begin{itemize}
+\item Instance: A graph, along with (a possibly empty) set of triangles in the graph.
+\item Output: the smallest subset of triangles which tield a unique triangle partition.
+\end{itemize}
+
+\begin{theorem}
+Triangle Partition is SPC-complete.
+\end{theorem}
+
+\begin{proof}
+Note that Triangle Partition is in SPC since we have the NTM that picks a partition non-deterministically, and then checks whether it was a partition. 
+
+We show we can solve 3SAT with Triangle Partition. Suppose we have an instance of 3SAT, we can build the graph described in \cite{holyer1981np}, with the modification to make the reduction parsimonious. Then the smallest certificate will contain some triangles, note that since within the graph, knowing one triangle gives you the whole partition of the graph, we can assume there is at most one triangle per graph. If the triangle was in the ``association" of two graphs, then we know that we can replace it a trangle from one of the two graphs and stil arrive at the same solution. Therefore, we can assume that we have triangles in the graphs, and not in the associations. 
+
+If the triangle is in a clause, we can assume that its a true triangle, since we can easily test which of the clause graphs are true. Also, we for a true clause graph is implied by the value of its variable, so we can assume that the SPC contains traingles in the variable graphs. Since the reduction is parsimonious, we know that this gives us a SPC for 3SAT. 
+\end{proof}
+
+\subsection{Latin Squares}
+
+\begin{theorem}
+
+\end{theorem}
 
 \bibliographystyle{plain}
 \bibliography{references}
