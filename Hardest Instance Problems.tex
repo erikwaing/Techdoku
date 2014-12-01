@@ -1,0 +1,155 @@
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{amsfonts}
+\usepackage{subfigure}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\urlstyle{same}
+\newcommand{\keywords}[1]{\par\addvspace\baseline skip
+\noindent\keywordname\enspace\ignorespaces#1}
+\newcommand{\x}{\overline{x}}
+\newcommand{\fc}{\frac{x_C}{N}}
+
+\setcounter{secnumdepth}{5} 
+
+\makeatletter
+\let\c@lemma=\c@theorem
+\let\c@corollary=\c@theorem
+\let\c@fact=\c@theorem
+\makeatother
+
+%\let\realendproof=\endproof
+%\def\end proof{\hspace*{\fill}$\Box$\realendproof}
+\date{October 29th, 2014}							% Activate to display a given date or no date 
+
+\begin{document}
+
+\title{Hardest Instance Problems}
+\titlerunning{}
+
+\author{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+%
+\authorrunning{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{Massachusetts Institute of Technology}
+
+\maketitle
+
+I introduce the class of function problems SPC, (smallest partial certificate), which is supposed to capture finding the ``hardest instance" of a problem. This is especially important for puzzle makers, since they want to make the hardest puzzles for people. 
+
+\section{Definition}
+
+Suppose we have two people: a puzzle-maker $M$ and a puzzle-solver $S$. $M$ will work to make a pencil-and-paper puzzle really hard, which it will print on a newspaper; however, it knows that $M$ must write the solution to the puzzle in the back of the newspaper. $M$ wants to make sure that if $S$ solves it, it can correctly verify that it has solved it by looking at the solution. 
+
+Therefore, $M$ wants to create an instance that is very hard to solve, yet still has a \emph{unique} solution. This will motivate the definition for the class SPC. 
+
+Without loss of generality, lets assume that non-deterministic Turing machines (NTMs) has at most $2$ non-deterministic choices. In other words, the computation tree has branching factor at most 2.  We will make a modified non-deterministic Turing machine with the additional input which we will call a \emph{partial certificate}. A partial certificate will work as a hints. A partial certificate is a tape, where cells can either be blank, 0, or 1. Whenever our modified NTM runs, it also reads the next tape cell in the parial certificate. If the cell is blank, it proceeds as it would. If the cell says 0, then instead of behaving non-deterministically, it will take the left branch of the computation. Likewise, if it reads a 1, it will take the right-branch of the computation.
+
+The \emph{size} of a partial certificate, is the number of tape cells with a 0 or 1 written. Note that in the class NP, a certificate specifies exactly which branch of the computation a NTM took toward an answer. This means that a modified NTM with input being a certificate will run like a deterministic turing machine. 
+
+We are focused on algorithms for computing the smallest partial certificate which yield accepting branches.
+
+\begin{definition}
+SPC is the class of function problems where given a non-deterministic Turing machine that runs in polynomial time, it computes the smallest partial certificate, where the modified NTM with that partial certificate has only one accepting branch.
+\end{definition}
+
+Here are some examples:
+\begin{enumerate}
+\item 3SAT: \begin{itemize}
+	\item Instance: a 3SAT formula
+	\item Output: smallest assignment of variables, such that the formula is satisfiable in only one way.
+		\end{itemize}
+\item Latin Squares: \begin{itemize}
+				\item Instance: an instance of latin square
+				\item Output: smallest partial solution where the Latin square is finished in only one way
+				\end{itemize}
+\item Sudoku: \begin{itemize}
+				\item Instance: an instance of Sudoku
+				\item Output: smallest filled solution where Soduku is uniquely solvable.
+\end{itemize}
+\end{enumerate}
+
+Ideally, our puzzle maker, $M$, would get an idea of a puzzle, make it, and then run it through a SPC algorithm. On receipt of the partial certificate, it adds the values that it needs, and then the puzzle maker can be confident that the puzzle solver $S$ will only solve it the same way that $M$ solved it.
+
+Additionally, $M$ can run the algorithm on an empty input, thus asking the question what is the smallest amount of information that I need to give in order for the puzzle to be uniquely solvable. In otherwords, we can ask:
+\begin{itemize}
+\item What is the smallest Sudoku that is uniquely solvable?
+\item What is the smallest Latin square that is uniquely solvable? In this case, this also specifies the smallest number of relations that one must give to specify a quasigroup of a given size? (a question that may be interesting for algebraists)
+\end{itemize}
+
+\section{How this fits?}
+
+So we can ask, how does SPC fit in terms of the complexity landscape? One can note that the corresponding decision problems for SPC, \emph{does there exists a partial certificate size less than $k$?}, seems to be NP-hard. Since if we can find a partial certificate of size equal to the runtime of the NTM, then we can solve the problem.
+
+However, it is not clear whether these problems are in NP. Suppose we had a partial certificate, that partial certificate might be extremely short. Then in order to verify that the partial certificate is in fact a partial certificate, we might still need to check exponentially many branches! 
+
+Finding some problems that are complete for this class of problems gives some indication that polynomial time algorithms for finding partial certificates do not exists.
+
+\section{Complete Problems}
+
+We will make a SAT instance in SPC as follows:
+\begin{itemize}
+\item Instance: a boolean formula
+\item Output: smallest assignment of the variables with only one superset of the satisfying assignment.
+\end{itemize}
+
+I make another minor assumption, saying that a state writes down unique values on the tape. 
+
+\begin{theorem}
+SAT is SPC-complete.
+\end{theorem}
+
+\begin{proof}
+We know that SAT is in SPC since we can have the NTM which non-deterministically picks an assignment of the variables, one at a time, and then checks to see if the boolean formula is satisfied. If it is, it accepts, otherwise, it rejects. 
+
+In order to show that SAT is SPC-hard, we analyze the reduction from Cook-Levin. We know that there is a SAT formula which corresponds bijectively to an execution of a branch of computation of a NTM. Suppose the NTM runs in $p(n)$ steps, where $p$ is a polynomial.
+
+Suppose we have the smallest partial certificate for SAT, then we can assume there are at most $p(n)$ variables. 
+
+Suppose that the smallest SAT partial certificate has an assignment for something which is false. Then we can either remove it, or set it to true. This is because looking at the clauses of \cite{Garey}, a variable being false does not immediately imply the assignment of another variable. On the other hand, a variable being set to true implies that many other variables be set to false. Therefore, we can assume that the only variables in the smallest SAT partial certificate are set to true.
+
+Likewise, a state variable or a head variable need not imply other variables, but the corresponding tape variables does imply the head and state variable. Therefore, we can also assume that only the tape variables are present in the smallest partial certificate.
+
+The tape variables that are set to true in the partial certificate indicate exactly which branch of the computation one should take. Therefore, the smallest SAT partial certificate gives the smallest partial certificate for a NTM to a unique accepting branch. Thus, SAT is SPC-complete.
+\end{proof}
+
+\begin{theorem}
+3SAT is SPC-complete.
+\end{theorem}
+
+The reduction from SAT to 3SAT is taken from \url{http://zoo.cs.yale.edu/classes/cs468/HW1-Solutions.pdf}.
+
+\begin{proof}
+Membership in SPC follows from SAT. 
+
+In order to show that its SPC-complete, we reduce from SAT. We can assume without loss of generality that the SAT formula is a conjuction of clauses, which are disjunctions. Suppose that we have a set of clauses $\{ C_i \}$, then I transform the clauses by succesively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
+\[ g(C) = \left\{ \begin{array}{cc} C & k \leq 3 \\
+						    (z_1 \vee x_1 \vee x_2) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee \overline{x_2}) \wedge (\overline{z_1} \vee x_3 \vee ... \vee x_k) & \text{ otherwise }\end{array} \right. \] 
+Note that if the SAT formula is satisfiable, then the 3SAT formula is satisfiable, and if the 3SAT formula is satisfiable, then the SAT formula is satisfiable. 
+
+Now suppose $z_i$ is in the smallest partial certificate of 3SAT. There are two cases:
+\begin{itemize}
+\item $z_i$ is set to false. In this case, we know that either $x_1$ or $x_2$ is set to true. So we can try as an instance the 3SAT formula where each of these is set to true in succession. One of these will have a smallest partial certificate which is the same size as the previous one, since the value of $z_i$ is implied by one of $x_1$ or $x_2$. Therefore, we can include that $x_1$ or $x_2$ and remove $z$.
+\item $z_i$ is set to true. Then $\overline{z_i}$ is false, which means that whichever $\overline{z_i}$ ends up being a part of in the clause will mean that one of two of the following will be true. We can again try both of them sequentially and note that one will have a smallest partial certificate which is of the same size. So we can remove $z_i$ and replace it by one of the others. 
+\end{itemize}
+Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are at most added variables as there are clauses plus variables, we can do this polynomially many times and arrive at a partial certificate of the 3SAT formula which works for the SAT formula as well.
+\end{proof}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}  
