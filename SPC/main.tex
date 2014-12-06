@@ -1,0 +1,341 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amsthm}
+\usepackage{subfigure}
+%\usepackage{caption}
+%\usepackage{subcaption}
+%\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{clrscode4e}
+\urlstyle{same}
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+% Uniform numbering for previously defined theorem environments (e.g., LNCS).
+\makeatletter
+\let\c@lemma=\c@theorem
+\let\c@corollary=\c@theorem
+\let\c@fact=\c@theorem
+\makeatother
+
+% Redefinition of LNCS or SODA or Springer proof environment to put a \Box at
+% the end of every proof.
+\let\realendproof=\endproof
+\def\endproof{\hspace*{\fill}$\Box$\realendproof}
+
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{The Complexity of Designing the Hardest Instances}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{The Complexity of Designing the Hardest Instances}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+%
+\authorrunning{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{MIT,\\
+77 Mass Ave., Cambridge, MA 02139, USA, \\
+\protect\url{{fermima,arielsc,eaw}@mit.edu}}
+
+%
+% NB: a more complex sample for affiliations and the mapping to the
+% corresponding authors can be found in the file "llncs.dem"
+% (search for the string "\mainmatter" where a contribution starts).
+% "llncs.dem" accompanies the document class "llncs.cls".
+%
+
+\maketitle
+
+\section{Introduction}
+\label{sec:Introduction}
+
+In 2012, McGuire, Tugemann, Civario surprised the world by showing that there is no 16-clue Sudoku puzzle \cite{mcguire2012there}. The MIT Math department graduate students were so surprised by this result that there is a copy of the arXiv preprint on a wall on the 4th floor of the mathematics department, next to the lounge. The paper described novel techniques to enumerate through all the possible 16-clue puzzles, and the computation lasted from January 2011 to December 2011. 
+
+We asked, is there some sort of hardness to these questions? Lets imagine the following scenario:
+
+We have two parties, a puzzle maker, lets call him/her $M$, and a puzzle solver, lets call him/her $S$. $M$ wants to design the hardest puzzles for $S$ to solve. $S$ reads the puzzles on the newspaper, so $M$ must make sure to provide the solution along with the puzzle. 
+
+Most algorithmic questions regarding puzzles ask how hard is for $S$ to solve the puzzle. We ask, how hard is it for $M$ to design the hardest puzzles. By hardest, we can mean the least number of clues. For example, for a Sudoku, we might mean the least number of already printed numbers. We also want to disallow certain cases, since $M$ obviously would not publish the empty Sudoku puzzle since the solution he provides might be different from how $S$ solves it. We will only look at \emph{unique} puzzles.
+
+\begin{definition}
+We will call a puzzle valid if it has a unique solution.
+\end{definition}
+
+In general, we assume that $M$ has the following workflow:
+\begin{enumerate}
+\item $M$ decides which kind of puzzle.
+\item $M$ decides how ``big" the puzzle will be.
+\item $M$ wants to illicit some deductive response by $S$, so it designs small parts of the puzzle.
+\item Now $M$ must make sure that the puzzle is valid, by adding the smallest number of additional clues.
+\item Compute the solution and publish it. 
+\end{enumerate}
+
+We can define the problem of \emph{computing the hardest instances} in the following way: 
+\begin{quote}
+Given a problem with a polynomially sized solutions, what is the minimum number of clues we must give in order for the problem to contain the clues in the solution, and for there to be a unique solution?
+\end{quote}
+
+We will ask the decision version of the problem: does there exists at most $k$ clues which give rise to a unique solution?
+
+In Section~\ref{sec:The Problems}, we formalize the problems that we are trying to solve. In Section~\ref{sec:SPC}, we define the complexity class $SPC$, we relate it to the kinds of problems we are trying to solve, and we compare the class to common complexity classes. Then in Section~\ref{sec:complete}, we give the reductions to show the problems in Section~\ref{sec:The Problems} are complete for this class. Finally, we conclude with some thoughts and open problems.
+
+\section{The Problems}
+\label{sec:The Problems}
+
+We present a formalism of the type of problems we wish to solve. Each problem will be defined with an \emph{instance} of the problem which will be an encoding of the problem into a string of polynomial size, along with a value $k$. The resulting output will be a decision signifying there exists $k$ clues which will solve the instance uniquely. This framework will fit in nicely with the problems we are trying to solve.
+
+\subsection{$SPC$-Sudoku}
+
+We first introduce the problem which motivated this study. The basic premise is that a puzzle maker wants to illicit some kind of particular deduction in the puzzle solver. The puzzle maker begins designing the puzzle, which becomes the instance to the problem. Additionally, the puzzle maker asks how many clues it must add, it does so by specifying a value $k$, and asking whether there are at most $k$ clues which will lead to a valid puzzle.
+
+\begin{itemize}
+\item Instance: A partially filled Sudoku puzzle, along with a parameter $k$.
+\item Question: Does there exists at most $k$ clues which will yield a valid Sudoku puzzle?
+\end{itemize}
+
+Note that when the instance is an empty Sudoku puzzle of dimension 10, the question becomes exactly the question of determining the size of the valid Sudoku puzzles. With this question, we can easily solve the problem that \cite{mcguire2012there} computed. 
+
+\subsection{$SPC$-Latin Squares}
+
+This is a very similar problem, related to Sudoku. Maybe slightly less known, a \emph{latin square} of dimension $n$ is an $n \times n$ grid filled with the numbers from $1$ through $n$. The constraint is that each row must contain all numbers $1$ through $n$, and each column must contain all numbers $1$ through $n$. In fact, it is know that each such square gives rise to a \emph{quasi-group}. The problem Latin Squares asks whether a partially filled latin square can be completed. It is known that such problem is $NP$-complete. We ask the corresponding ``minimum clue" question: what is the smallest number of clues a latin square of dimension $n$ must have in order for it to be filled up uniquely. We present the problem $SPC$-Latin Squares in our framework.
+
+\begin{itemize}
+\item Instance: A partially filled latin square, along with a parameter $k$. 
+\item Question: Does there exists at most $k$ clues which will yield a valid Latin Squares puzzle?
+\end{itemize}
+
+\subsection{$SPC$-Triangle Partition}
+
+Triangle Partition is not a puzzle. The problem is a known $NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the ``minimum clues" version of the problem since we will use it in order to show hardness results for $SPC$-Latin Squares and $SPC$-Sudoku. \cite{holyer1981np} gives a general description of the problem and \cite{colbourn1984complexity} gives a slightly more specific problem. We present the definition in \cite{colbourn1984complexity}. First, a definition of a property of tripartite graphs which will simplify the analysis.
+
+\begin{definition}
+A tripartite graph is uniform if each vertex has equally many neighbors in each of the other two partitions.
+\end{definition}
+
+\begin{itemize}
+\item Instance: A uniform tripartite graph, along with a parameter $k$.
+\item Question: Does there exists at most $k$ triangles which give rise to a unique partition of the graph into triangles?
+\end{itemize}
+
+Note that if a tripartite graph has a triangle partition, the graph must be uniform, so even though the requirement that the graph be uniform is not necessary, it simplifies the analysis.
+
+\subsection{$SPC$-SAT}
+
+The following is the obvious generalization for giving clues in the Boolean satisfiability problem.
+
+\begin{itemize}
+\item Instance: a Boolean formula $\phi$, along with a parameter $k$.
+\item Question: Is there an assignment of at most $k$ variables where the corresponding Boolean formula is satisfied uniquely?
+\end{itemize}
+
+\section{SPC: Smallest Partial Certificate}
+\label{sec:SPC}
+
+We will make some definitions of some problems which will be related to the ``minimum clues" puzzle. These definitions will give rise to a complexity class, which we call  $SPC$. We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the ``left" branch, and one the ``right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
+
+\begin{definition}
+A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or \emph{null}, which we denote as $\bot$.
+\end{definition}
+
+\begin{definition}
+The size of a partial certificate is the number of non-null entries. 
+\end{definition}
+
+For problems in $NP$, a partial certificate is the generalization of a certificate of an $NP$ problem. Each certificate of an $NP$ problem is a partial certificate. We can think of partial certificates as a certificate, where we erase some tape cells.
+
+\begin{definition}
+A modified non-deterministic Turing machine (mNTM) is a NTM where there is an additional input of a partial certificate. At each step of the computation, a mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
+\end{definition}
+
+In some sense, a partial certificate makes a mNTM more deterministic. If a partial certificate contains no $\bot$, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. We say that a NTM has a corresponding mNTM which runs exactly the same, but has an additional input for a partial certificate. With these definitions, we are ready to define the class $SPC$.
+
+\begin{definition}
+$SPC$ is the class of decision problems of the following form:\\
+\begin{quote}
+Given a NTM running in polynomial time and a parameter $k$, does there exists a partial certificate of size at most $k$ such that the corresponding mNTM with the partial certificate has only one accepting branch?
+\end{quote}
+\end{definition}
+
+\begin{proposition}
+Any problem of determining the smallest number of clues is in $SPC$, and alternative, any problem in $SPC$ can be phrased as a problem to determine the smallest number of clues.
+\end{proposition}
+
+\begin{proof}
+Our problems have polynomially long solutions, which can be checked in polynomial time. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing the if this NTM has a partial certificate of size at most $k$ with only one accepting branch is equivalent to asking whether there exists $k$ clues which give rise to a unique solution. 
+
+Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to $k$ clues which give rise to a unique solution.
+\end{proof}
+
+The above proposition justifies our analysis of this class for answering these questions.
+
+\begin{proposition}
+If a problem is $SPC$-hard, then it is $NP$-hard.
+\end{proposition}
+
+\begin{proof}
+If a problem is in $NP$, then there exists a NTM which decides in polynomial time. Lets say at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. We can phrase the question as does there exists a partial certificate of size at most $p(n)$? Therefore, $NP \subset SPC$, and so any $SPC$-hard problem is also $NP$-hard. 
+\end{proof}
+
+\begin{proposition}
+If a problem is $SPC$-hard, then it is $coNP$-hard. 
+\end{proposition}
+
+\begin{proof}
+UNIQUE-SAT is in $SPC$ since we can ask whether there is a partial certificate of size at most $0$. This implies that $coNP \subset US \subset SPC$ since UNIQUE-SAT is complete in $US$ \cite{blass1982unique}.
+\end{proof}
+
+\section{Complete Problems}
+\label{sec:complete}
+
+\begin{theorem}
+$SPC$-$SAT$ is $SPC$-complete.
+\end{theorem}
+
+\begin{proof}
+The proof is very similar to the Cook-Levin theorem. We use the proof in \cite{Garey}. We can first turn an arbritrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem, to get a Boolean formula $\phi$. 
+
+We claim that if $\phi$ has a partial assignment of $k$ variables with a unique complete assignment, then there exists a partial certificate for the NTM with corresponding mNTM having only one accepting branch of the computation.
+
+Note that if a partial assignment of $k$ variables contains a variable that is set to false, then the variable is a head position variable, a state variable, or a tape cell variable. We know that there exists a head position variable, a state variable, and a tape cell variable which is true at each time, so if we switch the corresponding variables, we have removed a false variable, added a true variable, and by analyzing $\phi$, the true variable implies that the false variable is false, therefore, we still have a partial certificate. 
+
+Therefore, we can assume that all assignments are true. If we have a head position variable, the tape cell variable at that given position will be set to true, and so switching them will maintain the partial assignment. Also, since the content of each tape cell is the state-content tuple, a state variable can be replaced by the tape cell variable. Therefore, we can assume that we have a partial assignment of the tape-cell variables, which are all true. 
+
+Since each complete assignment of the variables corresponds to a unique accepting branch of the computation, knowing the contents of the tape cell at each time tells you which branch of the computation to take. Therefore, if there exists a partial assignment of $k$ variables which yield a unique complete assignment, then there exists a partial certificate of size $k$ whose mNTM has a unique accepting branch.
+\end{proof}
+
+From this we can easily show that the corresponding $3SAT$ problem is $SPC$-complete. We follow the reduction 
+
+\begin{proposition}
+$SPC$-$3SAT$ is $SPC$-complete.
+\end{proposition}
+
+\begin{proof}
+We reduce from $SPC$-SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjuction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$, then transform the clauses by succesively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
+\[ g(C) = \left\{ \begin{array}{cc} C & k \leq 3 \\
+						    (z_1 \vee x_1 \vee x_2) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee \overline{x_2}) \wedge (\overline{z_1} \vee x_3 \vee ... \vee x_k) & \text{ otherwise }\end{array} \right. \] 
+
+Suppose $z_i$ is in a partial certificate of 3SAT. There are two cases:
+\begin{itemize}
+\item $z_i$ is set to false. In this case, we know that either $x_1$ or $x_2$ is set to true. If we switch $z_i$ and $x_1$ or $x_2$, one of these will be partial certificate which is the same size as the previous one, since the value of $z_i$ is implied by one of $x_1$ or $x_2$. Therefore, we can include $x_1$ or $x_2$ and remove $z$.
+\item $z_i$ is set to true. Then $\overline{z_i}$ is false, which means that whichever $\overline{z_i}$ ends up being a part of in the clause will mean that one of two of the following will be true. Again, if we switch them, one will have a smallest partial certificate which is of the same size. So we can remove $z_i$ and replace it by another variable. 
+\end{itemize}
+Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are a limited number of $z$s, we can repeat this procedure and arrive at a partial assignment of the 3SAT formula which works for the SAT formula as well.
+\end{proof}
+
+\begin{proposition}
+$SPC$-Triangle Partition is $SPC$-complete.
+\end{proposition}
+
+\begin{proof}
+We use the reduction from \cite{holyer1981np}, applying the slight modifications made in \cite{colbourn1984complexity} so that the graph is tripartite. 
+
+Note that in the reduction, if one has $k$ triangles and one of the triangles belongs to a join, then that triangle is implied by a neighboring triangle. So we can assume that all triangles are either in $H_{3,p}$ of variables, or $H_{3,p}$ of literals. 
+
+In addition, if one of the $k$ triangles is a $T$-patch triangle in an $H_{3,p}$ of a literal, then there exists a triangle in an $F$-patch of another literal, so can switch them.
+
+So in $k$ triangles, we can either assume they are in an $H_{3,p}$ of a variable, or an $H_{3,p}$ of a false literal. So if there is a partition of $k$ triangles which makes a unique edge partition, then there exists an assignment of $k$ variables which uniquely determine the assignment of all the variables to satisfy the formula. 
+
+Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable, for the triangle in the clause which satisfies it. This implies the variable, so we can do this. NEED TO CHECK THIS!!!!!!
+\end{proof}
+
+\begin{corollary}
+$SPC$-Latin Squares is $SPC$-complete.
+\end{corollary}
+
+\begin{proof}
+We can use the reduction from \cite{colbourn1984complexity}. For each uniform tripartite graph, there is a partially filled Latin Square. The Latin Square is $2n \times 2n$, but the top-leftmost $n \times n$ square will correspond exactly with triangles in the tripartite graph. The rest of the Latin Square is filled in. Therefore, for each additional square that we must fill in to the $n \times n$ square in the top-left corner, we are specifying a triangle in the partition. Therefore, $SPC$-Latin Squares is $SPC$-complete.
+\end{proof}
+
+\begin{corollary}
+$SPC$-Sudoku is $SPC$-complete
+\end{corollary}
+
+\begin{proof}
+We can use the reduction from \cite{takayuki2003complexity}. We note that each latin square will correspond exactly with some columns of the Sudoku puzzle. The rest of the Sudoku puzzle is filled in, so each partial assignment of the Sudoku corresponds to a partial assignment of the latin square. Therefore, the problem is $SPC$-complete.
+\end{proof}
+
+\subsection{Upper Bounds}
+
+We provide an algorithm for solving $SPC$-SAT with an NTM with a SAT oracle. This will mean that $SPC \subset NP^{NP}$ and so the complete problems will probably not be $PSPACE$-hard. If an $SPC$-complete problem were $PSPACE$-hard, it would collapse most of the polynomial time hierarchy \cite{stockmeyer1976polynomial}. 
+
+\begin{lemma}
+A Boolean formula $\phi$ has a partial assignment of $k$ variables which yield a unique solution if and only if every variable outside the partial assignment, one assignment yields a satisfiable formula, and one does not.
+\end{lemma}
+
+\begin{proof}
+This is clear since there is only one accepting branch.
+\end{proof}
+
+\begin{lemma}
+A Boolean formula $\phi$ has no partial assignment of $k$ variables if and only if there exists an additional variable which both assignments give a satisfiable Boolean formula.
+\end{lemma}
+
+\begin{proof}
+If there are at least two accepting branches of the computation. Compute the least common ancestor of the branches in the computation tree. That will yield a variable which can take on both assignments. 
+\end{proof}
+
+\begin{codebox}
+\Procname{$SPC$-SAT: Instance: $\phi$ formula with variables $\{ x_i \}$ and variable $k$.}
+\li \For $i = 1, ..., k$ \Then
+\li Non-deterministically pick a variable $x_i$, without repetition
+\li Non-deterministically pick an assignment \End
+\li Iterate through all remaining variables \Then
+\li \If a variable has both assignments with a satisfiable boolean formula \Then
+\li reject
+\li \Else assign that variable \End \End
+\li Once you assigned all variables, accept.
+\end{codebox}
+
+\begin{proposition}
+$SPC \subset NP^NP$
+\end{proposition}
+
+\begin{proof}
+Use the above algorithm to solve $SPC$-SAT. 
+\end{proof}
+
+\section{Conclusion}
+
+We have formalized the notion of what it means to compute the hardest instance to a puzzle by providing the minimum clues. This have rise to $SPC$, and we showed some problems were complete for this class. In particular, this means $SPC$-Sudoku is NP-hard, but probably not $PSPACE$-hard. However, the instances of $SPC$-Sudoku which make it $SPC$-complete are very far from empty. In fact, just by looking at the last reduction from $SPC$-Latin Squares, a Sudoku of dimensions $n^2 \times n^2$ which is a hard instance, at most $n^2$ of the $n^4$ squares at empty. It would be interesting to see if the empty instances of Sudoku are still complete for $SPC$. This would be exactly the problem \cite{mcguire2012there} solved for $n = 3$. 
+
+\bibliography{references}
+\bibliographystyle{splncs}
+\end{document}
