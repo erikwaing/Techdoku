@@ -85,16 +85,20 @@
 
 \maketitle
 
-\section{Introduction}
-\label{sec:Introduction}
-
 In 2012, McGuire, Tugemann, Civario surprised the world by showing that there is no 16-clue Sudoku puzzle \cite{mcguire2012there}. The graduate students in MIT's Math Department were so surprised by this result that there is a copy of the arXiv preprint on a wall on the 4th floor of the department, next to the lounge. The paper described novel techniques to enumerate through all the possible 16-clue puzzles, and the computation lasted from January 2011 to December 2011. 
 
-We are interested in formalizing this question for other puzzles. Consider the following scenario.
-
-There's two parties, a puzzle maker $M$, and a puzzle solver $S$. $M$ wants to design the hardest puzzles for $S$ to solve. $S$ reads the puzzles on the newspaper, so $M$ must make sure to provide the solution along with the puzzle. 
+We are interested in formalizing this question for other puzzles. Consider the following scenario. There are two parties: a puzzle maker $M$ and a puzzle solver $S$. $M$ wants to design the hardest puzzles for $S$ to solve. $S$ reads the puzzles on the newspaper, so $M$ must make sure to provide the solution along with the puzzle. 
 
 Most algorithmic results in this field ask how hard it is for $S$ to solve a puzzle. We are interested in the other side of the question: how hard is it for $M$ to design the hardest puzzle. By hardest, we mean the least number of clues. For example, for a Sudoku, we mean the least number of given entries. We also want to disallow certain cases. For instance, $M$ obviously would not publish the empty Sudoku puzzle since the solution he provides might be different from how $S$ solves it. We will only look at puzzles with clues such that the solution is \emph{unique}.
+
+In this paper, we are interested in determining how hard it is to compute hardest instances for the case of Sudoku. For that purpose, we will introduce an appropriate framework and define a complexity class, called $\mathsf{SPC}$. We will then present the problems that are essential to understanding the complexity of Sudoku. These include well known problems such as SAT and 3SAT, as well as other puzzles such as Latin Squares. After introducing these problems, we will show that they are all complete in the $\mathsf{SPC}$ class using known reductions. We conclude by providing upper bounds on the $\mathsf{SPC}$ class and posing interesting open questions. 
+
+In Section~\ref{sec:prelim}, we define the complexity class $\mathsf{SPC}$, relate it to the problem we are trying to solve and compare the class to common complexity classes. In Section ~\ref{sec:The Problems} we formalize the problems that will help us understand the complexity of Sudoku in this class. Then in Section~\ref{sec:complete}, we exhibit a chain of reductions to show the problems in Section~\ref{sec:The Problems} are complete for this class. Finally, we conclude with some thoughts and open problems.
+
+\textbf{Related Work} Insert related work here. 
+
+\section{Preliminaries}
+\label{sec:prelim}
 
 \begin{definition}
 We will call a puzzle \emph{valid} if it has a unique solution.
@@ -110,13 +114,69 @@ In general, we assume that $M$ has the following workflow:
 \end{enumerate}
 
 We can define the problem of \emph{computing the hardest instances} in the following way: 
-\begin{quote}
+\
+begin{quote}
 Given a problem with a polynomially sized solutions, what is the minimum number of clues we must give in order for the problem to contain the clues in the solution, and for there to be a unique solution?
 \end{quote}
 
 We will ask the decision version of the problem: does there exist a set of at most $k$ clues which give rise to a unique solution?
 
-In Section~\ref{sec:The Problems}, we formalize the problems that we are trying to solve. In Section~\ref{sec:SPC}, we define the complexity class $\mathsf{SPC}$, we relate it to the kinds of problems we are trying to solve, and we compare the class to common complexity classes. Then in Section~\ref{sec:complete}, we give the reductions to show the problems in Section~\ref{sec:The Problems} are complete for this class. Finally, we conclude with some thoughts and open problems.
+We now define terms which will be related to the "minimum clues" problem for puzzles. These definitions will give rise to a complexity class, which we call  $\mathsf{SPC}$ (for Smallest Partial Certificate). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the "left" branch, and the other the "right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
+
+\begin{definition}
+A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or \emph{blank}, which we denote as $\bot$.
+\end{definition}
+
+\begin{definition}
+The size of a partial certificate is the number of non-null entries. 
+\end{definition}
+
+For problems in $\NP$, a partial certificate is the generalization of a certificate of an $\NP$ problem. Each certificate of an $\NP$ problem is a partial certificate. We can think of partial certificates as a certificate, where we erase some tape cells.
+
+\begin{definition}
+A modified non-deterministic Turing machine (mNTM) is a NTM where there is an additional input of a partial certificate. At each step of the computation, a mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
+\end{definition}
+
+In some sense, a partial certificate makes a mNTM more deterministic. If a partial certificate contains no $\bot$, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. We say that a NTM has a corresponding mNTM which runs exactly the same, but has an additional input for a partial certificate. With these definitions, we are ready to define the class $\mathsf{SPC}$.
+
+\begin{definition}
+$\mathsf{SPC}$ is the class of decision problems of the following form:\\
+\begin{quote}
+Given a NTM running in polynomial time and a parameter $k$, does there exists a partial certificate of size at most $k$ such that the corresponding mNTM with the partial certificate has only one accepting branch?
+\end{quote}
+\end{definition}
+
+\begin{proposition}
+Any problem of determining the smallest number of clues is in $\mathsf{SPC}$, and alternative, any problem in $\mathsf{SPC}$ can be phrased as a problem to determine the smallest number of clues.
+\end{proposition}
+
+\begin{proof}
+Our problems have polynomially long solutions, which can be checked in polynomial time. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing the if this NTM has a partial certificate of size at most $k$ with only one accepting branch is equivalent to asking whether there exists $k$ clues which give rise to a unique solution. 
+
+Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to $k$ clues which give rise to a unique solution.
+\end{proof}
+
+The above proposition justifies our analysis of this class for answering these questions.
+
+\subsection{Relation to known complexity classes.}
+
+Here we present lower bounds for the complexity class $\mathsf{SPC}$. It remains to be shown if any of the containments is strict. It is the opinion of the authors that this is likely to be true. 
+
+\begin{proposition}
+If a problem is $\mathsf{SPC}$-hard, then it is $\NP$-hard.
+\end{proposition}
+
+\begin{proof}
+If a problem is in $\NP$, then there exists a NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. We can ask if there exists a partial certificate of size at most $p(n)$? Therefore, $\NP \subset \mathsf{SPC}$, and so any $\mathsf{SPC}$-hard problem is also $\NP$-hard. 
+\end{proof}
+
+\begin{proposition}
+If a problem is $\mathsf{SPC}$-hard, then it is $\coNP$-hard. 
+\end{proposition}
+
+\begin{proof}
+\mathsf{UNIQUE-SAT} is in $\mathsf{SPC}$ since we can ask whether there is a partial certificate of size at most $0$. This implies that $\coNP \subset \mathsf{US} \subset \mathsf{SPC}$ since UNIQUE-SAT is complete in $\mathsf{US}$ \cite{blass1982unique}.
+\end{proof}
 
 \section{The Problems}
 \label{sec:The Problems}
@@ -171,64 +231,10 @@ The following is the obvious generalization for giving clues in the Boolean sati
 \item Question: Is there an assignment of at most $k$ variables where the corresponding Boolean formula is satisfied uniquely?
 \end{itemize}
 
-\section{SPC: Smallest Partial Certificate}
-\label{sec:SPC}
-
-We will define terms which will be related to the "minimum clues" problem for puzzles. These definitions will give rise to a complexity class, which we call  $\mathsf{SPC}$. We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the "left" branch, and the other the "right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
-
-\begin{definition}
-A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or \emph{blank}, which we denote as $\bot$.
-\end{definition}
-
-\begin{definition}
-The size of a partial certificate is the number of non-null entries. 
-\end{definition}
-
-For problems in $\NP$, a partial certificate is the generalization of a certificate of an $\NP$ problem. Each certificate of an $\NP$ problem is a partial certificate. We can think of partial certificates as a certificate, where we erase some tape cells.
-
-\begin{definition}
-A modified non-deterministic Turing machine (mNTM) is a NTM where there is an additional input of a partial certificate. At each step of the computation, a mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
-\end{definition}
-
-In some sense, a partial certificate makes a mNTM more deterministic. If a partial certificate contains no $\bot$, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. We say that a NTM has a corresponding mNTM which runs exactly the same, but has an additional input for a partial certificate. With these definitions, we are ready to define the class $\mathsf{SPC}$.
-
-\begin{definition}
-$\mathsf{SPC}$ is the class of decision problems of the following form:\\
-\begin{quote}
-Given a NTM running in polynomial time and a parameter $k$, does there exists a partial certificate of size at most $k$ such that the corresponding mNTM with the partial certificate has only one accepting branch?
-\end{quote}
-\end{definition}
-
-\begin{proposition}
-Any problem of determining the smallest number of clues is in $\mathsf{SPC}$, and alternative, any problem in $\mathsf{SPC}$ can be phrased as a problem to determine the smallest number of clues.
-\end{proposition}
-
-\begin{proof}
-Our problems have polynomially long solutions, which can be checked in polynomial time. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing the if this NTM has a partial certificate of size at most $k$ with only one accepting branch is equivalent to asking whether there exists $k$ clues which give rise to a unique solution. 
-
-Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to $k$ clues which give rise to a unique solution.
-\end{proof}
-
-The above proposition justifies our analysis of this class for answering these questions.
-
-\begin{proposition}
-If a problem is $\mathsf{SPC}$-hard, then it is $\NP$-hard.
-\end{proposition}
-
-\begin{proof}
-If a problem is in $\NP$, then there exists a NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. We can ask if there exists a partial certificate of size at most $p(n)$? Therefore, $\NP \subset \mathsf{SPC}$, and so any $\mathsf{SPC}$-hard problem is also $\NP$-hard. 
-\end{proof}
-
-\begin{proposition}
-If a problem is $\mathsf{SPC}$-hard, then it is $\coNP$-hard. 
-\end{proposition}
-
-\begin{proof}
-\mathsf{UNIQUE-SAT} is in $\mathsf{SPC}$ since we can ask whether there is a partial certificate of size at most $0$. This implies that $\coNP \subset \mathsf{US} \subset \mathsf{SPC}$ since UNIQUE-SAT is complete in $\mathsf{US}$ \cite{blass1982unique}.
-\end{proof}
-
 \section{Complete Problems}
 \label{sec:complete}
+
+In this section, we proceed to show that $\mathsf{SPC-Sudoku}$ is $\mathsf{SPC}$-complete.
 
 \begin{theorem}
 $\mathsf{SPC-SAT}$ is $\mathsf{SPC}$-complete.
