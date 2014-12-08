@@ -93,7 +93,7 @@ Most algorithmic results in this field ask how hard it is for $S$ to solve a puz
 
 In this paper, we are interested in determining how hard it is to compute hardest instances for the case of Sudoku. For that purpose, we will introduce an appropriate framework and define a complexity class, called $\mathsf{SPC}$. We will then present the problems that are essential to understanding the complexity of Sudoku. These include well known problems such as SAT and 3SAT, as well as other puzzles such as Latin Squares. After introducing these problems, we will show that they are all complete in the $\mathsf{SPC}$ class using known reductions. We conclude by providing upper bounds on the $\mathsf{SPC}$ class and posing interesting open questions. 
 
-In Section~\ref{sec:prelim}, we define the complexity class $\mathsf{SPC}$, relate it to the problem we are trying to solve and compare the class to common complexity classes. In Section ~\ref{sec:The Problems} we formalize the problems that will help us understand the complexity of Sudoku in this class. Then in Section~\ref{sec:complete}, we exhibit a chain of reductions to show the problems in Section~\ref{sec:The Problems} are complete for this class. Finally, we conclude with some thoughts and open problems.
+In Section~\ref{sec:prelim}, we define the complexity class $\mathsf{SPC}$, relate it to the problem we are trying to solve and provide lower bounds for the class by showing it contains common complexity classes. In Section ~\ref{sec:The Problems} we formalize the problems that will help us understand the complexity of Sudoku in this class. These were mentioned above. Then in Section~\ref{sec:complete}, we exhibit a chain of reductions to show the problems in Section~\ref{sec:The Problems} are complete for this class. Finally, we conclude with some thoughts and open problems.
 
 \textbf{Related Work} Insert related work here. 
 
@@ -114,8 +114,8 @@ In general, we assume that $M$ has the following workflow:
 \end{enumerate}
 
 We can define the problem of \emph{computing the hardest instances} in the following way: 
-\
-begin{quote}
+
+\begin{quote}
 Given a problem with a polynomially sized solutions, what is the minimum number of clues we must give in order for the problem to contain the clues in the solution, and for there to be a unique solution?
 \end{quote}
 
@@ -175,7 +175,7 @@ If a problem is $\mathsf{SPC}$-hard, then it is $\coNP$-hard.
 \end{proposition}
 
 \begin{proof}
-\mathsf{UNIQUE-SAT} is in $\mathsf{SPC}$ since we can ask whether there is a partial certificate of size at most $0$. This implies that $\coNP \subset \mathsf{US} \subset \mathsf{SPC}$ since UNIQUE-SAT is complete in $\mathsf{US}$ \cite{blass1982unique}.
+$\mathsf{UNIQUE-SAT}$ is in $\mathsf{SPC}$ since we can ask whether there is a partial certificate of size at most $0$. This implies that $\coNP \subset \mathsf{US} \subset \mathsf{SPC}$ since UNIQUE-SAT is complete in $\mathsf{US}$ \cite{blass1982unique}.
 \end{proof}
 
 \section{The Problems}
@@ -223,7 +223,6 @@ A tripartite graph is \emph{uniform} if each vertex has equally many neighbors i
 Note that if a tripartite graph has a triangle partition, the graph must be uniform, so even though the requirement that the graph be uniform is not necessary, it simplifies the analysis.
 
 \subsection{$\mathsf{SPC-SAT}$}
-$\NP$
 The following is the obvious generalization for giving clues in the Boolean satisfiability problem.
 
 \begin{itemize}
@@ -234,7 +233,7 @@ The following is the obvious generalization for giving clues in the Boolean sati
 \section{Complete Problems}
 \label{sec:complete}
 
-In this section, we proceed to show that $\mathsf{SPC-Sudoku}$ is $\mathsf{SPC}$-complete.
+In this section, we proceed to show that $\mathsf{SPC-Sudoku}$ is $\mathsf{SPC}$-complete. In order to do so, we first show that $\mathsf{SPC-SAT}$ is $\mathsf{SPC}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
 
 \begin{theorem}
 $\mathsf{SPC-SAT}$ is $\mathsf{SPC}$-complete.
@@ -254,9 +253,9 @@ Since each complete assignment of the variables corresponds to a unique acceptin
 
 From this we can easily show that the corresponding $3SAT$ problem is $\mathsf{SPC}$-complete. We follow the reduction 
 
-\begin{proposition}
+\begin{theorem}
 $\mathsf{SPC-3SAT}$ is $\mathsf{SPC}$-complete.
-\end{proposition}
+\end{theorem}
 
 \begin{proof}
 We reduce from $\mathsf{SPC}$-SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjuction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$, then transform the clauses by succesively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
@@ -271,9 +270,11 @@ Suppose $z_i$ is in a partial certificate of 3SAT. There are two cases:
 Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are a limited number of $z_i$, we can repeat this procedure and arrive at a partial assignment of the 3SAT formula which works for the SAT formula as well.
 \end{proof}
 
-\begin{proposition}
+The following proof is a sketch and is under revision.
+
+\begin{theorem}
 $\mathsf{SPC-Triangle Partition}$ is $\mathsf{SPC}$-complete.
-\end{proposition}
+\end{theorem}
 
 \begin{proof}
 We use the reduction from \cite{holyer1981np}, applying the slight modifications made in \cite{colbourn1984complexity} so that the graph is tripartite. 
@@ -284,23 +285,81 @@ In addition, if one of the $k$ triangles is a $T$-patch triangle in an $H_{3,p}$
 
 So in $k$ triangles, we can either assume they are in an $H_{3,p}$ of a variable, or an $H_{3,p}$ of a false literal. So if there is a partition of $k$ triangles which makes a unique edge partition, then there exists an assignment of $k$ variables which uniquely determine the assignment of all the variables to satisfy the formula. 
 
-Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable, for the triangle in the clause which satisfies it. This implies the variable, so we can do this. NEED TO CHECK THIS!!!!!!
+Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable, for the triangle in the clause which satisfies it. This implies the variable, so we can do this.
 \end{proof}
 
-\begin{corollary}
+\begin{theorem}
 $\mathsf{SPC-Latin Squares}$ is $\mathsf{SPC}$-complete.
-\end{corollary}
+\end{theorem}
 
 \begin{proof}
-We can use the reduction from \cite{colbourn1984complexity}. For each uniform tripartite graph, there is a partially filled Latin Square. The Latin Square is $2n \times 2n$, but the top-leftmost $n \times n$ square will correspond exactly with triangles in the tripartite graph. The rest of the Latin Square is filled in. Therefore, for each additional square that we must fill in to the $n \times n$ square in the top-left corner, we are specifying a triangle in the partition. Therefore, $\mathsf{SPC}$-Latin Squares is $\mathsf{SPC}$-complete.
+We do this via reduction from the triangle partition problem. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we use Theorem 3 from the Latin frameworks section to write down a latin framework $LF(G;2n,2n,2n)$ in polynomial time. Since the Latin framework is constructed so that $G$ is a defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial latin square $LF(G;2n,2n,2n)$. This completes the proof.
+
+We claim that the above proofs can give us an $\mathsf{SPC}$-hardness result for completing a partial Latin square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin square $P$.
 \end{proof}
 
-\begin{corollary}
+\begin{theorem}
 $\mathsf{SPC-Sudoku}$ is $\mathsf{SPC}$-complete
-\end{corollary}
+\end{theorem}
 
-\begin{proof}
-We can use the reduction from \cite{takayuki2003complexity}. We note that each Latin Square will correspond exactly with some columns of the Sudoku puzzle. The rest of the Sudoku puzzle is filled in, so each partial assignment of the Sudoku corresponds to a partial assignment of the latin square. Therefore, the problem is $\mathsf{SPC}$-complete.
+We will show the proof from \cite{takayuki2003complexity}. For proofs of the following two propositions, refer to the paper. 
+
+\begin{proposition}
+Let $S_0$ be defined as
+$$S_0 (i,j) = ((i \mod n) n + \lfloor i/n \rfloor + j) \mod n^2. $$
+Then $S_0$ represents a solution to an order $n$ Number Place. 
+\end{proposition}
+
+\begin{proposition}
+Let $S$ be a Number Place puzzle of order $n$ such that
+\begin{displaymath}
+S(i,j) = \left\{
+\begin{array}{lr}
+\perp & : (i,j) \in B\\
+S_0 (i,j) & : \text{otherwise}
+\end{array}
+\right.
+\end{displaymath}
+
+where $B = \{ (i,j) | i < n \text{ and } (j \equiv 0) \mod n \}$. Then a square $S'$ obtained by filling in the blanks of $S$ is a solution to $S$ if and only if
+
+\begin{itemize}
+\item For any $(i,j) \in B$, $S'(i,j) \equiv 0 \mod n$
+\item A square $L$ defined by $L(i, j/n) = S'(i,j)/n$ for all $(i, j) \in B$ is a Latin Square.
+\end{itemize}
+
+\end{proposition}
+
+\begin{proof} 
+
+We will show an $\mathsf{SPC}$ reduction from $\mathsf{SPC-Latin Squares}$ and argue that it can be done in polynomial time.
+
+Suppose we are given a Latin Square $L$ of order $n$. We will construct a Sudoku instance of order $n$ as follows:
+\begin{displaymath}
+S(i,j) = \left\{
+\begin{array}{lr}
+\perp & : (i,j) \in B, L(i, j/n) = \perp \\
+L(i, j/n) n & : (i,j) \in B, L(i, j/n) \neq \perp \\
+S_0 (i,j) & : \text{otherwise}
+\end{array}
+\right.
+\end{displaymath}
+This construction can be done in polynomial time. In addition, from our previous analysis we know that any solution of $L$ has a unique corresponding solution of $S$. Therefore, we get a polynomial time $\mathsf{SPC}$ reduction.
+
+\begin{figure}[H]
+\label{fig:partialLS}
+\centering
+\includegraphics[scale=0.25]{partialLS}
+\caption{Example of partial Latin Square of order 3.}
+\end{figure}
+
+\begin{figure}[H]
+\label{fig:partialNP}
+\centering
+\includegraphics[scale=0.25]{partialNP}
+\caption{Example of corresponding partial Number Place on a board of order 3.}
+\end{figure}
+
 \end{proof}
 
 \subsection{Upper Bounds}
