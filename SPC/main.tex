@@ -98,8 +98,6 @@ In this paper, we are interested in determining how hard it is to compute hardes
 
 In Section~\ref{sec:prelim}, we define the complexity class $\mathsf{SPC}$, relate it to the problem we are trying to solve and provide lower bounds for the class by showing it contains common complexity classes. In Section ~\ref{sec:The Problems} we formalize the problems that will help us understand the complexity of Sudoku in this class. These were mentioned above. Then in Section~\ref{sec:complete}, we exhibit a chain of reductions to show the problems in Section~\ref{sec:The Problems} are complete for this class. Finally, we conclude with some thoughts and open problems.
 
-\textbf{Related Work} Insert related work here. 
-
 \section{Preliminaries}
 \label{sec:prelim}
 
@@ -161,69 +159,18 @@ Alternatively, if we have a NTM running in polynomial time, then we can think of
 
 The above proposition justifies our analysis of this class for answering these questions.
 
-\subsection{Relation to known complexity classes.}
+It is important to note at this point that in order for a problem to be $\mathsf{SPC}$-complete, it needs to belong to the class as well as be reducible to any other problem in the class. In this context, we use the classical Karp single-call notion of a reduction. 
 
-Here we present lower bounds for the complexity class $\mathsf{SPC}$. It remains to be shown if any of the containments is strict. It is the opinion of the authors that this is likely to be true. 
+\section{Related Work.}
 
-\begin{proposition}
-If a problem is $\mathsf{SPC}$-hard, then it is $\NP$-hard.
-\end{proposition}
-
-\begin{proof}
-If a problem is in $\NP$, then there exists a NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. We can ask if there exists a partial certificate of size at most $p(n)$? Therefore, $\NP \subset \mathsf{SPC}$, and so any $\mathsf{SPC}$-hard problem is also $\NP$-hard. 
-\end{proof}
-
-\begin{proposition}
-If a problem is $\mathsf{SPC}$-hard, then it is $\coNP$-hard. 
-\end{proposition}
-
-\begin{proof}
-$\mathsf{UNIQUE-SAT}$ is in $\mathsf{SPC}$ since we can ask whether there is a partial certificate of size at most $0$. This implies that $\coNP \subset \mathsf{US} \subset \mathsf{SPC}$ since UNIQUE-SAT is complete in $\mathsf{US}$ \cite{blass1982unique}.
-\end{proof}
-
-\section{The Problems}
+\section{Some $\mathsf{SPC}$-complete Problems.}
 \label{sec:The Problems}
 
 We present a formalism of the type of problems we wish to solve. Each problem will be defined with an \emph{instance} of the problem which will be an encoding of the problem into a string of polynomial size, along with a value $k$. The resulting output will be a decision signifying there exists $k$ clues which will solve the instance uniquely. This framework will fit in nicely with the problems we are trying to solve.
 
 The basic premise is that a puzzle maker wants to induce some kind of particular deduction in the puzzle solver. The puzzle maker begins designing the puzzle, which becomes the instance to the problem. Additionally, the puzzle maker asks how many clues it must add, it does so by specifying a value $k$, and asking whether there are at most $k$ clues which will lead to a valid puzzle.
 
-\subsection{$\mathsf{SPC-Sudoku}$}
-
-We first introduce the problem which motivated this study. In Sudoku puzzles, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. Often in the literature, $n$ is referred to as the order of the puzzle. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a numbers. 
-
-\begin{itemize}
-\item Instance: A partially filled Sudoku puzzle, along with a parameter $k$.
-\item Question: Does there exists at most $k$ clues which will yield a valid Sudoku puzzle?
-\end{itemize}
-
-Note that when the instance is an empty Sudoku puzzle of order 3, the question becomes exactly the question of determining the size of the valid Sudoku puzzles. This particular instance of our problem can easily solve the problem that \cite{mcguire2012there} computed. 
-
-\subsection{$\mathsf{SPC-LatinSquares}$}
-
-n Latin Squares, we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. 
-
-In fact, it is know that each such square gives rise to a \emph{quasi-group}. The problem of Latin Squares asks whether a partially filled Latin Square can be completed. It is known that such problem is \NP-complete. We present the problem $\mathsf{SPC-Latin Squares}$ in our framework.
-
-\begin{itemize}
-\item Instance: A partially filled latin square, along with a parameter $k$. 
-\item Question: Does there exists at most $k$ clues which will yield a valid Latin Squares puzzle?
-\end{itemize}
-
-\subsection{$\mathsf{SPC-Triangle Partition}$}
-
-This problem is a known $\NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the ``minimum clues" version of the problem since we will use it to show hardness results for $\mathsf{SPC-Latin Squares}$ and $\mathsf{SPC-Sudoku}$. There is a general description of the problem in \cite{holyer1981np}. A specific instance is addressed in \cite{colbourn1984complexity}. We will use the definition in \cite{colbourn1984complexity}. We first present a definition of a property of tripartite graphs which will simplify the analysis.
-
-\begin{definition}
-A tripartite graph is \emph{uniform} if each vertex has equally many neighbors in each of the other two partitions.
-\end{definition}
-
-\begin{itemize}
-\item Instance: A uniform tripartite graph, along with a parameter $k$.
-\item Question: Does there exists at most $k$ triangles which give rise to a unique partition of the graph into triangles?
-\end{itemize}
-
-Note that if a tripartite graph has a triangle partition, the graph must be uniform, so even though the requirement that the graph be uniform is not necessary, it simplifies the analysis.
+In this section, we proceed to show that $\mathsf{SPC-Sudoku}$ is $\mathsf{SPC}$-complete. In order to do so, we first show that $\mathsf{SPC-SAT}$ is $\mathsf{SPC}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
 
 \subsection{$\mathsf{SPC-SAT}$}
 The following is the obvious generalization for giving clues in the Boolean satisfiability problem.
@@ -232,13 +179,6 @@ The following is the obvious generalization for giving clues in the Boolean sati
 \item Instance: a Boolean formula $\phi$, along with a parameter $k$.
 \item Question: Is there an assignment of at most $k$ variables where the corresponding Boolean formula is satisfied uniquely?
 \end{itemize}
-
-\section{Complete Problems}
-\label{sec:complete}
-
-In this section, we proceed to show that $\mathsf{SPC-Sudoku}$ is $\mathsf{SPC}$-complete. In order to do so, we first show that $\mathsf{SPC-SAT}$ is $\mathsf{SPC}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
-
-It is important to note at this point that in order for a problem to be $\mathsf{SPC}$-complete, it needs to belong to the class as well as be reducible to any other problem in the class. In this context, we use the classical Karp single-call notion of a reduction. 
 
 \begin{theorem}
 $\mathsf{SPC-SAT}$ is $\mathsf{SPC}$-complete.
@@ -256,7 +196,7 @@ Therefore, we can assume that all assignments are true. If we have a head positi
 Since each complete assignment of the variables corresponds to a unique accepting branch of the computation, knowing the contents of the tape cell at each time tells you which branch of the computation to take. Therefore, if there exists a partial assignment of $k$ variables which yield a unique complete assignment, then there exists a partial certificate of size $k$ whose mNTM has a unique accepting branch.
 \end{proof}
 
-From this we can easily show that the corresponding $3SAT$ problem is $\mathsf{SPC}$-complete. We follow the reduction 
+From this we can easily show that the corresponding 3SAT problem is $\mathsf{SPC}$-complete.
 
 \begin{theorem}
 $\mathsf{SPC-3SAT}$ is $\mathsf{SPC}$-complete.
@@ -274,6 +214,21 @@ Suppose $z_i$ is in a partial certificate of 3SAT. There are two cases:
 \end{itemize}
 Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are a limited number of $z_i$, we can repeat this procedure and arrive at a partial assignment of the 3SAT formula which works for the SAT formula as well.
 \end{proof}
+
+\subsection{$\mathsf{SPC-Triangle Partition}$}
+
+This problem is a known $\NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the ``minimum clues" version of the problem since we will use it to show hardness results for $\mathsf{SPC-Latin Squares}$ and $\mathsf{SPC-Sudoku}$. There is a general description of the problem in \cite{holyer1981np}. A specific instance is addressed in \cite{colbourn1984complexity}. We will use the definition in \cite{colbourn1984complexity}. We first present a definition of a property of tripartite graphs which will simplify the analysis.
+
+\begin{definition}
+A tripartite graph is \emph{uniform} if each vertex has equally many neighbors in each of the other two partitions.
+\end{definition}
+
+\begin{itemize}
+\item Instance: A uniform tripartite graph, along with a parameter $k$.
+\item Question: Does there exists at most $k$ triangles which give rise to a unique partition of the graph into triangles?
+\end{itemize}
+
+Note that if a tripartite graph has a triangle partition, the graph must be uniform, so even though the requirement that the graph be uniform is not necessary, it simplifies the analysis.
 
 The following proof is a sketch and is under revision.
 
@@ -293,6 +248,18 @@ So in $k$ triangles, we can either assume they are in an $H_{3,p}$ of a variable
 Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable, for the triangle in the clause which satisfies it. This implies the variable, so we can do this.
 \end{proof}
 
+\subsection{$\mathsf{SPC-LatinSquares}$}
+
+In Latin Squares we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. 
+
+In fact, it is know that each such square gives rise to a \emph{quasi-group}. The problem of Latin Squares asks whether a partially filled Latin Square can be completed. It is known that such problem is \NP-complete. We present the problem $\mathsf{SPC-Latin Squares}$ in our framework.
+
+\begin{itemize}
+\item Instance: A partially filled latin square, along with a parameter $k$. 
+\item Question: Does there exists at most $k$ clues which will yield a valid Latin Squares puzzle?
+\end{itemize}
+
+
 \begin{theorem}
 $\mathsf{SPC-Latin Squares}$ is $\mathsf{SPC}$-complete.
 \end{theorem}
@@ -302,6 +269,17 @@ We do this via reduction from the triangle partition problem. Given a tripartite
 
 We claim that the above proofs can give us an $\mathsf{SPC}$-hardness result for completing a partial Latin square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin square $P$.
 \end{proof}
+
+\subsection{$\mathsf{SPC-Sudoku}$}
+
+We first introduce the problem which motivated this study. In Sudoku puzzles, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. Often in the literature, $n$ is referred to as the order of the puzzle. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a numbers. 
+
+\begin{itemize}
+\item Instance: A partially filled Sudoku puzzle, along with a parameter $k$.
+\item Question: Does there exists at most $k$ clues which will yield a valid Sudoku puzzle?
+\end{itemize}
+
+Note that when the instance is an empty Sudoku puzzle of order 3, the question becomes exactly the question of determining the size of the valid Sudoku puzzles. This particular instance of our problem can easily solve the problem that \cite{mcguire2012there} computed. 
 
 \begin{theorem}
 $\mathsf{SPC-Sudoku}$ is $\mathsf{SPC}$-complete
@@ -365,6 +343,28 @@ This construction can be done in polynomial time. In addition, from our previous
 \caption{Example of corresponding partial Number Place on a board of order 3.}
 \end{figure}
 
+\end{proof}
+
+\section{Relationship to Other Complexity Classes.}
+
+\subsection{Lower Bounds}
+
+Here we present lower bounds for the complexity class $\mathsf{SPC}$. It remains to be shown if any of the containments is strict. It is the opinion of the authors that this is likely to be true. 
+
+\begin{proposition}
+If a problem is $\mathsf{SPC}$-hard, then it is $\NP$-hard.
+\end{proposition}
+
+\begin{proof}
+If a problem is in $\NP$, then there exists a NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. We can ask if there exists a partial certificate of size at most $p(n)$? Therefore, $\NP \subset \mathsf{SPC}$, and so any $\mathsf{SPC}$-hard problem is also $\NP$-hard. 
+\end{proof}
+
+\begin{proposition}
+If a problem is $\mathsf{SPC}$-hard, then it is $\coNP$-hard. 
+\end{proposition}
+
+\begin{proof}
+$\mathsf{UNIQUE-SAT}$ is in $\mathsf{SPC}$ since we can ask whether there is a partial certificate of size at most $0$. This implies that $\coNP \subset \mathsf{US} \subset \mathsf{SPC}$ since UNIQUE-SAT is complete in $\mathsf{US}$ \cite{blass1982unique}.
 \end{proof}
 
 \subsection{Upper Bounds}
