@@ -105,7 +105,7 @@ In Section~\ref{sec:prelim}, we define the complexity class $\mathsf{SPC}$, rela
 We will call a puzzle \emph{valid} if it has a unique solution.
 \end{definition}
 
-In general, we assume that $M$ has the following workflow:
+In general, we assume that our puzzle maker, $M$, has the following workflow:
 \begin{enumerate}
 \item $M$ decides which kind of puzzle.
 \item $M$ decides how "big" the puzzle will be.
@@ -152,14 +152,16 @@ Any problem of determining the smallest number of clues is in $\mathsf{SPC}$, an
 \end{proposition}
 
 \begin{proof}
-Our problems have polynomially long solutions, which can be checked in polynomial time. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing the if this NTM has a partial certificate of size at most $k$ with only one accepting branch is equivalent to asking whether there exists $k$ clues which give rise to a unique solution. 
+Our problems have polynomially long solutions, which can be checked in polynomial time. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing whether this NTM has a partial certificate of size at most $k$ with only one accepting branch is equivalent to asking whether there exists $k$ clues which give rise to a unique solution. 
+
+Suppose there were $c$ possible choices for a given clue. Then the NTM with branching factor $2$ must have $\log c$ levels in which it branches non-deterministically. The possible problem which arises is that one clue in the minimum clues problem might correspond to $\log c$ values in the partial certificate. In order to make sure that one clue in the minimum clues problem corresponds to exactly one value in the partial certificate, we branch of the decisions in a slightly different manner. In particular, instead of splitting the decisions with a complete binary tree of height $\log c$, we split the decisions with a complete binary tree of height $c$. The $i$th level right branch in the tree corresponds to picking the $i$th value out of possible $c$ values. We make all the branches for which the decisions contain more than one right branch be rejecting branches. This means that one clue will correspond to exactly one value in the smallest partial certificate, which will indicate which clue was chosen.
 
 Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to $k$ clues which give rise to a unique solution.
 \end{proof}
 
 The above proposition justifies our analysis of this class for answering these questions.
 
-It is important to note at this point that in order for a problem to be $\mathsf{SPC}$-complete, it needs to belong to the class as well as be reducible to any other problem in the class. In this context, we use the classical Karp single-call notion of a reduction. 
+It is important to note at this point that in order for a problem to be $\mathsf{SPC}$-complete, it needs to belong to the class as well as be reducible to any other problem in the class. In this context, we use the classical Karp single-call notion of a reduction with the additional constraint that smallest partial certificates are preserved by the mapping.
 
 \section{Related Work.}
 
