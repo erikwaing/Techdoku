@@ -21,6 +21,7 @@
 \usepackage{amssymb}
 \setcounter{tocdepth}{3}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage[full]{complexity}
 \usepackage{amsmath}
 %\usepackage{amsfonts}
@@ -85,13 +86,15 @@
 
 \maketitle
 
-In 2012, McGuire, Tugemann, Civario surprised the world by showing that there is no 16-clue Sudoku puzzle \cite{mcguire2012there}. The graduate students in MIT's Math Department were so surprised by this result that there is a copy of the arXiv preprint on a wall on the 4th floor of the department, next to the lounge. The paper described novel techniques to enumerate through all the possible 16-clue puzzles, and the computation lasted from January 2011 to December 2011. 
+\section{Introduction}
+
+In 2012, McGuire, Tugemann, Civario confirmed the conjecture that there is no 16-clue Sudoku puzzle \cite{mcguire2012there}. The graduate students in MIT's Math Department were so surprised by this result that there is a copy of the arXiv preprint on a wall on the 4th floor of the department, next to the lounge. The paper described novel techniques to enumerate through all the possible 16-clue puzzles, and the computation lasted from January 2011 to December 2011. 
 
 We are interested in formalizing this question for other puzzles. Consider the following scenario. There are two parties: a puzzle maker $M$ and a puzzle solver $S$. $M$ wants to design the hardest puzzles for $S$ to solve. $S$ reads the puzzles on the newspaper, so $M$ must make sure to provide the solution along with the puzzle. 
 
 Most algorithmic results in this field ask how hard it is for $S$ to solve a puzzle. We are interested in the other side of the question: how hard is it for $M$ to design the hardest puzzle. By hardest, we mean the least number of clues. For example, for a Sudoku, we mean the least number of given entries. We also want to disallow certain cases. For instance, $M$ obviously would not publish the empty Sudoku puzzle since the solution he provides might be different from how $S$ solves it. We will only look at puzzles with clues such that the solution is \emph{unique}.
 
-In this paper, we are interested in determining how hard it is to compute hardest instances for the case of Sudoku. For that purpose, we will introduce an appropriate framework and define a complexity class, called $\mathsf{SPC}$. We will then present the problems that are essential to understanding the complexity of Sudoku. These include well known problems such as SAT and 3SAT, as well as other puzzles such as Latin Squares. After introducing these problems, we will show that they are all complete in the $\mathsf{SPC}$ class using known reductions. We conclude by providing upper bounds on the $\mathsf{SPC}$ class and posing interesting open questions. 
+In this paper, we are interested in determining how hard it is to compute hardest instances for the case of Sudoku. For that purpose, we will introduce an appropriate framework and define a complexity class, called $\mathsf{SPC}$. We will then present the problems that are essential to understanding the complexity of Sudoku. These c well known problems such as SAT and 3SAT, as well as other puzzles such as Latin Squares. After introducing these problems, we will show that they are all complete in the $\mathsf{SPC}$ class using known reductions. We conclude by providing upper bounds on the $\mathsf{SPC}$ class and posing interesting open questions. 
 
 In Section~\ref{sec:prelim}, we define the complexity class $\mathsf{SPC}$, relate it to the problem we are trying to solve and provide lower bounds for the class by showing it contains common complexity classes. In Section ~\ref{sec:The Problems} we formalize the problems that will help us understand the complexity of Sudoku in this class. These were mentioned above. Then in Section~\ref{sec:complete}, we exhibit a chain of reductions to show the problems in Section~\ref{sec:The Problems} are complete for this class. Finally, we conclude with some thoughts and open problems.
 
@@ -235,12 +238,14 @@ The following is the obvious generalization for giving clues in the Boolean sati
 
 In this section, we proceed to show that $\mathsf{SPC-Sudoku}$ is $\mathsf{SPC}$-complete. In order to do so, we first show that $\mathsf{SPC-SAT}$ is $\mathsf{SPC}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
 
+It is important to note at this point that in order for a problem to be $\mathsf{SPC}$-complete, it needs to belong to the class as well as be reducible to any other problem in the class. In this context, we use the classical Karp single-call notion of a reduction. 
+
 \begin{theorem}
 $\mathsf{SPC-SAT}$ is $\mathsf{SPC}$-complete.
 \end{theorem}
 
 \begin{proof}
-The proof is very similar to the Cook-Levin theorem. We use the proof in \cite{Garey}. We can first turn an arbitrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem, to get a Boolean formula $\phi$. 
+The proof is similar to the Cook-Levin theorem. We use the proof in \cite{Garey}. We can first turn an arbitrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem, to get a Boolean formula $\phi$. 
 
 We claim that if $\phi$ has a partial assignment of $k$ variables with a unique complete assignment, then there exists a partial certificate for the NTM with corresponding mNTM having only one accepting branch of the computation.
 
@@ -293,7 +298,7 @@ $\mathsf{SPC-Latin Squares}$ is $\mathsf{SPC}$-complete.
 \end{theorem}
 
 \begin{proof}
-We do this via reduction from the triangle partition problem. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we use Theorem 3 from the Latin frameworks section to write down a latin framework $LF(G;2n,2n,2n)$ in polynomial time. Since the Latin framework is constructed so that $G$ is a defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial latin square $LF(G;2n,2n,2n)$. This completes the proof.
+We do this via reduction from the triangle partition problem. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a latin framework $LF(G;2n,2n,2n)$ in polynomial time (cite...). Since the Latin framework is constructed so that $G$ is a defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial latin square $LF(G;2n,2n,2n)$. This completes the proof.
 
 We claim that the above proofs can give us an $\mathsf{SPC}$-hardness result for completing a partial Latin square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin square $P$.
 \end{proof}
@@ -349,14 +354,14 @@ This construction can be done in polynomial time. In addition, from our previous
 \begin{figure}[H]
 \label{fig:partialLS}
 \centering
-\includegraphics[scale=0.25]{partialLS}
+\includegraphics[scale=0.25]{sudoku-3.png}
 \caption{Example of partial Latin Square of order 3.}
 \end{figure}
 
 \begin{figure}[H]
 \label{fig:partialNP}
 \centering
-\includegraphics[scale=0.25]{partialNP}
+\includegraphics[scale=0.25]{sudoku-1.png}
 \caption{Example of corresponding partial Number Place on a board of order 3.}
 \end{figure}
 
