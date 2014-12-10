@@ -55,10 +55,10 @@
 \mainmatter  % start of an individual contribution
 
 % first the title is needed
-\title{The Complexity of Designing the Hardest Instances}
+\title{The Complexity of Determining Critical Sets}
 
 % a short form should be given in case it is too long for the running head
-\titlerunning{The Complexity of Designing the Hardest Instances}
+\titlerunning{The Complexity of Determining Critical Sets}
 
 % the name(s) of the author(s) follow(s) next
 %
@@ -88,15 +88,20 @@
 
 \section{Introduction}
 
-In 2012, McGuire, Tugemann, Civario confirmed the conjecture that there is no 16-clue Sudoku puzzle \cite{mcguire2012there}. The graduate students in MIT's Math Department were so surprised by this result that there is a copy of the arXiv preprint on a wall on the 4th floor of the department, next to the lounge. The paper described novel techniques to enumerate through all the possible 16-clue puzzles, and the computation lasted from January 2011 to December 2011. 
+In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. It had long been known that 17 clues was sufficient, and there exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed.
 
-We are interested in formalizing this question for other puzzles. Consider the following scenario. There are two parties: a puzzle maker $M$ and a puzzle solver $S$. $M$ wants to design the hardest puzzles for $S$ to solve. $S$ reads the puzzles on the newspaper, so $M$ must make sure to provide the solution along with the puzzle. 
+We consider a following generalization of the above Sudoku question: for any given problem, what is the fewest number of clues necessary to make it uniquely solvable? For example, if the problem is to find a Hamiltonian cycle in a given graph $G = (V,E)$, our question would be to determine the minimum number of edges you can specify before only one Hamiltonian cycle contains all of these edges. This general problem is motivated by possible applications to puzzle-making. A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper).
 
-Most algorithmic results in this field ask how hard it is for $S$ to solve a puzzle. We are interested in the other side of the question: how hard is it for $M$ to design the hardest puzzle. By hardest, we mean the least number of clues. For example, in a Sudoku puzzle, a puzzle is hard when it has few entries. The Sudoku puzzle with the least number of entries is the hardest. We also want to disallow certain cases. For instance, $M$ obviously would not publish the empty Sudoku puzzle since the solution provided might be different from how $S$ solves it. We will only look at puzzles with clues such that the solution is \emph{unique}.
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a new complexity class and we consider the idea of $\mathsf{FCP}$-hard problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic NP-hard problems such as SAT and 3SAT, as well as NP-hard puzzle problems such as Latin square completion and Sudoku completion. 
 
-In this paper, we are interested in determining how hard it is to compute hardest instances for the case of Sudoku. For that purpose, we will introduce an appropriate framework and define a complexity class, called $\mathsf{MCS}$. We will then present the problems that are essential to understanding the complexity of Sudoku. These are well known problems such as SAT and 3SAT, as well as other puzzles such as Latin Squares. After introducing these problems, we will show that they are all complete in the $\mathsf{MCS}$ class using known reductions. We conclude by providing upper bounds on the $\mathsf{MCS}$ class and posing interesting open questions. 
+The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this sort of problem for the specific cases of Sudoku, Latin squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the complexity class $\mathsf{FCP}$. We state what it means for a problem to be $\mathsf{FCP}$, and provide a framework for $\mathsf{FCP}$-reductions. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Sudoku, and Latin square completion problems, and show why these problems are $\mathsf{FCP}$-hard. Then in Section~\ref{sec:relationship}, we show how the complexity class $\mathsf{FCP}$ fits into the landscape of well-known classes such as $\mathsf{P}, \mathsf{NP}, \mathsf{NP}^\mathsf{NP}$, and $\mathsf{PSPACE}$. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
 
-In Section~\ref{sec:prelim}, we define the complexity class $\mathsf{MCS}$, relate it to the problem we are trying to solve and provide lower bounds for the class by showing it contains common complexity classes. In Section ~\ref{sec:The Problems} we formalize the problems that will help us understand the complexity of Sudoku in this class. These were mentioned above. Then in Section~\ref{sec:complete}, we exhibit a chain of reductions to show the problems in Section~\ref{sec:The Problems} are complete for this class. Finally, we conclude with some thoughts and open problems.
+
+\section{Related Work.}
+\label{sec:related}
+
+This problem has been investigated before under a variety of different names. The problem of determining the smallest Sudoku has been referred to as the ``minimum number of clues problem" in
+by McGuire et al. in \cite{mcguire2012there}, as well as the ``minimal fair puzzle" problem. The problem of finding the smallest partial Latin Square with a unique solution has been called the ``minimum critical set" problem by Ghandehari et al. in \cite{Ghandehari2005121} .
 
 \section{Preliminaries}
 \label{sec:prelim}
@@ -166,11 +171,6 @@ Alternatively, if we have a NTM running in polynomial time, then we can think of
 The above proposition justifies our analysis of this class for answering these questions.
 
 It is important to note at this point that in order for a problem to be $\mathsf{MCS}$-complete, it needs to belong to the class as well as be reducible to any other problem in the class. In this context, we use the classical Karp single-call notion of a reduction with the additional constraint that smallest partial certificates are preserved by the mapping.
-
-\section{Related Work.}
-
-This problem has been investigated before under a variety of different names. The problem of determining the smallest Sudoku has been referred to as the ``minimum number of clues problem" in
-by McGuire et al. in \cite{mcguire2012there}, as well as the ``minimal fair puzzle" problem. The problem of finding the smallest partial Latin Square with a unique solution has been called the ``minimum critical set" problem by Ghandehari et al. in \cite{Ghandehari2005121} .
 
 \section{Some $\mathsf{MCS}$-complete Problems.}
 \label{sec:The Problems}
@@ -355,6 +355,7 @@ This construction can be done in polynomial time. In addition, from our previous
 \end{proof}
 
 \section{Relationship to Other Complexity Classes.}
+\label{sec:relationship}
 
 \subsection{Lower Bounds}
 
@@ -417,6 +418,7 @@ Use the above algorithm to solve $\mathsf{MCS-SAT}$.
 \end{proof}
 
 \section{Conclusion}
+\label{sec:conclusion}
 
 We have formalized the notion of what it means to compute the hardest instance to a puzzle by providing the minimum clues. This gave rise to $\mathsf{MCS}$, and we showed some problems were complete for this class. In particular, this means $\mathsf{MCS-Sudoku}$ is $\NP$-hard, but is unlikely to be $\PSPACE$-hard. However, the instances of $\mathsf{MCS-Sudoku}$ which make it $\mathsf{MCS}$-complete are very far from empty. In fact, just by looking at the last reduction from $\mathsf{MCS-Latin Squares}$, a Sudoku of dimensions $n^2 \times n^2$ which is a hard instance, at most $n^2$ of the $n^4$ squares at empty. It would be interesting to see if the empty instances of Sudoku are still complete for $\mathsf{MCS}$. This would be exactly the problem \cite{mcguire2012there} solved for $n = 3$. 
 
