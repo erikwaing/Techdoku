@@ -152,20 +152,16 @@ Any fewest clues problem is in $\mathsf{FCP}$, and alternative, any problem in $
 \begin{proof}
 Our problems have polynomially long solutions, which can be checked in polynomial time with the algorithm $A$. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing whether this NTM has a partial certificate of size at most $k$ with only one accepting branch is almost equivalent to asking whether there exists a set of clues of size $k$. 
 
-Suppose there were $c$ possible choices for a element whose value we are trying to determine. Then the NTM with branching factor $2$ must have $\log c$ levels in which it branches non-deterministically. The possible problem which arises is that one value in the minimal critical set might correspond to $\log c$ values in the partial certificate. In order to make sure that one clue in the minimal critical set corresponds to exactly one value in the partial certificate, we branch of the decisions in a slightly different manner. In particular, instead of splitting the decisions with a complete binary tree of height $\log c$, we split the decisions with a complete binary tree of height $c$. The $i$th level right branch in the tree corresponds to picking the $i$th value out of possible $c$ values. We make all the branches for which the decisions contain more than one right branch be rejecting branches. This means that one determined value will correspond to exactly one value in the smallest partial certificate, which will indicate which value was chosen.
+Suppose there were $c$ possible choices for a element whose value we are trying to determine. Then the NTM with branching factor $2$ must have $\log c$ levels in which it branches non-deterministically. The possible problem which arises is that one value in the clue set might correspond to $\log c$ values in the partial certificate. In order to make sure that one clue in the clue set corresponds to exactly one value in the partial certificate, we branch of the decisions in a slightly different manner. In particular, instead of splitting the decisions with a complete binary tree of height $\log c$, we split the decisions with a complete binary tree of height $c$. The $i$th level right branch in the tree corresponds to picking the $i$th value out of possible $c$ values. We make all the branches for which the decisions contain more than one right branch be rejecting branches. This means that one value in the clue set will correspond to exactly one value in the partial certificate, which will indicate which value was chosen.
 
-Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to a critical set of size $k$.
+Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to a clue set of size $k$.
 \end{proof}
 
 The above proposition justifies our analysis of this class for answering these questions.
 
 \subsubsection{$\mathsf{FCP}$-reductions}
 
-In order for this class to make sense, we need to define the notion of a reduction. Suppose we are given two problems $A, B$. A $\mathsf{FCP}$-reduction from $A$ to $B$ is a polynomial time computable mapping $f$ that maps instances of $A$ to instances of $B$.  
-
-We say a problem $B$ is $\mathsf{FCP}$-hard if it can be reduced to any other problem $A$ in $\mathsf{FCP}$ through a $\mathsf{FCP}$-reduction. We say a problem is $\mathsf{FCP}$-complete if it is both in $\mathsf{FCP}$ and is $\mathsf{FCP}$-hard. 
-
-This concept is completely analogous to that of $\NP$ reductions in the sense that we allow multiple calls. 
+We have not fully characterized what a reduction in this class is. Instead, we use Karp-style single-call parsimonious reductions. We find a parsimonious mapping from instances of some problem $\Pi_1$ to instances of some other problem $\Pi_2$. If the partial certificates sizes are preserved by the mapping, if we can decide whether a partial certificate exists for an instance of $B$, then we can decide whether a partial certificate exists for an instance in $A$. So if the $\mathsf{FCP}$ version of $A$ is $\mathsf{FCP}$-hard, then the $\mathsf{FCP}$ version of $B$ is $\mathsf{FCP}$-hard. 
 
 \section{Some $\mathsf{FCP}$-complete Problems.}
 \label{sec:The Problems}
