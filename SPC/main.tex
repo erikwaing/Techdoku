@@ -130,18 +130,18 @@ A partial certificate is a read-only tape which contains at each tape cell one o
 The size of a partial certificate is the number of non-null entries. 
 \end{definition}
 
-For problems in $\NP$, a partial certificate is the generalization of a certificate of an $\NP$ problem. Each certificate of an $\NP$ problem is a partial certificate. We can think of partial certificates as a certificate, where we erase some tape cells.
+For problems in $\NP$, a partial certificate is the generalization of a certificate of an $\NP$ problem. Any certificate of an $\NP$ problem can be thought of as a partial certificate. We can view partial certificates as ordinary certificates with some tape cells erased.
 
 \begin{definition}
-A modified non-deterministic Turing machine (mNTM) is a NTM where there is an additional input of a partial certificate. At each step of the computation, a mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
+A modified non-deterministic Turing machine (mNTM) is an NTM where there is an additional input of a partial certificate. At each step of the computation, an mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
 \end{definition}
 
-In some sense, a partial certificate makes a mNTM more deterministic. If a partial certificate contains no $\bot$, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. We say that a NTM has a corresponding mNTM which runs exactly the same, but has an additional input for a partial certificate. With these definitions, we are ready to define the class $\mathsf{FCP}$.
+In some sense, a partial certificate makes an mNTM more deterministic. If a partial certificate contains no $\bot$ characters, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. It is clear that given any NTM, we can construct a corresponding mNTM which runs in exactly the same manner, but has an additional input of a partial certificate. With these definitions, we are ready to define the class $\mathsf{FCP}$.
 
 \begin{definition}
-$\mathsf{FCP}$ is the class of decision problems of the following form:\\
+$\mathsf{FCP}$ is the class of decision problems of the following form:
 \begin{quote}
-Given a NTM running in polynomial time and a parameter $k$, does there exists a partial certificate of size at most $k$ such that the corresponding mNTM with the partial certificate has only one accepting branch?
+Given an NTM running in polynomial time and a parameter $k$, does there exists a partial certificate of size at most $k$ such that the corresponding mNTM with the partial certificate has only one accepting branch?
 \end{quote}
 \end{definition}
 
