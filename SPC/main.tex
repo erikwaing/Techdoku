@@ -174,7 +174,7 @@ The above proposition justifies our analysis of this class for answering these q
 
 \subsubsection{$\mathsf{FCP}$-reductions}
 
-In order for this class to make sense, we need to define the notion of a reduction. Suppose we are given two problems $A, B$. A $\mathsf{FCP}$-reduction from $A$ to $B$ is a polynomial time computable bijective mapping $f$ that maps instances of $A$ to instances of $B$.  
+In order for this class to make sense, we need to define the notion of a reduction. Suppose we are given two problems $A, B$. A $\mathsf{FCP}$-reduction from $A$ to $B$ is a polynomial time computable mapping $f$ that maps instances of $A$ to instances of $B$.  
 
 We say a problem $B$ is $\mathsf{FCP}$-hard if it can be reduced to any other problem $A$ in $\mathsf{FCP}$ through a $\mathsf{FCP}$-reduction. We say a problem is $\mathsf{FCP}$-complete if it is both in $\mathsf{FCP}$ and is $\mathsf{FCP}$-hard. 
 
@@ -186,11 +186,11 @@ This concept is completely analogous to that of $\NP$ reductions in the sense th
 In this section, we proceed to show that $\mathsf{FCP-Sudoku}$ is $\mathsf{FCP}$-complete. In order to do so, we first show that $\mathsf{FCP-SAT}$ is $\mathsf{FCP}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
 
 \subsection{$\mathsf{FCP-SAT}$}
-The following is the obvious generalization for giving clues in the Boolean satisfiability problem.
+The following is the fewest clues version of the Boolean satisfiability problem.
 
 \begin{itemize}
 \item Instance: a Boolean formula $\phi$, along with a parameter $k$.
-\item Question: Is there critical set of size at most $k$ where the corresponding Boolean formula is satisfied uniquely?
+\item Question: Is there a set of clues of size at most $k$ such that the Boolean formula restricted to that partial assignment is uniquely satisfiable?
 \end{itemize}
 
 \begin{theorem}
@@ -198,39 +198,39 @@ $\mathsf{FCP-SAT}$ is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-The proof is similar to the Cook-Levin theorem. We use the proof in \cite{Garey}. We can first turn an arbitrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem, to get a Boolean formula $\phi$. 
+The proof is similar to that of the Cook-Levin theorem presented in \cite{Garey}. We first turn an arbitrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem to get a Boolean formula $\phi$. 
 
 We claim that if $\phi$ has a partial assignment of $k$ variables with a unique complete assignment, then there exists a partial certificate for the NTM with corresponding mNTM having only one accepting branch of the computation.
 
-Note that if a partial assignment of $k$ variables contains a variable that is set to false, then the variable is a head position variable, a state variable, or a tape cell variable. We know that there exists a head position variable, a state variable, and a tape cell variable which is true at each time, so if we switch the corresponding variables, we have removed a false variable, added a true variable, and by analyzing $\phi$, the true variable implies that the false variable is false, therefore, we still have a partial certificate. 
+Note that if a partial assignment of $k$ variables contains a variable that is set to false, then the variable is a head position variable, a state variable, or a tape cell variable. We know that there exists a head position variable, a state variable, and a tape cell variable which is true at each time, so if we switch the corresponding variables, we have removed a false variable, added a true variable. By analyzing $\phi$, the true variable implies that the false variable is false, therefore, we still have a partial certificate. 
 
-Therefore, we can assume that all assignments are true. If we have a head position variable, the tape cell variable at that given position will be set to true, and so switching them will maintain the partial assignment. Also, since the content of each tape cell is the state-content tuple, a state variable can be replaced by the tape cell variable. Therefore, we can assume that we have a partial assignment of the tape-cell variables, which are all true. 
+This implies that we can assume that all assignments are true. If we have a head position variable, the tape cell variable at that given position will be set to true, and so switching them will maintain the partial assignment. Also, since the content of each tape cell is the state-content tuple, a state variable can be replaced by the tape cell variable.
 
 Since each complete assignment of the variables corresponds to a unique accepting branch of the computation, knowing the contents of the tape cell at each time tells you which branch of the computation to take. Therefore, if there exists a partial assignment of $k$ variables which yield a unique complete assignment, then there exists a partial certificate of size $k$ whose mNTM has a unique accepting branch.
 \end{proof}
 
-From this we can easily show that the corresponding 3SAT problem is $\mathsf{FCP}$-complete.
+From this we can easily show that the fewest clues version of the 3SAT problem is $\mathsf{FCP}$-complete.
 
 \begin{theorem}
 $\mathsf{FCP-3SAT}$ is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We reduce from $\mathsf{FCP}$-SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjunction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$, then transform the clauses by successively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
+We reduce from $\mathsf{FCP}$-SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjunction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$. Transform the clauses by successively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
 \[ g(C) = \left\{ \begin{array}{cc} C & k \leq 3 \\
 						    (z_1 \vee x_1 \vee x_2) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee \overline{x_2}) \wedge (\overline{z_1} \vee x_3 \vee ... \vee x_k) & \text{ otherwise }\end{array} \right. \] 
 
-Suppose $z_i$ is in a partial certificate of 3SAT. There are two cases:
+Suppose $z_i$ is in a partial solution of 3SAT. There are two cases:
 \begin{itemize}
-\item $z_i$ is set to false. In this case, we know that either $x_1$ or $x_2$ is set to true. If we switch $z_i$ and $x_1$ or $x_2$, one of these will be partial certificate which is the same size as the previous one, since the value of $z_i$ is implied by one of $x_1$ or $x_2$. Therefore, we can include $x_1$ or $x_2$ and remove $z$.
-\item $z_i$ is set to true. Then $\overline{z_i}$ is false, which means that whichever $\overline{z_i}$ ends up being a part of in the clause will mean that one of two of the following will be true. Again, if we switch them, one will have a smallest partial certificate which is of the same size. So we can remove $z_i$ and replace it by another variable. 
+\item Suppose $z_i$ is set to false. In this case, we know that either $x_1$ or $x_2$ is set to true. If we switch $z_i$ and $x_1$ or $x_2$, one of these will create a partial certificate which is the same size as the previous one. This follows from the fact that the value of $z_i$ is implied by one of $x_1$ or $x_2$. Therefore, we can include $x_1$ or $x_2$ and remove $z$.
+\item $z_i$ is set to true. Then $\overline{z_i}$ is false, which means that whichever clause $\overline{z_i}$ ends up being a part of, at least one of the following two will be true. Analogous to the previous case, if we switch them, one will have a smallest partial certificate which is of the same size. So we can remove $z_i$ and replace it by another variable. 
 \end{itemize}
 Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are a limited number of $z_i$, we can repeat this procedure and arrive at a partial assignment of the 3SAT formula which works for the SAT formula as well.
 \end{proof}
 
 \subsection{$\mathsf{FCP-Triangle Partition}$}
 
-This problem is a known $\NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the critical set version of the problem since we will use it to show hardness results for $\mathsf{FCP-Latin Squares}$ and $\mathsf{FCP-Sudoku}$. There is a general description of the problem in \cite{holyer1981np}. A specific instance is addressed in \cite{colbourn1984complexity}. We will use the definition in \cite{colbourn1984complexity}. We first present a definition of a property of tripartite graphs which will simplify the analysis.
+This problem is a known $\NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the fewest clues version of the problem since we will use it to show hardness results for $\mathsf{FCP-Latin Squares}$ and $\mathsf{FCP-Sudoku}$. There is a general description of the problem in \cite{holyer1981np}. A specific instance is addressed in \cite{colbourn1984complexity}. We will use the definition in \cite{colbourn1984complexity}. We first present a definition of a property of tripartite graphs which will simplify the analysis.
 
 \begin{definition}
 A tripartite graph is \emph{uniform} if each vertex has equally many neighbors in each of the other two partitions.
@@ -238,10 +238,10 @@ A tripartite graph is \emph{uniform} if each vertex has equally many neighbors i
 
 \begin{itemize}
 \item Instance: A uniform tripartite graph, along with a parameter $k$.
-\item Question: Does there critical set of at most $k$ triangles?
+\item Question: Does there exist a set of $k$ triangles such that including them implies a unique partition of the remainder of the graph?
 \end{itemize}
 
-Note that if a tripartite graph has a triangle partition, the graph must be uniform, so even though the requirement that the graph be uniform is not necessary, it simplifies the analysis.
+Note that if a tripartite graph has a triangle partition, the graph must be uniform. Therefore, we assume without loss of generality that this is the case. 
 
 The following proof is a sketch and is under revision.
 
@@ -250,26 +250,26 @@ $\mathsf{FCP-Triangle Partition}$ is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We use the reduction from \cite{holyer1981np}, applying the slight modifications made in \cite{colbourn1984complexity} so that the graph is tripartite. 
+We use the reduction from \cite{holyer1981np}, applying the slight modifications made in \cite{colbourn1984complexity} so that the graph is tripartite. We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation.
 
 Note that in the reduction, if one has $k$ triangles and one of the triangles belongs to a join, then that triangle is implied by a neighboring triangle. So we can assume that all triangles are either in $H_{3,p}$ of variables, or $H_{3,p}$ of literals. 
 
-In addition, if one of the $k$ triangles is a $T$-patch triangle in an $H_{3,p}$ of a literal, then there exists a triangle in an $F$-patch of another literal, so can switch them.
+In addition, if one of the $k$ triangles is a $T$-patch triangle in an $H_{3,p}$ of a literal, then there exists a triangle in an $F$-patch of another literal. Therefore, we can switch them.
 
 So in $k$ triangles, we can either assume they are in an $H_{3,p}$ of a variable, or an $H_{3,p}$ of a false literal. So if there is a partition of $k$ triangles which makes a unique edge partition, then there exists an assignment of $k$ variables which uniquely determine the assignment of all the variables to satisfy the formula. 
 
-Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable, for the triangle in the clause which satisfies it. This implies the variable, so we can do this.
+Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable for the triangle in the clause which satisfies it. This implies the value of the variable, so we can do this.
 \end{proof}
 
 \subsection{$\mathsf{FCP-LatinSquares}$}
 
 In Latin Squares we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. 
 
-In fact, it is know that each such square gives rise to a \emph{quasi-group}. The problem of Latin Squares asks whether a partially filled Latin Square can be completed. It is known that such problem is \NP-complete. We present the problem $\mathsf{FCP-Latin Squares}$ in our framework.
+It is known that such problem is \NP-complete. We present the problem $\mathsf{FCP-Latin Squares}$ in our framework.
 
 \begin{itemize}
 \item Instance: A partially filled latin square, along with a parameter $k$. 
-\item Question: Does there exists a critical set of at most  $k$ entries which will yield a valid Latin Squares puzzle?
+\item Question: Does there exists set of at most $k$ entries such that pre-setting them implies a unique solution?
 \end{itemize}
 
 
@@ -278,21 +278,21 @@ $\mathsf{FCP-Latin Squares}$ is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We do this via reduction from the triangle partition problem. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a latin framework $LF(G;2n,2n,2n)$ in polynomial time (cite...). Since the Latin framework is constructed so that $G$ is a defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial latin square $LF(G;2n,2n,2n)$. This completes the proof.
+We do this via reduction from $\mathsf{FCP-TrianglePartition}$. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G;2n,2n,2n)$ in polynomial time \cite{colbourn1984complexity}. Since the Latin framework is constructed so that $G$ is the defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This completes the proof.
 
-We claim that the above proofs can give us an $\mathsf{FCP}$-hardness result for completing a partial Latin square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin square $P$.
+We claim that the above proofs give us an $\mathsf{FCP}$-hardness result for completing a partial Latin Square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin Square $P$.
 \end{proof}
 
 \subsection{$\mathsf{FCP-Sudoku}$}
 
-We first introduce the problem which motivated this study. In Sudoku puzzles, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. Often in the literature, $n$ is referred to as the order of the puzzle. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a numbers. 
+We first introduce the problem which motivated this study. In Sudoku puzzles, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. Often in the literature, $n$ is referred to as the order of the puzzle. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a number. 
 
 \begin{itemize}
 \item Instance: A partially filled Sudoku puzzle, along with a parameter $k$.
-\item Question: Does there exists at critical set of at most $k$ entries which will yield a valid Sudoku puzzle?
+\item Question: Does there exists at set of at most $k$ entries such that presetting them yield a unique Sudoku puzzle?
 \end{itemize}
 
-Note that when the instance is an empty Sudoku puzzle of order 3, the question becomes exactly the question of determining the size of the valid Sudoku puzzles. This particular instance of our problem can easily solve the problem that \cite{mcguire2012there} computed. 
+Note that when the instance is an empty Sudoku puzzle of order 3, the question becomes exactly the question of determining the size of the valid Sudoku puzzles. This particular instance of the problem can solve the problem that \cite{mcguire2012there} computed. 
 
 \begin{theorem}
 $\mathsf{FCP-Sudoku}$ is $\mathsf{FCP}$-complete
@@ -368,7 +368,7 @@ $\NP \subset \mathsf{FCP}$
 \end{proposition}
 
 \begin{proof}
-If a problem is in $\NP$, then there exists an NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. Thus, we can solve any problem in $\NP$ with the following equivalent $\FCP$ question: is there a partial (possibly full) certificate of size at most $p(n)$?
+If a problem is in $\NP$, then there exists an NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. Thus, we can solve any problem in $\NP$ with the following equivalent $\mathsf{FCP}$ question: is there a partial (possibly full) certificate of size at most $p(n)$?
 \end{proof}
 
 \begin{corollary}
@@ -380,7 +380,7 @@ If a problem is $\mathsf{FCP}$-hard, it is also $\coNP$-hard.
 \end{proposition}
 
 \begin{proof}
-Consider the problem of $\mathsf{UNIQUE-SAT}$, which gives a Boolean formula and asks if there is exactly one solution. This problem is known to be $\coNP$-hard \cite{blass1982unique}. We can solve $\mathsf{UNIQUE-SAT}$ by asking the following $\FCP$ question: given a Boolean formula, is there a partial certificate of size at most 0? If and only if such a certificate exists, then by definition of the Boolean formula is uniquely satisfiable.
+Consider the problem of $\mathsf{UNIQUE-SAT}$, which gives a Boolean formula and asks if there is exactly one solution. This problem is known to be $\coNP$-hard \cite{blass1982unique}. We can solve $\mathsf{UNIQUE-SAT}$ by asking the following $\mathsf{FCP}$ question: given a Boolean formula, is there a partial certificate of size at most 0? If and only if such a certificate exists, then by definition of the Boolean formula is uniquely satisfiable.
 \end{proof}
 
 We switch our focus now to the problem of $\mathsf{FCP-SAT}$, an $\mathsf{FCP}$-complete problem. 
