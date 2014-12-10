@@ -103,15 +103,13 @@ The paper is organized as follows. In Section~\ref{sec:related}, we discuss prev
 This problem has been investigated before under a variety of different names. The problem of determining the smallest Sudoku has been referred to as the ``minimum number of clues problem" in
 by McGuire et al. in \cite{mcguire2012there}, as well as the ``minimal fair puzzle" problem. The problem of finding the smallest partial Latin Square with a unique solution has been called the ``minimum critical set" problem by Ghandehari et al. in \cite{Ghandehari2005121} .
 
-\section{Preliminaries}
+\section{\mathsf{FCP}: Fewest Clues Problem}
 \label{sec:prelim}
+
+\subsection{Formalizing the Problems}
 
 \begin{definition}
 We will call a puzzle \emph{valid} if it has a unique solution.
-\end{definition}
-
-\begin{definition}
-We call a partial solution to an NP-Search problem determining if it implies a unique solution. Suppose we are given an instance of a puzzle, or more generally an NP-Search problem, and a partial solution. We are interested in finding the smallest determining set that contains the partial solution for this instance. The smallest determining set is referred to as the minimal critical set. 
 \end{definition}
 
 In general, we assume that our puzzle maker, $M$, has the following workflow:
@@ -123,15 +121,15 @@ In general, we assume that our puzzle maker, $M$, has the following workflow:
 \item $M$ computes the solution and publishes it. 
 \end{enumerate}
 
-We can define the problem of \emph{computing the hardest instances} in the following way: 
+We present a formalism of the type of problems we wish to solve, \emph{finding fewest clues}. An \emph{instance} of a finding fewest clues problem $P$ is a string over some finite alphabet. A \emph{solution} $s$ to $x$ is a set of values from some finite alphabet where $|s| = p(|x|)$, for some fixed polynomial $p$. $P$ also comes with an algorithm $A$ with input $x$ and $s$ that decides whether $s$ is a solution of $x$. We add the additional requirement that $A$ runs in polynomial time.
 
-\begin{quote}
-Given a problem with a polynomially sized solutions, what is the minimal critical set?
-\end{quote}
+Given some parameter $k$, we can ask whether there exists a set of clues, $c$, of at most $k$ values, such that $c \subset s$ for some solution to $x$, and $s$ is the only such solution.
 
-We will ask the decision version of the problem: does there exist a set of at most $k$ variables which give rise to a unique solution?
+Note that we can phrase the problem of deciding existance of a smallest valid Sudoku and other such puzzles as a finding minimum clues problem. An instance is a partially filled Sudoku, a solution is a way to fill the Sudoku. Since Sudoku is in \NP, we can check whether a completely filled Sudoku is a solution in polynomial time. Asking whether there exists set of clues of size $k$ at most $k$ corresponds to asking how many additional numbers must be place in order to get a valid Sudoku puzzle.
 
-We now present definitions will give rise to a complexity class, which we call  $\mathsf{FCP}$ (for Minimal Critical Set). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the "left" branch, and the other the "right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
+\subsection{The \mathsf{FCP} Class}
+
+We now present definitions will give rise to a complexity class, which we call  $\mathsf{FCP}$ (for Fewest Clues Problem). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the "left" branch, and the other the "right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
 
 \begin{definition}
 A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or \emph{blank}, which we denote as $\bot$.
@@ -157,11 +155,11 @@ Given a NTM running in polynomial time and a parameter $k$, does there exists a 
 \end{definition}
 
 \begin{proposition}
-Any problem of determining the minimal critical set is in $\mathsf{FCP}$, and alternative, any problem in $\mathsf{FCP}$ can be phrased as a problem to determine the minimal critical set.
+Any fewest clues problem is in $\mathsf{FCP}$, and alternative, any problem in $\mathsf{FCP}$ can be phrased as a fewest clues problem.
 \end{proposition}
 
 \begin{proof}
-Our problems have polynomially long solutions, which can be checked in polynomial time. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing whether this NTM has a partial certificate of size at most $k$ with only one accepting branch is equivalent to asking whether there exists a determining set of size $k$. 
+Our problems have polynomially long solutions, which can be checked in polynomial time with the algorithm $A$. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing whether this NTM has a partial certificate of size at most $k$ with only one accepting branch is almost equivalent to asking whether there exists a set of clues of size $k$. 
 
 Suppose there were $c$ possible choices for a element whose value we are trying to determine. Then the NTM with branching factor $2$ must have $\log c$ levels in which it branches non-deterministically. The possible problem which arises is that one value in the minimal critical set might correspond to $\log c$ values in the partial certificate. In order to make sure that one clue in the minimal critical set corresponds to exactly one value in the partial certificate, we branch of the decisions in a slightly different manner. In particular, instead of splitting the decisions with a complete binary tree of height $\log c$, we split the decisions with a complete binary tree of height $c$. The $i$th level right branch in the tree corresponds to picking the $i$th value out of possible $c$ values. We make all the branches for which the decisions contain more than one right branch be rejecting branches. This means that one determined value will correspond to exactly one value in the smallest partial certificate, which will indicate which value was chosen.
 
@@ -180,10 +178,6 @@ This concept is completely analogous to that of $\NP$ reductions in the sense th
 
 \section{Some $\mathsf{FCP}$-complete Problems.}
 \label{sec:The Problems}
-
-We present a formalism of the type of problems we wish to solve. Each problem will be defined with an \emph{instance} of the problem which will be an encoding of the problem into a string of polynomial size, along with a value $k$. The resulting output will be a decision signifying there exists a critical set of size $k$. This framework will fit in nicely with the problems we are trying to solve.
-
-The basic premise is that a puzzle maker wants to induce some kind of particular deduction in the puzzle solver. The puzzle maker begins designing the puzzle, which becomes the instance to the problem. Additionally, the puzzle maker asks how many values to determine, it does so by specifying a value $k$, and asking whether there is a critical set of size $k$ which will lead to a valid puzzle.
 
 In this section, we proceed to show that $\mathsf{FCP-Sudoku}$ is $\mathsf{FCP}$-complete. In order to do so, we first show that $\mathsf{FCP-SAT}$ is $\mathsf{FCP}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
 
