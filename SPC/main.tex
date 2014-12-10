@@ -101,8 +101,12 @@ The paper is organized as follows. In Section~\ref{sec:related}, we discuss prev
 \label{sec:related}
 
 This problem has been investigated before under a variety of different names. The problem of determining the smallest Sudoku has been referred to as the ``minimum number of clues problem" in
-by McGuire et al. in \cite{mcguire2012there}, as well as the ``minimal fair puzzle" problem. The problem of finding the smallest partial Latin Square with a unique solution has been called the ``minimum critical set" problem by Ghandehari et al. in \cite{Ghandehari2005121} .
+by McGuire et al. in \cite{mcguire2012there}, as well as the ``minimal fair puzzle" problem. The problem of finding the smallest partial Latin Square with a unique solution has been called the ``minimum critical set" problem by Ghandehari et al. in \cite{Ghandehari2005121}. They present upper and lower bounds for this problem. 
 
+In 2013, Cooper and Kirkpatrick \cite{Cooper:2014:CSS:2612293.2612628} extended this problem beyond the realms of puzzles. They introduce a similar notion for the graph coloring problem. Given a graph and a proper coloring of the graph, they refer to a \emph{critical set} as the smallest set of vertices such that when the coloring is restricted to them, there is a unique to properly color the rest of the graph. In order to understand the complexity of this problem, they define problems that are natural upper and lower bounds of it. They show that computing the upper and lower bounds is $\NP$-hard. 
+
+To the knowledge of the authors, there aren't any significant efforts to generalize this concept to $\NP$ search problems. 
+ 
 \section{Preliminaries}
 \label{sec:prelim}
 
@@ -131,7 +135,7 @@ Given a problem with a polynomially sized solutions, what is the minimal critica
 
 We will ask the decision version of the problem: does there exist a set of at most $k$ variables which give rise to a unique solution?
 
-We now present definitions will give rise to a complexity class, which we call  $\mathsf{FCP}$ (for Minimal Critical Set). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the "left" branch, and the other the "right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
+We now present definitions will give rise to a complexity class, which we call  $\mathsf{FCP}$ (Fewest Clues Problem). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the "left" branch, and the other the "right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
 
 \begin{definition}
 A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or \emph{blank}, which we denote as $\bot$.
