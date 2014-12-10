@@ -361,45 +361,44 @@ This construction can be done in polynomial time. In addition, from our previous
 \section{Relationship to Other Complexity Classes.}
 \label{sec:relationship}
 
-\subsection{Lower Bounds}
-
-Here we present lower bounds for the complexity class $\mathsf{FCP}$. It remains to be shown if any of the containments is strict. It is the opinion of the authors that this is likely to be true. 
+In this section, we consider how $\mathsf{FCP}$ fits in relation to the well-known complexity classes, $\mathsf{NP}, \mathsf{coNP}, \mathsf{NP}^\mathsf{NP}, \mathsf{PSPACE}$. Recall that $\mathsf{NP}^\mathsf{NP}$ refers to the class of problems solvable in nondeterministic polynomial time with an $\mathsf{NP}$-oracle. We give a number of different containments, but it remains to be shown if any of these containments are strict.
 
 \begin{proposition}
-If a problem is $\mathsf{FCP}$-hard, then it is $\NP$-hard.
+$\NP \subset \mathsf{FCP}$
 \end{proposition}
 
 \begin{proof}
-If a problem is in $\NP$, then there exists a NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. We can ask if there exists a partial certificate of size at most $p(n)$? Therefore, $\NP \subset \mathsf{FCP}$, and so any $\mathsf{FCP}$-hard problem is also $\NP$-hard. 
+If a problem is in $\NP$, then there exists an NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. Thus, we can solve any problem in $\NP$ with the following equivalent $\FCP$ question: is there a partial (possibly full) certificate of size at most $p(n)$?
 \end{proof}
 
+\begin{corollary}
+If a problem is $\mathsf{FCP}$-hard, it is also $\NP$-hard.
+\end{corollary}
+
 \begin{proposition}
-If a problem is $\mathsf{FCP}$-hard, then it is $\coNP$-hard. 
+If a problem is $\mathsf{FCP}$-hard, it is also $\coNP$-hard. 
 \end{proposition}
 
 \begin{proof}
-$\mathsf{UNIQUE-SAT}$ is in $\mathsf{FCP}$ since we can ask whether there is a partial certificate of size at most $0$. This implies that $\coNP \subset \mathsf{US} \subset \mathsf{FCP}$ since UNIQUE-SAT is complete in $\mathsf{US}$ \cite{blass1982unique}.
+Consider the problem of $\mathsf{UNIQUE-SAT}$, which gives a Boolean formula and asks if there is exactly one solution. This problem is known to be $\coNP$-hard \cite{blass1982unique}. We can solve $\mathsf{UNIQUE-SAT}$ by asking the following $\FCP$ question: given a Boolean formula, is there a partial certificate of size at most 0? If and only if such a certificate exists, then by definition of the Boolean formula is uniquely satisfiable.
 \end{proof}
 
-\subsection{Upper Bounds}
+We switch our focus now to the problem of $\mathsf{FCP-SAT}$, an $\mathsf{FCP}$-complete problem. 
 
-We provide an algorithm for solving $\mathsf{FCP-SAT}$ with an NTM with a SAT oracle. This will mean that $\mathsf{FCP} \subset \NP^{\NP}$ and so the complete problems will probably not be $\PSPACE$-hard. If an $\mathsf{FCP}$-complete problem were $\PSPACE$-hard, it would collapse most of the polynomial time hierarchy \cite{stockmeyer1976polynomial}. 
-
-\begin{lemma}
-A Boolean formula $\phi$ has a partial assignment of $k$ variables which yield a unique solution if and only if every variable outside the partial assignment, one assignment yields a satisfiable formula, and one does not.
-\end{lemma}
+\begin{proposition}
+$\mathsf{FCP}$ is contained in $\NP^{\NP}$.
+\end{proposition}
 
 \begin{proof}
-This is clear since there is only one accepting branch.
-\end{proof}
+We do this by providing an algorithm that solves $\mathsf{FCP-SAT}$ with an NTM with a SAT oracle. 
 
-\begin{lemma}
-A Boolean formula $\phi$ has no partial assignment of $k$ variables if and only if there exists an additional variable which both assignments give a satisfiable Boolean formula.
-\end{lemma}
+The algorithm we give will rely on the following observations.
 
-\begin{proof}
-If there are at least two accepting branches of the computation. Compute the least common ancestor of the branches in the computation tree. That will yield a variable which can take on both assignments. 
-\end{proof}
+\textbf{Observation 1:} A Boolean formula $\phi$ has a partial assignment of $k$ variables which yield a unique solution if and only if for every variable outside the partial assignment, one assignment of this variable yields a satisfiable formula, and the other does not. This observation holds due to the fact that there is only one accepting branch.
+
+\textbf{Observation 2:} A Boolean formula $\phi$ with a partial assignment of $k$ variables is \emph{not} uniquely satisfiable if and only if there exists a variable outside of the partial assignment for which both truth assignmetns of this variable give a satisfiable Boolean formula. This observation holds because this situation corresponds exactly with cases where we are not on a unique accepting branch.
+
+To complete the proof, we simply give the algorithm:
 
 \begin{codebox}
 \Procname{$\mathsf{FCP-SAT}$: Instance: $\phi$ formula with variables $\{ x_i \}$ and variable $k$.}
@@ -407,19 +406,13 @@ If there are at least two accepting branches of the computation. Compute the lea
 \li Non-deterministically pick a variable $x_i$, without repetition
 \li Non-deterministically pick an assignment \End
 \li Iterate through all remaining variables \Then
-\li \If a variable has both assignments with a satisfiable boolean formula \Then
+\li \If a variable is such that both assignments give a satisfiable formula \Then
 \li reject
 \li \Else assign that variable \End \End
-\li Once you assigned all variables, accept.
+\li Once you have assigned all variables, accept.
 \end{codebox}
-
-\begin{proposition}
-$\mathsf{FCP} \subset \NP^\NP$
-\end{proposition}
-
-\begin{proof}
-Use the above algorithm to solve $\mathsf{FCP-SAT}$. 
 \end{proof}
+
 
 \section{Conclusion}
 \label{sec:conclusion}
