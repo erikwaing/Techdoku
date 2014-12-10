@@ -97,7 +97,7 @@ We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}
 The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this sort of problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the complexity class $\mathsf{FCP}$. We state what it means for a problem to be $\mathsf{FCP}$, and provide a framework for $\mathsf{FCP}$-reductions. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\mathsf{FCP}$-hard. Then in Section~\ref{sec:relationship}, we show how the complexity class $\mathsf{FCP}$ fits into the landscape of well-known classes such as $\mathsf{P}, \mathsf{NP}, \mathsf{NP}^\mathsf{NP}$, and $\mathsf{PSPACE}$. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
 
 
-\section{Related Work.}
+\subsubsection{Related Work.}
 \label{sec:related}
 
 This problem has been investigated before under a variety of different names. The problem of determining the smallest Sudoku has been referred to as the ``minimum number of clues problem" in
@@ -110,33 +110,20 @@ To the knowledge of the authors, there aren't any significant efforts to general
 \section{$\mathsf{FCP}$: Fewest Clues Problem}
 \label{sec:prelim}
 
-\subsection{Formalizing the Problems}
+\subsection{Formalizing the Question}
 
-\begin{definition}
-We will call a puzzle \emph{valid} if it has a unique solution.
-\end{definition}
+In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. An \emph{instance} of a ``finding fewest clues" problem $P$ is a string over a finite alphabet that encodes a puzzle, as well as a parameter $k$. A \emph{solution} $s$ to $x$ is a set of values from a finite alphabet where $|s| = p(|x|)$, for some fixed polynomial $p$. $P$ also comes with an algorithm $A$ with inputs $x$ and $s$ that decides in polynomial time whether $s$ is a solution of $x$. Note that the existence of such an $A$ implies that the original decision problem of determining the existence of a solution is in NP.
 
-In general, we assume that our puzzle maker, $M$, has the following workflow:
-\begin{enumerate}
-\item $M$ decides which kind of puzzle.
-\item $M$ decides how "big" the puzzle will be.
-\item $M$ wants to induce some deductive response by $S$, so it designs small parts of the puzzle.
-\item $M$ must make sure that the puzzle is valid, by adding the minimal critical set of entries.
-\item $M$ computes the solution and publishes it. 
-\end{enumerate}
+The key feature of the fewest clues problem is the parameter $k$, which allows us to ask: does there exist a set $c$ of at most $k$ clues such that $c \subset s$ for exactly one solution $s$ to $x$?
 
-We present a formalism of the type of problems we wish to solve, \emph{finding fewest clues}. An \emph{instance} of a finding fewest clues problem $P$ is a string over some finite alphabet. A \emph{solution} $s$ to $x$ is a set of values from some finite alphabet where $|s| = p(|x|)$, for some fixed polynomial $p$. $P$ also comes with an algorithm $A$ with input $x$ and $s$ that decides whether $s$ is a solution of $x$. We add the additional requirement that $A$ runs in polynomial time.
-
-Given some parameter $k$, we can ask whether there exists a set of clues, $c$, of at most $k$ values, such that $c \subset s$ for some solution to $x$, and $s$ is the only such solution.
-
-Note that we can phrase the problem of deciding existance of a smallest valid Sudoku and other such puzzles as a finding minimum clues problem. An instance is a partially filled Sudoku, a solution is a way to fill the Sudoku. Since Sudoku is in \NP, we can check whether a completely filled Sudoku is a solution in polynomial time. Asking whether there exists set of clues of size $k$ at most $k$ corresponds to asking how many additional numbers must be place in order to get a valid Sudoku puzzle.
+Note that this set-up easily allows us to solve the classic problem of determining the minimum number of clues to uniquely specify a Sudoku puzzle. We just need to ask the following question: given the instance of an empty Sudoku, is there a set of clues $c$ that produces a uniquely solvable Sudoku and is such that $|c| \leq k$? Binary searching on the value of $k$ solves the original Sudoku minimum clues problem.
 
 \subsection{The $\mathsf{FCP}$ Class}
 
-We now present definitions will give rise to a complexity class, which we call  $\mathsf{FCP}$ (for Fewest Clues Problem). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the "left" branch, and the other the "right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
+We now present definitions that give rise to a complexity class, which we call  $\mathsf{FCP}$ (Fewest Clues Problem). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the ``left" branch, and the other the ``right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
 
 \begin{definition}
-A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or \emph{blank}, which we denote as $\bot$.
+A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or $\bot$.
 \end{definition}
 
 \begin{definition}
