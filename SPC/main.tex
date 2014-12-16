@@ -49,7 +49,6 @@
 \let\realendproof=\endproof
 \def\endproof{\hspace*{\fill}$\Box$\realendproof}
 
-
 \begin{document}
 
 \mainmatter  % start of an individual contribution
@@ -368,7 +367,7 @@ $\NP \subset \mathsf{FCP}$
 \end{proposition}
 
 \begin{proof}
-If a problem is in $\NP$, then there exists an NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. Thus, we can solve any problem in $\NP$ with the following equivalent $\FCP$ question: is there a partial (possibly full) certificate of size at most $p(n)$?
+If a problem is in $\NP$, then there exists an NTM which decides in time at most $p(n)$, where $p$ is a polynomial and $n$ is the size of the input. Thus, we can solve any problem in $\NP$ with the following equivalent $\mathsf{FCP}$ question: is there a partial (possibly full) certificate of size at most $p(n)$?
 \end{proof}
 
 \begin{corollary}
@@ -380,7 +379,7 @@ If a problem is $\mathsf{FCP}$-hard, it is also $\coNP$-hard.
 \end{proposition}
 
 \begin{proof}
-Consider the problem of $\mathsf{UNIQUE-SAT}$, which gives a Boolean formula and asks if there is exactly one solution. This problem is known to be $\coNP$-hard \cite{blass1982unique}. We can solve $\mathsf{UNIQUE-SAT}$ by asking the following $\FCP$ question: given a Boolean formula, is there a partial certificate of size at most 0? If and only if such a certificate exists, then by definition of the Boolean formula is uniquely satisfiable.
+Consider the problem of $\mathsf{UNIQUE-SAT}$, which gives a Boolean formula and asks if there is exactly one solution. This problem is known to be $\coNP$-hard \cite{blass1982unique}. We can solve $\mathsf{UNIQUE-SAT}$ by asking the following $\mathsf{FCP}$ question: given a Boolean formula, is there a partial certificate of size at most 0? If and only if such a certificate exists, then by definition of the Boolean formula is uniquely satisfiable.
 \end{proof}
 
 We switch our focus now to the problem of $\mathsf{FCP-SAT}$, an $\mathsf{FCP}$-complete problem. 
