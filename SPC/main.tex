@@ -109,51 +109,38 @@ To the knowledge of the authors, there aren't any significant efforts to general
 \section{$\mathsf{FCP}$: Fewest Clues Problem}
 \label{sec:prelim}
 
-\subsection{Formalizing the Problems}
+\subsection{Formalizing the Question}
 
-\begin{definition}
-We will call a puzzle \emph{valid} if it has a unique solution.
-\end{definition}
+In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. An \emph{instance} of a ``finding fewest clues" problem $P$ is a string over a finite alphabet that encodes a puzzle, as well as a parameter $k$. A \emph{solution} $s$ to $x$ is a set of values from a finite alphabet where $|s| = p(|x|)$, for some fixed polynomial $p$. $P$ also comes with an algorithm $A$ with inputs $x$ and $s$ that decides in polynomial time whether $s$ is a solution of $x$. Note that the existence of such an $A$ implies that the original decision problem of determining the existence of a solution is in NP.
 
-In general, we assume that our puzzle maker, $M$, has the following workflow:
-\begin{enumerate}
-\item $M$ decides which kind of puzzle.
-\item $M$ decides how "big" the puzzle will be.
-\item $M$ wants to induce some deductive response by $S$, so it designs small parts of the puzzle.
-\item $M$ must make sure that the puzzle is valid, by adding the minimal critical set of entries.
-\item $M$ computes the solution and publishes it. 
-\end{enumerate}
+The key feature of the fewest clues problem is the parameter $k$, which allows us to ask: does there exist a set $c$ of at most $k$ clues such that $c \subset s$ for exactly one solution $s$ to $x$?
 
-We present a formalism of the type of problems we wish to solve, \emph{finding fewest clues}. An \emph{instance} of a finding fewest clues problem $P$ is a string over some finite alphabet. A \emph{solution} $s$ to $x$ is a set of values from some finite alphabet where $|s| = p(|x|)$, for some fixed polynomial $p$. $P$ also comes with an algorithm $A$ with input $x$ and $s$ that decides whether $s$ is a solution of $x$. We add the additional requirement that $A$ runs in polynomial time.
-
-Given some parameter $k$, we can ask whether there exists a set of clues, $c$, of at most $k$ values, such that $c \subset s$ for some solution to $x$, and $s$ is the only such solution.
-
-Note that we can phrase the problem of deciding existance of a smallest valid Sudoku and other such puzzles as a finding minimum clues problem. An instance is a partially filled Sudoku, a solution is a way to fill the Sudoku. Since Sudoku is in \NP, we can check whether a completely filled Sudoku is a solution in polynomial time. Asking whether there exists set of clues of size $k$ at most $k$ corresponds to asking how many additional numbers must be place in order to get a valid Sudoku puzzle.
+Note that this set-up easily allows us to solve the classic problem of determining the minimum number of clues to uniquely specify a Sudoku puzzle. We just need to ask the following question: given the instance of an empty Sudoku, is there a set of clues $c$ that produces a uniquely solvable Sudoku and is such that $|c| \leq k$? Binary searching on the value of $k$ solves the original Sudoku minimum clues problem.
 
 \subsection{The $\mathsf{FCP}$ Class}
 
-We now present definitions will give rise to a complexity class, which we call  $\mathsf{FCP}$ (for Fewest Clues Problem). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the "left" branch, and the other the "right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
+We now present definitions that give rise to a complexity class, which we call  $\mathsf{FCP}$ (Fewest Clues Problem). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the ``left" branch, and the other the ``right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
 
 \begin{definition}
-A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or \emph{blank}, which we denote as $\bot$.
+A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or $\bot$.
 \end{definition}
 
 \begin{definition}
 The size of a partial certificate is the number of non-null entries. 
 \end{definition}
 
-For problems in $\NP$, a partial certificate is the generalization of a certificate of an $\NP$ problem. Each certificate of an $\NP$ problem is a partial certificate. We can think of partial certificates as a certificate, where we erase some tape cells.
+For problems in $\NP$, a partial certificate is the generalization of a certificate of an $\NP$ problem. Any certificate of an $\NP$ problem can be thought of as a partial certificate. We can view partial certificates as ordinary certificates with some tape cells erased.
 
 \begin{definition}
-A modified non-deterministic Turing machine (mNTM) is a NTM where there is an additional input of a partial certificate. At each step of the computation, a mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
+A modified non-deterministic Turing machine (mNTM) is an NTM where there is an additional input of a partial certificate. At each step of the computation, an mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
 \end{definition}
 
-In some sense, a partial certificate makes a mNTM more deterministic. If a partial certificate contains no $\bot$, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. We say that a NTM has a corresponding mNTM which runs exactly the same, but has an additional input for a partial certificate. With these definitions, we are ready to define the class $\mathsf{FCP}$.
+In some sense, a partial certificate makes an mNTM more deterministic. If a partial certificate contains no $\bot$ characters, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. It is clear that given any NTM, we can construct a corresponding mNTM which runs in exactly the same manner, but has an additional input of a partial certificate. With these definitions, we are ready to define the class $\mathsf{FCP}$.
 
 \begin{definition}
-$\mathsf{FCP}$ is the class of decision problems of the following form:\\
+$\mathsf{FCP}$ is the class of decision problems of the following form:
 \begin{quote}
-Given a NTM running in polynomial time and a parameter $k$, does there exists a partial certificate of size at most $k$ such that the corresponding mNTM with the partial certificate has only one accepting branch?
+Given an NTM running in polynomial time and a parameter $k$, does there exists a partial certificate of size at most $k$ such that the corresponding mNTM with the partial certificate has only one accepting branch?
 \end{quote}
 \end{definition}
 
@@ -164,20 +151,16 @@ Any fewest clues problem is in $\mathsf{FCP}$, and alternative, any problem in $
 \begin{proof}
 Our problems have polynomially long solutions, which can be checked in polynomial time with the algorithm $A$. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing whether this NTM has a partial certificate of size at most $k$ with only one accepting branch is almost equivalent to asking whether there exists a set of clues of size $k$. 
 
-Suppose there were $c$ possible choices for a element whose value we are trying to determine. Then the NTM with branching factor $2$ must have $\log c$ levels in which it branches non-deterministically. The possible problem which arises is that one value in the minimal critical set might correspond to $\log c$ values in the partial certificate. In order to make sure that one clue in the minimal critical set corresponds to exactly one value in the partial certificate, we branch of the decisions in a slightly different manner. In particular, instead of splitting the decisions with a complete binary tree of height $\log c$, we split the decisions with a complete binary tree of height $c$. The $i$th level right branch in the tree corresponds to picking the $i$th value out of possible $c$ values. We make all the branches for which the decisions contain more than one right branch be rejecting branches. This means that one determined value will correspond to exactly one value in the smallest partial certificate, which will indicate which value was chosen.
+Suppose there were $c$ possible choices for a element whose value we are trying to determine. Then the NTM with branching factor $2$ must have $\log c$ levels in which it branches non-deterministically. The possible problem which arises is that one value in the clue set might correspond to $\log c$ values in the partial certificate. In order to make sure that one clue in the clue set corresponds to exactly one value in the partial certificate, we branch of the decisions in a slightly different manner. In particular, instead of splitting the decisions with a complete binary tree of height $\log c$, we split the decisions with a complete binary tree of height $c$. The $i$th level right branch in the tree corresponds to picking the $i$th value out of possible $c$ values. We make all the branches for which the decisions contain more than one right branch be rejecting branches. This means that one value in the clue set will correspond to exactly one value in the partial certificate, which will indicate which value was chosen.
 
-Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to a critical set of size $k$.
+Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to a clue set of size $k$.
 \end{proof}
 
 The above proposition justifies our analysis of this class for answering these questions.
 
 \subsubsection{$\mathsf{FCP}$-reductions}
 
-In order for this class to make sense, we need to define the notion of a reduction. Suppose we are given two problems $A, B$. A $\mathsf{FCP}$-reduction from $A$ to $B$ is a polynomial time computable bijective mapping $f$ that maps instances of $A$ to instances of $B$.  
-
-We say a problem $B$ is $\mathsf{FCP}$-hard if it can be reduced to any other problem $A$ in $\mathsf{FCP}$ through a $\mathsf{FCP}$-reduction. We say a problem is $\mathsf{FCP}$-complete if it is both in $\mathsf{FCP}$ and is $\mathsf{FCP}$-hard. 
-
-This concept is completely analogous to that of $\NP$ reductions in the sense that we allow multiple calls. 
+We have not fully characterized what a reduction in this class is. Instead, we use Karp-style single-call parsimonious reductions. We find a parsimonious mapping from instances of some problem $\Pi_1$ to instances of some other problem $\Pi_2$. If the partial certificates sizes are preserved by the mapping, if we can decide whether a partial certificate exists for an instance of $B$, then we can decide whether a partial certificate exists for an instance in $A$. So if the $\mathsf{FCP}$ version of $A$ is $\mathsf{FCP}$-hard, then the $\mathsf{FCP}$ version of $B$ is $\mathsf{FCP}$-hard. 
 
 \section{Some $\mathsf{FCP}$-complete Problems.}
 \label{sec:The Problems}
@@ -185,11 +168,11 @@ This concept is completely analogous to that of $\NP$ reductions in the sense th
 In this section, we proceed to show that $\mathsf{FCP-Sudoku}$ is $\mathsf{FCP}$-complete. In order to do so, we first show that $\mathsf{FCP-SAT}$ is $\mathsf{FCP}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
 
 \subsection{$\mathsf{FCP-SAT}$}
-The following is the obvious generalization for giving clues in the Boolean satisfiability problem.
+The following is the fewest clues version of the Boolean satisfiability problem.
 
 \begin{itemize}
 \item Instance: a Boolean formula $\phi$, along with a parameter $k$.
-\item Question: Is there critical set of size at most $k$ where the corresponding Boolean formula is satisfied uniquely?
+\item Question: Is there a set of clues of size at most $k$ such that the Boolean formula restricted to that partial assignment is uniquely satisfiable?
 \end{itemize}
 
 \begin{theorem}
@@ -197,39 +180,39 @@ $\mathsf{FCP-SAT}$ is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-The proof is similar to the Cook-Levin theorem. We use the proof in \cite{Garey}. We can first turn an arbitrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem, to get a Boolean formula $\phi$. 
+The proof is similar to that of the Cook-Levin theorem presented in \cite{Garey}. We first turn an arbitrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem to get a Boolean formula $\phi$. 
 
 We claim that if $\phi$ has a partial assignment of $k$ variables with a unique complete assignment, then there exists a partial certificate for the NTM with corresponding mNTM having only one accepting branch of the computation.
 
-Note that if a partial assignment of $k$ variables contains a variable that is set to false, then the variable is a head position variable, a state variable, or a tape cell variable. We know that there exists a head position variable, a state variable, and a tape cell variable which is true at each time, so if we switch the corresponding variables, we have removed a false variable, added a true variable, and by analyzing $\phi$, the true variable implies that the false variable is false, therefore, we still have a partial certificate. 
+Note that if a partial assignment of $k$ variables contains a variable that is set to false, then the variable is a head position variable, a state variable, or a tape cell variable. We know that there exists a head position variable, a state variable, and a tape cell variable which is true at each time, so if we switch the corresponding variables, we have removed a false variable, added a true variable. By analyzing $\phi$, the true variable implies that the false variable is false, therefore, we still have a partial certificate. 
 
-Therefore, we can assume that all assignments are true. If we have a head position variable, the tape cell variable at that given position will be set to true, and so switching them will maintain the partial assignment. Also, since the content of each tape cell is the state-content tuple, a state variable can be replaced by the tape cell variable. Therefore, we can assume that we have a partial assignment of the tape-cell variables, which are all true. 
+This implies that we can assume that all assignments are true. If we have a head position variable, the tape cell variable at that given position will be set to true, and so switching them will maintain the partial assignment. Also, since the content of each tape cell is the state-content tuple, a state variable can be replaced by the tape cell variable.
 
 Since each complete assignment of the variables corresponds to a unique accepting branch of the computation, knowing the contents of the tape cell at each time tells you which branch of the computation to take. Therefore, if there exists a partial assignment of $k$ variables which yield a unique complete assignment, then there exists a partial certificate of size $k$ whose mNTM has a unique accepting branch.
 \end{proof}
 
-From this we can easily show that the corresponding 3SAT problem is $\mathsf{FCP}$-complete.
+From this we can easily show that the fewest clues version of the 3SAT problem is $\mathsf{FCP}$-complete.
 
 \begin{theorem}
 $\mathsf{FCP-3SAT}$ is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We reduce from $\mathsf{FCP}$-SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjunction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$, then transform the clauses by successively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
+We reduce from $\mathsf{FCP}$-SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjunction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$. Transform the clauses by successively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
 \[ g(C) = \left\{ \begin{array}{cc} C & k \leq 3 \\
 						    (z_1 \vee x_1 \vee x_2) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee \overline{x_2}) \wedge (\overline{z_1} \vee x_3 \vee ... \vee x_k) & \text{ otherwise }\end{array} \right. \] 
 
-Suppose $z_i$ is in a partial certificate of 3SAT. There are two cases:
+Suppose $z_i$ is in a partial solution of 3SAT. There are two cases:
 \begin{itemize}
-\item $z_i$ is set to false. In this case, we know that either $x_1$ or $x_2$ is set to true. If we switch $z_i$ and $x_1$ or $x_2$, one of these will be partial certificate which is the same size as the previous one, since the value of $z_i$ is implied by one of $x_1$ or $x_2$. Therefore, we can include $x_1$ or $x_2$ and remove $z$.
-\item $z_i$ is set to true. Then $\overline{z_i}$ is false, which means that whichever $\overline{z_i}$ ends up being a part of in the clause will mean that one of two of the following will be true. Again, if we switch them, one will have a smallest partial certificate which is of the same size. So we can remove $z_i$ and replace it by another variable. 
+\item Suppose $z_i$ is set to false. In this case, we know that either $x_1$ or $x_2$ is set to true. If we switch $z_i$ and $x_1$ or $x_2$, one of these will create a partial certificate which is the same size as the previous one. This follows from the fact that the value of $z_i$ is implied by one of $x_1$ or $x_2$. Therefore, we can include $x_1$ or $x_2$ and remove $z$.
+\item $z_i$ is set to true. Then $\overline{z_i}$ is false, which means that whichever clause $\overline{z_i}$ ends up being a part of, at least one of the following two will be true. Analogous to the previous case, if we switch them, one will have a smallest partial certificate which is of the same size. So we can remove $z_i$ and replace it by another variable. 
 \end{itemize}
 Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are a limited number of $z_i$, we can repeat this procedure and arrive at a partial assignment of the 3SAT formula which works for the SAT formula as well.
 \end{proof}
 
 \subsection{$\mathsf{FCP-Triangle Partition}$}
 
-This problem is a known $\NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the critical set version of the problem since we will use it to show hardness results for $\mathsf{FCP-Latin Squares}$ and $\mathsf{FCP-Sudoku}$. There is a general description of the problem in \cite{holyer1981np}. A specific instance is addressed in \cite{colbourn1984complexity}. We will use the definition in \cite{colbourn1984complexity}. We first present a definition of a property of tripartite graphs which will simplify the analysis.
+This problem is a known $\NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the fewest clues version of the problem since we will use it to show hardness results for $\mathsf{FCP-Latin Squares}$ and $\mathsf{FCP-Sudoku}$. There is a general description of the problem in \cite{holyer1981np}. A specific instance is addressed in \cite{colbourn1984complexity}. We will use the definition in \cite{colbourn1984complexity}. We first present a definition of a property of tripartite graphs which will simplify the analysis.
 
 \begin{definition}
 A tripartite graph is \emph{uniform} if each vertex has equally many neighbors in each of the other two partitions.
@@ -237,10 +220,10 @@ A tripartite graph is \emph{uniform} if each vertex has equally many neighbors i
 
 \begin{itemize}
 \item Instance: A uniform tripartite graph, along with a parameter $k$.
-\item Question: Does there critical set of at most $k$ triangles?
+\item Question: Does there exist a set of $k$ triangles such that including them implies a unique partition of the remainder of the graph?
 \end{itemize}
 
-Note that if a tripartite graph has a triangle partition, the graph must be uniform, so even though the requirement that the graph be uniform is not necessary, it simplifies the analysis.
+Note that if a tripartite graph has a triangle partition, the graph must be uniform. Therefore, we assume without loss of generality that this is the case. 
 
 The following proof is a sketch and is under revision.
 
@@ -249,26 +232,26 @@ $\mathsf{FCP-Triangle Partition}$ is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We use the reduction from \cite{holyer1981np}, applying the slight modifications made in \cite{colbourn1984complexity} so that the graph is tripartite. 
+We use the reduction from \cite{holyer1981np}, applying the slight modifications made in \cite{colbourn1984complexity} so that the graph is tripartite. We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation.
 
 Note that in the reduction, if one has $k$ triangles and one of the triangles belongs to a join, then that triangle is implied by a neighboring triangle. So we can assume that all triangles are either in $H_{3,p}$ of variables, or $H_{3,p}$ of literals. 
 
-In addition, if one of the $k$ triangles is a $T$-patch triangle in an $H_{3,p}$ of a literal, then there exists a triangle in an $F$-patch of another literal, so can switch them.
+In addition, if one of the $k$ triangles is a $T$-patch triangle in an $H_{3,p}$ of a literal, then there exists a triangle in an $F$-patch of another literal. Therefore, we can switch them.
 
 So in $k$ triangles, we can either assume they are in an $H_{3,p}$ of a variable, or an $H_{3,p}$ of a false literal. So if there is a partition of $k$ triangles which makes a unique edge partition, then there exists an assignment of $k$ variables which uniquely determine the assignment of all the variables to satisfy the formula. 
 
-Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable, for the triangle in the clause which satisfies it. This implies the variable, so we can do this.
+Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable for the triangle in the clause which satisfies it. This implies the value of the variable, so we can do this.
 \end{proof}
 
 \subsection{$\mathsf{FCP-LatinSquares}$}
 
 In Latin Squares we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. 
 
-In fact, it is know that each such square gives rise to a \emph{quasi-group}. The problem of Latin Squares asks whether a partially filled Latin Square can be completed. It is known that such problem is \NP-complete. We present the problem $\mathsf{FCP-Latin Squares}$ in our framework.
+It is known that such problem is \NP-complete. We present the problem $\mathsf{FCP-Latin Squares}$ in our framework.
 
 \begin{itemize}
 \item Instance: A partially filled latin square, along with a parameter $k$. 
-\item Question: Does there exists a critical set of at most  $k$ entries which will yield a valid Latin Squares puzzle?
+\item Question: Does there exists set of at most $k$ entries such that pre-setting them implies a unique solution?
 \end{itemize}
 
 
@@ -277,21 +260,21 @@ $\mathsf{FCP-Latin Squares}$ is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We do this via reduction from the triangle partition problem. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a latin framework $LF(G;2n,2n,2n)$ in polynomial time (cite...). Since the Latin framework is constructed so that $G$ is a defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial latin square $LF(G;2n,2n,2n)$. This completes the proof.
+We do this via reduction from $\mathsf{FCP-TrianglePartition}$. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G;2n,2n,2n)$ in polynomial time \cite{colbourn1984complexity}. Since the Latin framework is constructed so that $G$ is the defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This completes the proof.
 
-We claim that the above proofs can give us an $\mathsf{FCP}$-hardness result for completing a partial Latin square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin square $P$.
+We claim that the above proofs give us an $\mathsf{FCP}$-hardness result for completing a partial Latin Square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin Square $P$.
 \end{proof}
 
 \subsection{$\mathsf{FCP-Sudoku}$}
 
-We first introduce the problem which motivated this study. In Sudoku puzzles, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. Often in the literature, $n$ is referred to as the order of the puzzle. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a numbers. 
+We first introduce the problem which motivated this study. In Sudoku puzzles, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. Often in the literature, $n$ is referred to as the order of the puzzle. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a number. 
 
 \begin{itemize}
 \item Instance: A partially filled Sudoku puzzle, along with a parameter $k$.
-\item Question: Does there exists at critical set of at most $k$ entries which will yield a valid Sudoku puzzle?
+\item Question: Does there exists at set of at most $k$ entries such that presetting them yield a unique Sudoku puzzle?
 \end{itemize}
 
-Note that when the instance is an empty Sudoku puzzle of order 3, the question becomes exactly the question of determining the size of the valid Sudoku puzzles. This particular instance of our problem can easily solve the problem that \cite{mcguire2012there} computed. 
+Note that when the instance is an empty Sudoku puzzle of order 3, the question becomes exactly the question of determining the size of the valid Sudoku puzzles. This particular instance of the problem can solve the problem that \cite{mcguire2012there} computed. 
 
 \begin{theorem}
 $\mathsf{FCP-Sudoku}$ is $\mathsf{FCP}$-complete
@@ -416,7 +399,9 @@ To complete the proof, we simply give the algorithm:
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have formalized the notion of what it means to compute the hardest instance to a puzzle by providing the minimum clues. This gave rise to $\mathsf{FCP}$, and we showed some problems were complete for this class. In particular, this means $\mathsf{FCP-Sudoku}$ is $\NP$-hard, but is unlikely to be $\PSPACE$-hard. However, the instances of $\mathsf{FCP-Sudoku}$ which make it $\mathsf{FCP}$-complete are very far from empty. In fact, just by looking at the last reduction from $\mathsf{FCP-Latin Squares}$, a Sudoku of dimensions $n^2 \times n^2$ which is a hard instance, at most $n^2$ of the $n^4$ squares at empty. It would be interesting to see if the empty instances of Sudoku are still complete for $\mathsf{FCP}$. This would be exactly the problem \cite{mcguire2012there} solved for $n = 3$. 
+We have formalized the notion of what it means for a problem to be uniquely solvable after giving the fewest possible number of clues. This gave rise to the $\mathsf{FCP}$ class. We presented $\mathsf{FPC}$ versions of some classical $\NP$ problems and showed they were complete for this class. In particular, this means $\mathsf{FCP-Sudoku}$ is $\NP$-hard, but is unlikely to be $\PSPACE$-hard. However, the instances of $\mathsf{FCP-Sudoku}$ which make it $\mathsf{FCP}$-complete are very far from empty. In fact, just by looking at the last reduction from $\mathsf{FCP-Latin Squares}$, a Sudoku of dimensions $n^2 \times n^2$ which is a hard instance, at most $n^2$ of the $n^4$ squares at empty. It would be interesting to see if the empty instances of Sudoku are still complete for $\mathsf{FCP}$. This would be exactly the problem \cite{mcguire2012there} solved for $n = 3$. 
+
+Further work in the field includes looking at other related results and adapting our framework to a the more general setting. The authors also think that it is important to determine where this class fits in the complexity zoo. In particular, there seem to be connections with the class $\#P$. A stricter notion of a reduction might also be required. Finally, it would be interesting to find problems in $\P$ such that their $\mathsf{SPC}$ versions are as hard for the class, or $\NP$ hard problems such that their $\mathsf{SPC}$ versions are not hard for the class. 
 
 \bibliography{references}
 \bibliographystyle{splncs}
