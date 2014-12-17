@@ -91,9 +91,9 @@ In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are
 
 We consider a following generalization of the above Sudoku question: for any given problem, what is the fewest number of clues necessary to make it uniquely solvable? For example, if the problem is to find a Hamiltonian cycle in a given graph $G = (V,E)$, our question would be to determine the minimum number of edges you can specify before only one Hamiltonian cycle contains all of these edges. This general problem is motivated by possible applications to puzzle-making. A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper).
 
-We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a new complexity class and we consider the idea of $\mathsf{FCP}$-hard problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic NP-hard problems such as SAT and 3SAT, as well as NP-hard puzzle problems such as Latin square completion and Sudoku completion. 
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a new complexity class and we consider the idea of $\mathsf{FCP}$-hard problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. 
 
-The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this sort of problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the complexity class $\mathsf{FCP}$. We state what it means for a problem to be $\mathsf{FCP}$, and provide a framework for $\mathsf{FCP}$-reductions. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\mathsf{FCP}$-hard. Then in Section~\ref{sec:relationship}, we show how the complexity class $\mathsf{FCP}$ fits into the landscape of well-known classes such as $\mathsf{P}, \mathsf{NP}, \mathsf{NP}^\mathsf{NP}$, and $\mathsf{PSPACE}$. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
+The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this sort of problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the complexity class $\mathsf{FCP}$. We state what it means for a problem to be $\mathsf{FCP}$, and provide a framework for $\mathsf{FCP}$ reductions. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\mathsf{FCP}$-hard. Then in Section~\ref{sec:relationship}, we show how the complexity class $\mathsf{FCP}$ fits into the landscape of well-known classes such as $\mathsf{P}, \mathsf{NP}, \mathsf{NP}^\mathsf{NP}$, and $\mathsf{PSPACE}$. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
 
 
 \subsubsection{Related Work.}
@@ -106,7 +106,7 @@ In 2013, Cooper and Kirkpatrick \cite{Cooper:2014:CSS:2612293.2612628} extended 
 
 To the knowledge of the authors, there aren't any significant efforts to generalize this concept to $\NP$ search problems. 
 
-\section{$\mathsf{FCP}$: Fewest Clues Problem}
+\section{$\mathsf{FCP}$-: Fewest Clues Problem}
 \label{sec:prelim}
 
 \subsection{Formalizing the Question}
@@ -118,7 +118,7 @@ In particular, we will have an $\NP$ search problem be comprised of a set of \em
 A \emph{clue} will be an indexed character of a solution. So a clue indicates what character lies at some position of the solution.
 
 \begin{definition}
-Given some $\NP$ search problem $A$, the ``fewest clues" variation of $A$, $(\mathsf{FCP} A)$ asks for the minimum number of clues correspodning to a unique solution for any given instance.
+Given some $\NP$ search problem $A$, the ``fewest clues" variation of $A$, $(\mathsf{FCP} A)$ asks for the minimum number of clues corresponding to a unique solution for any given instance.
 \end{definition}
 
 This set-up allows us to ask $\mathsf{FCP}$ variations to the common puzzles like Sudoku quiet easily. For the classical $9 \times 9$ Sudoku, we let the alphabet be $\Sigma = \{ 1, ..., 9 \} \cup \{ \Box \}$, and we let an instance be a string of length 81 with elements from $\Sigma$, where each position in the string corresponds to a position on the $9 \times 9$ Sudoku board. The presence of $\Box$ indicates that position is unknown. A solution will be a string of length $81$ with no $\Box$ characters. 
@@ -140,7 +140,7 @@ We can also ask the corresponding decision question for some fewest clues proble
 
 We now present definitions that give rise to a complexity class, which we call  $\mathsf{FCP}$ (Fewest Clues Problem). This will sound very familiar to the above notions of solution and clue. We generalize the $\mathsf{FCP}$ variation to all $\NP$ search problems without having to explicitly specify the instance, solution and checker algorithm by framing the problem in terms of non-deterministic Turing machines. This generalization will give us an easy extension of the Cook-Levin theorem, which will show that $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete.
 
-We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, when the NTM performs a non-deterministic step where the computation branches, we assume that we have a canonical ordering of the two branches. We can call one the ``left" branch, and the other the ``right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial since we are only dealing with $\NP$ search problems.
+We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, when the NTM performs a non-deterministic step where the computation branches, we assume that we have a canonical ordering of the two branches. We can call one the ``left" branch, and the other the ``right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial since we are only dealing with $\NP$- search problems.
 
 \begin{definition}
 A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or $\bot$.
@@ -215,24 +215,24 @@ Proof: follows from 2 and 3 and the fact that corresponding partial certificates
 \end{enumerate}
 \end{proof}
 
-We are almost there, we just need to show that the condition that $\Sigma = \{ 0, 1\}$ is unneccesary. We do this by cleverly choosing how to branch.
+We are almost there, we just need to show that the condition that $\Sigma = \{ 0, 1\}$ is unnecessary. We do this by cleverly choosing how to branch.
 
 \begin{proposition}
 Any fewest clues problem is in $\mathsf{FCP}$.
 \end{proposition}
 
 \begin{proof}
-The only problem with the above proof for arbritrary \emph{finite} $\Sigma$ is that we simply cannot write down every possible solution in the non-deterministic step in $p(|x|)$ steps. Let $|\Sigma| = \sigma$. If we require the NTM $M$ to have branching factor $2$, it will take at least $\log \sigma$ non-deterministic steps to specify a unique characted in $\Sigma$ to write down. This is a problem, since a specific character in the partial certificate might not be a clue, but rather might say, ``the $i$th character of the solution is in the first half of $\Sigma$". We would no longer maintain the number of clues equal to the size of the partial certificate, since each clue would correspond to $\log \sigma$ characters in a partial certificate.
+The only problem with the above proof for arbitrary \emph{finite} $\Sigma$ is that we simply cannot write down every possible solution in the non-deterministic step in $p(|x|)$ steps. Let $|\Sigma| = \sigma$. If we require the NTM $M$ to have branching factor $2$, it will take at least $\log \sigma$ non-deterministic steps to specify a unique character in $\Sigma$ to write down. This is a problem, since a specific character in the partial certificate might not be a clue, but rather might say, ``the $i$th character of the solution is in the first half of $\Sigma$". We would no longer maintain the number of clues equal to the size of the partial certificate, since each clue would correspond to $\log \sigma$ characters in a partial certificate.
 
 Instead of taking $\log \sigma$ steps to decide which character of $\Sigma$ to write in the solution, we use $\sigma$ steps. The first non-deterministic step will choose whether to write the first element of $\Sigma$. The second will choose whether to write the second. The third step will choose the third element of $\Sigma$ and so on (see Figure~\ref{fig:branching}). Since each branch of the computation must be the same length, once we pick, we continue branching for $\sigma$ steps, and if we ever take a right branch again, will reject. I claim now that each partial certificate corresponds to a clue of the same size and vice-versa, allowing up to complete the theorem.
 \begin{enumerate}
-\item Each clue correponds to a segment of $\sigma$ characters in a certificate.\\
+\item Each clue corresponds to a segment of $\sigma$ characters in a certificate.\\
 Proof: This is obvious, since it takes us $\sigma$ non-deterministic steps to make a choice of character.
 \item There are no 0's in the smallest partial certificate with a unique accepting branch.\\
 Proof: Suppose there was a 0 in the smallest partial certificate with a unique accepting branch, then that 0 corresponds to a taking some left branch. The left branch was in the process of picking some character, and suppose the unique accepting branch picked $a \in \Sigma$, then replace the 0 in the partial certificate, with the $1$ which picked $a$ in that segment of $\sigma$ branches. This is also a partial certificate of the same size. 
 \item The 1's in the smallest partial certificate are inside their chunk of $\sigma$ branches.\\
 Proof: if there were two 1's inside the chunk, the branch will reject.
-\item If the $i$th branch of the $j$th chunk of $\sigma$ branches in the smallest partial certificate correponds to the clue of picking the $i$th element of $\Sigma$ for index $j$ in the solution.\\
+\item If the $i$th branch of the $j$th chunk of $\sigma$ branches in the smallest partial certificate corresponds to the clue of picking the $i$th element of $\Sigma$ for index $j$ in the solution.\\
 Proof: follows from the fact that there are only 1's, each in their $\sigma$ long chunks.
 \item Each smallest partial certificate with unique accepting branch corresponds to a set of clues of the same size with a unique solution. \\
 Proof: this follows from 4 and the fact that we know how to go from clues to partial certificates.
@@ -251,7 +251,7 @@ The above proposition justifies our analysis of this class for answering these q
 \section{Some $\mathsf{FCP}$-complete Problems.}
 \label{sec:The Problems}
 
-In this section, we proceed to show that $\mathsf{FCP}$ Sudoku is $\mathsf{FCP}$-complete. In order to do so, we first show that $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
+In this section, we proceed to show that $\mathsf{FCP}$ Sudoku is $\mathsf{FCP}$-complete. In order to do so, we first show that $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\NP$-complete. 
 
 \subsection{$\mathsf{FCP}$ SAT}
 The following is the fewest clues version of the Boolean satisfiability problem.
@@ -321,7 +321,7 @@ If the formula is satisfiable, then the satisfying assignments corresponds to a 
 
 \begin{theorem}
 \label{thm:cooklevinanalog}
-$\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete.
+$\mathsf{FCP}$ \text{SAT} is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
@@ -339,11 +339,11 @@ Since each complete assignment of the variables corresponds to a unique acceptin
 From this we can easily show that the fewest clues version of the 3SAT problem is $\mathsf{FCP}$-complete.
 
 \begin{theorem}
-$\mathsf{FCP-3SAT}$ is $\mathsf{FCP}$-complete.
+$\mathsf{FCP}$ 3SAT is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We reduce from $\mathsf{FCP}$-SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjunction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$. Transform the clauses by successively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
+We reduce from $\mathsf{FCP}$ SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjunction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$. Transform the clauses by successively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
 \[ g(C) = \left\{ \begin{array}{cc} C & k \leq 3 \\
 						    (z_1 \vee x_1 \vee x_2) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee \overline{x_2}) \wedge (\overline{z_1} \vee x_3 \vee ... \vee x_k) & \text{ otherwise }\end{array} \right. \] 
 
@@ -355,9 +355,9 @@ Suppose $z_i$ is in a partial solution of 3SAT. There are two cases:
 Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are a limited number of $z_i$, we can repeat this procedure and arrive at a partial assignment of the 3SAT formula which works for the SAT formula as well.
 \end{proof}
 
-\subsection{$\mathsf{FCP-Triangle Partition}$}
+\subsection{$\mathsf{FCP}$ Triangle Partition}
 
-This problem is a known $\NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the fewest clues version of the problem since we will use it to show hardness results for $\mathsf{FCP-Latin Squares}$ and $\mathsf{FCP-Sudoku}$. There is a general description of the problem in \cite{holyer1981np}. A specific instance is addressed in \cite{colbourn1984complexity}. We will use the definition in \cite{colbourn1984complexity}. We first present a definition of a property of tripartite graphs which will simplify the analysis.
+This problem is a known $\NP$-complete problem which asks to partition the edges of a graph into triangles \cite{holyer1981np}. We present the fewest clues version of the problem since we will use it to show hardness results for $\mathsf{FCP}$ Latin Squares and $\mathsf{FCP}$ Sudoku. There is a general description of the problem in \cite{holyer1981np}. A specific instance is addressed in \cite{colbourn1984complexity}. We will use the definition in \cite{colbourn1984complexity}. We first present a definition of a property of tripartite graphs which will simplify the analysis.
 
 \begin{definition}
 A tripartite graph is \emph{uniform} if each vertex has equally many neighbors in each of the other two partitions.
@@ -373,7 +373,7 @@ Note that if a tripartite graph has a triangle partition, the graph must be unif
 The following proof is a sketch and is under revision.
 
 \begin{theorem}
-$\mathsf{FCP-Triangle Partition}$ is $\mathsf{FCP}$-complete.
+$\mathsf{FCP}$ Triangle Partition is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
@@ -388,11 +388,11 @@ So in $k$ triangles, we can either assume they are in an $H_{3,p}$ of a variable
 Likewise, if there is an assignment of $k$ variables, then in each clause, there is at least one variable which satisfies the clause. So we can switch the triangle in the variable for the triangle in the clause which satisfies it. This implies the value of the variable, so we can do this.
 \end{proof}
 
-\subsection{$\mathsf{FCP-LatinSquares}$}
+\subsection{$\mathsf{FCP}$ LatinSquares}
 
 In Latin Squares we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. 
 
-It is known that such problem is \NP-complete. We present the problem $\mathsf{FCP-Latin Squares}$ in our framework.
+It is known that such problem is $\NP$-complete. We present the problem $\mathsf{FCP}$ Latin Squares in our framework.
 
 \begin{itemize}
 \item Instance: A partially filled latin square, along with a parameter $k$. 
@@ -401,16 +401,16 @@ It is known that such problem is \NP-complete. We present the problem $\mathsf{F
 
 
 \begin{theorem}
-$\mathsf{FCP-Latin Squares}$ is $\mathsf{FCP}$-complete.
+$\mathsf{FCP}$ Latin Squares is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We do this via reduction from $\mathsf{FCP-TrianglePartition}$. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G;2n,2n,2n)$ in polynomial time \cite{colbourn1984complexity}. Since the Latin framework is constructed so that $G$ is the defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This completes the proof.
+We do this via reduction from $\mathsf{FCP}$ TrianglePartition. Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G;2n,2n,2n)$ in polynomial time \cite{colbourn1984complexity}. Since the Latin framework is constructed so that $G$ is the defect of $LF(G;2n,2n,2n)$, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This completes the proof.
 
 We claim that the above proofs give us an $\mathsf{FCP}$-hardness result for completing a partial Latin Square. To see this, note that the triangle partitions of a defect graph $G(P)$ are in one to one correspondence with the solutions to the Latin Square $P$.
 \end{proof}
 
-\subsection{$\mathsf{FCP-Sudoku}$}
+\subsection{$\mathsf{FCP}$ Sudoku}
 
 We first introduce the problem which motivated this study. In Sudoku puzzles, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. Often in the literature, $n$ is referred to as the order of the puzzle. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a number. 
 
@@ -422,7 +422,7 @@ We first introduce the problem which motivated this study. In Sudoku puzzles, we
 Note that when the instance is an empty Sudoku puzzle of order 3, the question becomes exactly the question of determining the size of the valid Sudoku puzzles. This particular instance of the problem can solve the problem that \cite{mcguire2012there} computed. 
 
 \begin{theorem}
-$\mathsf{FCP-Sudoku}$ is $\mathsf{FCP}$-complete
+$\mathsf{FCP}$ Sudoku is $\mathsf{FCP}$-complete
 \end{theorem}
 
 We will show the proof from \cite{takayuki2003complexity}. For proofs of the following two propositions, refer to the paper. 
@@ -455,7 +455,7 @@ where $B = \{ (i,j) | i < n \text{ and } (j \equiv 0) \mod n \}$. Then a square 
 
 \begin{proof} 
 
-We will show an $\mathsf{FCP}$ reduction from $\mathsf{FCP-Latin Squares}$ and argue that it can be done in polynomial time.
+We will show an $\mathsf{FCP}$-reduction from $\mathsf{FCP}$ Latin Squares and argue that it can be done in polynomial time.
 
 Suppose we are given a Latin Square $L$ of order $n$. We will construct a Sudoku instance of order $n$ as follows:
 \begin{displaymath}
@@ -467,7 +467,7 @@ S_0 (i,j) & : \text{otherwise}
 \end{array}
 \right.
 \end{displaymath}
-This construction can be done in polynomial time. In addition, from our previous analysis we know that any solution of $L$ has a unique corresponding solution of $S$. Therefore, we get a polynomial time $\mathsf{FCP}$ reduction.
+This construction can be done in polynomial time. In addition, from our previous analysis we know that any solution of $L$ has a unique corresponding solution of $S$. Therefore, we get a polynomial time $\mathsf{FCP}$-reduction.
 
 \begin{figure}[H]
 \label{fig:partialLS}
@@ -510,25 +510,25 @@ If a problem is $\mathsf{FCP}$-hard, it is also $\coNP$-hard.
 Consider the problem of $\mathsf{UNIQUE-SAT}$, which gives a Boolean formula and asks if there is exactly one solution. This problem is known to be $\coNP$-hard \cite{blass1982unique}. We can solve $\mathsf{UNIQUE-SAT}$ by asking the following $\mathsf{FCP}$ question: given a Boolean formula, is there a partial certificate of size at most 0? If and only if such a certificate exists, then by definition of the Boolean formula is uniquely satisfiable.
 \end{proof}
 
-We switch our focus now to the problem of $\mathsf{FCP-SAT}$, an $\mathsf{FCP}$-complete problem. 
+We switch our focus now to the problem of $\mathsf{FCP}$ SAT, an $\mathsf{FCP}$-complete problem. 
 
 \begin{proposition}
 $\mathsf{FCP}$ is contained in $\NP^{\NP}$.
 \end{proposition}
 
 \begin{proof}
-We do this by providing an algorithm that solves $\mathsf{FCP-SAT}$ with an NTM with a SAT oracle. 
+We do this by providing an algorithm that solves $\mathsf{FCP}$ SAT with an NTM with a SAT oracle. 
 
 The algorithm we give will rely on the following observations.
 
 \textbf{Observation 1:} A Boolean formula $\phi$ has a partial assignment of $k$ variables which yield a unique solution if and only if for every variable outside the partial assignment, one assignment of this variable yields a satisfiable formula, and the other does not. This observation holds due to the fact that there is only one accepting branch.
 
-\textbf{Observation 2:} A Boolean formula $\phi$ with a partial assignment of $k$ variables is \emph{not} uniquely satisfiable if and only if there exists a variable outside of the partial assignment for which both truth assignmetns of this variable give a satisfiable Boolean formula. This observation holds because this situation corresponds exactly with cases where we are not on a unique accepting branch.
+\textbf{Observation 2:} A Boolean formula $\phi$ with a partial assignment of $k$ variables is \emph{not} uniquely satisfiable if and only if there exists a variable outside of the partial assignment for which both truth assignments of this variable give a satisfiable Boolean formula. This observation holds because this situation corresponds exactly with cases where we are not on a unique accepting branch.
 
 To complete the proof, we simply give the algorithm:
 
 \begin{codebox}
-\Procname{$\mathsf{FCP-SAT}$: Instance: $\phi$ formula with variables $\{ x_i \}$ and variable $k$.}
+\Procname{$\mathsf{FCP}$ SAT: Instance: $\phi$ formula with variables $\{ x_i \}$ and variable $k$.}
 \li \For $i = 1, ..., k$ \Then
 \li Non-deterministically pick a variable $x_i$, without repetition
 \li Non-deterministically pick an assignment \End
@@ -544,9 +544,9 @@ To complete the proof, we simply give the algorithm:
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have formalized the notion of what it means for a problem to be uniquely solvable after giving the fewest possible number of clues. This gave rise to the $\mathsf{FCP}$ class. We presented $\mathsf{FPC}$ versions of some classical $\NP$ problems and showed they were complete for this class. In particular, this means $\mathsf{FCP-Sudoku}$ is $\NP$-hard, but is unlikely to be $\PSPACE$-hard. However, the instances of $\mathsf{FCP-Sudoku}$ which make it $\mathsf{FCP}$-complete are very far from empty. In fact, just by looking at the last reduction from $\mathsf{FCP-Latin Squares}$, a Sudoku of dimensions $n^2 \times n^2$ which is a hard instance, at most $n^2$ of the $n^4$ squares at empty. It would be interesting to see if the empty instances of Sudoku are still complete for $\mathsf{FCP}$. This would be exactly the problem \cite{mcguire2012there} solved for $n = 3$. 
+We have formalized the notion of what it means for a problem to be uniquely solvable after giving the fewest possible number of clues. This gave rise to the $\mathsf{FCP}$ class. We presented $\mathsf{FPC}$ versions of some classical $\NP$ problems and showed they were complete for this class. In particular, this means $\mathsf{FCP}$ Sudoku is $\NP$-hard, but is unlikely to be $\PSPACE$-hard. However, the instances of $\mathsf{FCP}$ Sudoku which make it $\mathsf{FCP}$-complete are very far from empty. In fact, just by looking at the last reduction from $\mathsf{FCP}$ Latin Squares, a Sudoku of dimensions $n^2 \times n^2$ which is a hard instance, at most $n^2$ of the $n^4$ squares at empty. It would be interesting to see if the empty instances of Sudoku are still complete for $\mathsf{FCP}$. This would be exactly the problem \cite{mcguire2012there} solved for $n = 3$. 
 
-Further work in the field includes looking at other related results and adapting our framework to a the more general setting. The authors also think that it is important to determine where this class fits in the complexity zoo. In particular, there seem to be connections with the class $\#P$. A stricter notion of a reduction might also be required. Finally, it would be interesting to find problems in $\P$ such that their $\mathsf{SPC}$ versions are as hard for the class, or $\NP$ hard problems such that their $\mathsf{SPC}$ versions are not hard for the class. 
+Further work in the field includes looking at other related results and adapting our framework to a the more general setting. The authors also think that it is important to determine where this class fits in the complexity zoo. In particular, there seem to be connections with the class $\#P$. A stricter notion of a reduction might also be required. Finally, it would be interesting to find problems in $\P$ such that their $\mathsf{SPC}$ versions are as hard for the class, or $\NP$-hard problems such that their $\mathsf{SPC}$ versions are not hard for the class. 
 
 \bibliography{references}
 \bibliographystyle{splncs}
