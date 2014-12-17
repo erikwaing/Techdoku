@@ -111,15 +111,36 @@ To the knowledge of the authors, there aren't any significant efforts to general
 
 \subsection{Formalizing the Question}
 
-In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. An \emph{instance} of a ``finding fewest clues" problem $P$ is a string over a finite alphabet that encodes a puzzle, as well as a parameter $k$. A \emph{solution} $s$ to $x$ is a set of values from a finite alphabet where $|s| = p(|x|)$, for some fixed polynomial $p$. $P$ also comes with an algorithm $A$ with inputs $x$ and $s$ that decides in polynomial time whether $s$ is a solution of $x$. Note that the existence of such an $A$ implies that the original decision problem of determining the existence of a solution is in NP.
+In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. We will be working with $\NP$ search problems, this is the class of problems whose decision is in $\NP$, but we ask for a particular solution. In the case of Hamiltonian Path, instead of asking does there exists a Hamiltonian path, we are asking to present a Hamiltonian path. It is clear that $\NP$ search problems are ``harder" than decision problems, since one can answer the decision problem once one has found a solution.
 
-The key feature of the fewest clues problem is the parameter $k$, which allows us to ask: does there exist a set $c$ of at most $k$ clues such that $c \subset s$ for exactly one solution $s$ to $x$?
+In particular, we will have an $\NP$ search problem be comprised of a set of \emph{instances}, which will be strings $x$ over some finite alphabet, and for an instance a set of possible \emph{solutions} to be strings $s$ of polynomial size with respect to $|x|$ over some finite alphabet. Each problem also comes with an algorithm $A$ that checks whether a string $s$ is in fact a solution for an instance $x$.
 
-Note that this set-up easily allows us to solve the classic problem of determining the minimum number of clues to uniquely specify a Sudoku puzzle. We just need to ask the following question: given the instance of an empty Sudoku, is there a set of clues $c$ that produces a uniquely solvable Sudoku and is such that $|c| \leq k$? Binary searching on the value of $k$ solves the original Sudoku minimum clues problem.
+A \emph{clue} will be an indexed character of a solution. So a clue indicates what character lies at some position of the solution.
+
+\begin{definition}
+Given some $\NP$ search problem $A$, the ``fewest clues" variation of $A$, $(\mathsf{FCP} A)$ asks for the minimum number of clues correspodning to a unique solution for any given instance.
+\end{definition}
+
+This set-up allows us to ask $\mathsf{FCP}$ variations to the common puzzles like Sudoku quiet easily. For the classical $9 \times 9$ Sudoku, we let the alphabet be $\Sigma = \{ 1, ..., 9 \} \cup \{ \Box \}$, and we let an instance be a string of length 81 with elements from $\Sigma$, where each position in the string corresponds to a position on the $9 \times 9$ Sudoku board. The presence of $\Box$ indicates that position is unknown. A solution will be a string of length $81$ with no $\Box$ characters. 
+
+The algorithm $A$ checks whether a solution is correct first checks that in every row, every column, and every $3 \times 3$ square contains all the numbers from $\{1 , ..., 9\}$ and that the solution contains the same numbers as the instance at the specified positions. Figure~\ref{fig:blanksudoku} shows a blank Sudoku puzzle indicating the rows, columns, and $3 \times 3$ squares.
+
+\begin{figure}
+\centering
+\label{fig:seventeencluesudoku}
+\includegraphics[width=0.5\linewidth]{seventeencluesudoku.jpg}
+\caption{17-Clue $9 \times 9$ Sudoku, taken from \cite{smallsudoku}}
+\end{figure}
+
+Therefore, the $\mathsf{FCP}$ Sudoku puzzle asks which is the fewest number of squares we must fill in order for the Sudoku to be uniquely solvable. A solution for the $9 \times 9$ case where the instance is initially empty is given in Figure~\ref{fig:seventeencluesudoku}. The fewest clues are given by the yellow squares.
+
+We can also ask the corresponding decision question for some fewest clues problem: does there exist less than $k$ clues which uniquely specify a solution for a given instance? By being able to answer this question, we can solve for the minimum number of clues necessary with a binary search through $k$.
 
 \subsection{The $\mathsf{FCP}$ Class}
 
-We now present definitions that give rise to a complexity class, which we call  $\mathsf{FCP}$ (Fewest Clues Problem). We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, we assume that we have a canonical ordering of the two branches, so we can call one the ``left" branch, and the other the ``right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial.
+We now present definitions that give rise to a complexity class, which we call  $\mathsf{FCP}$ (Fewest Clues Problem). This will sound very familiar to the above notions of solution and clue. We generalize the $\mathsf{FCP}$ variation to all $\NP$ search problems without having to explicitly specify the instance, solution and checker algorithm by framing the problem in terms of non-deterministic Turing machines. This generalization will give us an easy extension of the Cook-Levin theorem, which will show that $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete.
+
+We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, when the NTM performs a non-deterministic step where the computation branches, we assume that we have a canonical ordering of the two branches. We can call one the ``left" branch, and the other the ``right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial since we are only dealing with $\NP$ search problems.
 
 \begin{definition}
 A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or $\bot$.
@@ -129,7 +150,7 @@ A partial certificate is a read-only tape which contains at each tape cell one o
 The size of a partial certificate is the number of non-null entries. 
 \end{definition}
 
-For problems in $\NP$, a partial certificate is the generalization of a certificate of an $\NP$ problem. Any certificate of an $\NP$ problem can be thought of as a partial certificate. We can view partial certificates as ordinary certificates with some tape cells erased.
+For any $\NP$ search problem, a partial certificate is the generalization of a certificate. Also, any certificate of an $\NP$ problem can be thought of as a partial certificate. We think of partial certificates as ordinary certificates with some tape cells erased.
 
 \begin{definition}
 A modified non-deterministic Turing machine (mNTM) is an NTM where there is an additional input of a partial certificate. At each step of the computation, an mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
@@ -138,45 +159,169 @@ A modified non-deterministic Turing machine (mNTM) is an NTM where there is an a
 In some sense, a partial certificate makes an mNTM more deterministic. If a partial certificate contains no $\bot$ characters, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. It is clear that given any NTM, we can construct a corresponding mNTM which runs in exactly the same manner, but has an additional input of a partial certificate. With these definitions, we are ready to define the class $\mathsf{FCP}$.
 
 \begin{definition}
-$\mathsf{FCP}$ is the class of decision problems of the following form:
+$\mathsf{FCP}$ is the class of function problems of the following form:
 \begin{quote}
-Given an NTM running in polynomial time and a parameter $k$, does there exists a partial certificate of size at most $k$ such that the corresponding mNTM with the partial certificate has only one accepting branch?
+Given an NTM running in polynomial time, compute the smallest a partial certificate such that the corresponding mNTM with the partial certificate has only one accepting branch?
 \end{quote}
 \end{definition}
 
 \begin{proposition}
-Any fewest clues problem is in $\mathsf{FCP}$, and alternative, any problem in $\mathsf{FCP}$ can be phrased as a fewest clues problem.
+Any problem in $\mathsf{FCP}$ can be phrased as a fewest clues problem.
 \end{proposition}
 
 \begin{proof}
-Our problems have polynomially long solutions, which can be checked in polynomial time with the algorithm $A$. Therefore, we can create the NTM that non-deterministically generates a solution, and checks whether the solution works deterministically. Computing whether this NTM has a partial certificate of size at most $k$ with only one accepting branch is almost equivalent to asking whether there exists a set of clues of size $k$. 
-
-Suppose there were $c$ possible choices for a element whose value we are trying to determine. Then the NTM with branching factor $2$ must have $\log c$ levels in which it branches non-deterministically. The possible problem which arises is that one value in the clue set might correspond to $\log c$ values in the partial certificate. In order to make sure that one clue in the clue set corresponds to exactly one value in the partial certificate, we branch of the decisions in a slightly different manner. In particular, instead of splitting the decisions with a complete binary tree of height $\log c$, we split the decisions with a complete binary tree of height $c$. The $i$th level right branch in the tree corresponds to picking the $i$th value out of possible $c$ values. We make all the branches for which the decisions contain more than one right branch be rejecting branches. This means that one value in the clue set will correspond to exactly one value in the partial certificate, which will indicate which value was chosen.
-
-Alternatively, if we have a NTM running in polynomial time, then we can think of the problem as finding which turns at the branches one must take in order for the NTM to accept. A partial certificate of size at most $k$ is equivalent to a clue set of size $k$.
+Suppose we are given NTM $M$ which runs in polynomial time with respect to the length of the input. We create a fewest clues problem $\mathsf{FCP} M$:
+\begin{itemize}
+\item Instances: these are the instances of the NTM
+\item Solutions: these are strings with characters in $\Sigma = \{ 0, 1 \}$.
+\item Checker algorithm: Given an instance $x$ and a solution $s$, simulate an mNTM which corresponds to the NTM $M$ with partial certificate $s$. If the runtime of the mNTM is not equal to $|s|$, then reject. If it is equal, and so the mNTM behaves deterministically and accepts, then accept. 
+\end{itemize}
+\begin{enumerate}
+\item Each clue in $\mathsf{FCP} M$ corresponds to a character in the certificate.\\
+Proof: This is because each clue is an indexed character of the solution, which is in turn an indexed character of a certificate.
+\item A set of clues corresponds to a partial certificate for $M$.\\
+Proof: This follows from $1$ by taking many of characters in the certificate.
+\item If $C$ is a set of clues with a unique solution, then the corresponding partial certificate will have a unique accepting branch.\\
+Proof: Suppose there is another accepting branch in the mNTM. The non-deterministic turns at each step specify two possible solutions for the set of clues $C$. 
+\item If $C$ is the smallest set of clues with a unique solution, then the corresponding partial certificate is the smallest partial certificate with mNTM having a unique accepting branch.\\
+Proof: Follows from 3 and the fact that the size of the partial certificate is the same as the number of clues.
+\item Therefore, a problem in $\mathsf{FCP}$ can be phrased as a fewest clues problem.\\
+Proof: follows from $4$ and because each partial certificate corresponds to a set of clues.
+\end{enumerate}
 \end{proof}
 
+\begin{proposition}
+Any fewest clues problem with solution alphabet $\Sigma = \{ 0 ,1 \}$ is in $\mathsf{FCP}$.
+\end{proposition}
+
+\begin{proof}
+We assume that we have some fewest clues problem, $\mathsf{FCP} A$, where:
+\begin{itemize}
+\item The set of instances is $I$.
+\item The set of solutions is $S(x)$ for each $x \in I$ where each string is a character from some alphabet $\Sigma$ and each $s \in S(x)$ has $|s| \leq p(|x|)$.
+\item We have an algorithm $A$ with inputs $x \in I$, $s \in S$ that decides in polynomial time whether $s$ is a solution to $x$.
+\end{itemize}
+We will construct a NTM $M$ such that the smallest partial certificate for $M$ will correspond to the fewest clues in $\mathsf{FCP} A$. \\
+NTM $M$: Given an instance $x$, non-deterministically, for $p(|x|)$ steps, generate a solution $s$ by writing a character in each step, where the left branch writes $0$ in the solution and the right branch writes $1$ in the solution. Then simulate $A$ with inputs $x$ and $s$. Accept if $A$ accepts, and reject if $A$ rejects. 
+\begin{enumerate}
+\item A partial certificate corresponds to a set of clues of the same size.\\
+Proof: The partial certificate only applies to non-deterministic steps, where $M$ writes down a solution. Therefore, a partial certificate tells the mNTM which characters to write at which positions deterministically, which correspond to a set of clues.
+\item If a partial certificate has an mNTM with only one accepting branch, then the corresponding set of clues has a unique solution.\\
+Proof: If the partial certificate has only one accepting branch, then it means that the corresponding set of clues have only a unique way to complete the clues to have a solution, since each branch explores every possible solution which is a superset of the set of clues.
+\item If there exists a set of clues with a unique solution, there exists a partial certificate with only one accepting branch.\\
+Proof: The set of clues specifies a partial certificate. If there is one way to fill the set of clues to have a solution, each solution will correspond to a branch of the computation. 
+\item The smallest partial certificate with a unique accepting branch in the mNTM is the smallest set of clues with a unique solution.\\
+Proof: follows from 2 and 3 and the fact that corresponding partial certificates and sets of clues have the same size. 
+\end{enumerate}
+\end{proof}
+
+We are almost there, we just need to show that the condition that $\Sigma = \{ 0, 1\}$ is unneccesary. We do this by cleverly choosing how to branch.
+
+\begin{proposition}
+Any fewest clues problem is in $\mathsf{FCP}$.
+\end{proposition}
+
+\begin{proof}
+The only problem with the above proof for arbritrary \emph{finite} $\Sigma$ is that we simply cannot write down every possible solution in the non-deterministic step in $p(|x|)$ steps. Let $|\Sigma| = \sigma$. If we require the NTM $M$ to have branching factor $2$, it will take at least $\log \sigma$ non-deterministic steps to specify a unique characted in $\Sigma$ to write down. This is a problem, since a specific character in the partial certificate might not be a clue, but rather might say, ``the $i$th character of the solution is in the first half of $\Sigma$". We would no longer maintain the number of clues equal to the size of the partial certificate, since each clue would correspond to $\log \sigma$ characters in a partial certificate.
+
+Instead of taking $\log \sigma$ steps to decide which character of $\Sigma$ to write in the solution, we use $\sigma$ steps. The first non-deterministic step will choose whether to write the first element of $\Sigma$. The second will choose whether to write the second. The third step will choose the third element of $\Sigma$ and so on (see Figure~\ref{fig:branching}). Since each branch of the computation must be the same length, once we pick, we continue branching for $\sigma$ steps, and if we ever take a right branch again, will reject. I claim now that each partial certificate corresponds to a clue of the same size and vice-versa, allowing up to complete the theorem.
+\begin{enumerate}
+\item Each clue correponds to a segment of $\sigma$ characters in a certificate.\\
+Proof: This is obvious, since it takes us $\sigma$ non-deterministic steps to make a choice of character.
+\item There are no 0's in the smallest partial certificate with a unique accepting branch.\\
+Proof: Suppose there was a 0 in the smallest partial certificate with a unique accepting branch, then that 0 corresponds to a taking some left branch. The left branch was in the process of picking some character, and suppose the unique accepting branch picked $a \in \Sigma$, then replace the 0 in the partial certificate, with the $1$ which picked $a$ in that segment of $\sigma$ branches. This is also a partial certificate of the same size. 
+\item The 1's in the smallest partial certificate are inside their chunk of $\sigma$ branches.\\
+Proof: if there were two 1's inside the chunk, the branch will reject.
+\item If the $i$th branch of the $j$th chunk of $\sigma$ branches in the smallest partial certificate correponds to the clue of picking the $i$th element of $\Sigma$ for index $j$ in the solution.\\
+Proof: follows from the fact that there are only 1's, each in their $\sigma$ long chunks.
+\item Each smallest partial certificate with unique accepting branch corresponds to a set of clues of the same size with a unique solution. \\
+Proof: this follows from 4 and the fact that we know how to go from clues to partial certificates.
+\end{enumerate}
+\end{proof}
+
+\begin{figure}
+\centering
+\label{fig:branching}
+\includegraphics[width=0.4\linewidth]{branching.pdf}
+\caption{Branching to pick $\Sigma = \{ 0, 1, 2, 3 \}$}
+\end{figure}
+
 The above proposition justifies our analysis of this class for answering these questions.
-
-\subsubsection{$\mathsf{FCP}$-reductions}
-
-We have not fully characterized what a reduction in this class is. Instead, we use Karp-style single-call parsimonious reductions. We find a parsimonious mapping from instances of some problem $\Pi_1$ to instances of some other problem $\Pi_2$. If the partial certificates sizes are preserved by the mapping, if we can decide whether a partial certificate exists for an instance of $B$, then we can decide whether a partial certificate exists for an instance in $A$. So if the $\mathsf{FCP}$ version of $A$ is $\mathsf{FCP}$-hard, then the $\mathsf{FCP}$ version of $B$ is $\mathsf{FCP}$-hard. 
 
 \section{Some $\mathsf{FCP}$-complete Problems.}
 \label{sec:The Problems}
 
-In this section, we proceed to show that $\mathsf{FCP-Sudoku}$ is $\mathsf{FCP}$-complete. In order to do so, we first show that $\mathsf{FCP-SAT}$ is $\mathsf{FCP}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
+In this section, we proceed to show that $\mathsf{FCP}$ Sudoku is $\mathsf{FCP}$-complete. In order to do so, we first show that $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete. We then follow a known chain of reductions that is used to show that the problem of filling in a Sudoku is $\mathsf{NP}$-complete. 
 
-\subsection{$\mathsf{FCP-SAT}$}
+\subsection{$\mathsf{FCP}$ SAT}
 The following is the fewest clues version of the Boolean satisfiability problem.
 
 \begin{itemize}
-\item Instance: a Boolean formula $\phi$, along with a parameter $k$.
-\item Question: Is there a set of clues of size at most $k$ such that the Boolean formula restricted to that partial assignment is uniquely satisfiable?
+\item Instance: a Boolean formula $\phi$.
+\item Question: What is the smallest partial assignment of the variables which is uniquely satisfiable?
 \end{itemize}
 
+We will prove that $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete using the same construction as in the Cook-Levin theorem. We include the theorem here since our proof draws on many of their ideas. The proof is from \cite{Garey}, but the authors give it as it appears in Wikipedia.
+
 \begin{theorem}
-$\mathsf{FCP-SAT}$ is $\mathsf{FCP}$-complete.
+SAT is $\NP$-complete.
+\end{theorem}
+
+\begin{proof}
+For any NTM $M$ which runs in polynomial time, and given an input $x$ to the $M$, we will make a Boolean expression $\phi$ of polynomial size in $x$ such that the formula is satisfiable if and only if $M$ accepts on input $x$. 
+
+Recall that a NTM $M$ is defined by a tuple of states $Q$, $\Sigma$ a finite alphabet of tape symbols, $s \in Q$ a starting state, $F \subset Q$ a set of accept states, and $\delta \subset ((Q - F) \times \Sigma) \times (Q \times \Sigma \times \{ -1, 1\}))$ is the non-deterministic transition function. Suppose $M$ runs in $p(|x|)$ where $p$ is some polynomial.
+
+For each $q \in Q$, $-p(|x|) \leq i \leq p(|x|)$, $j \in \Sigma$, and $0 \leq k \leq p(|x|)$, we have the variables outlined in the following table:\\
+\begin{center}
+\begin{tabular}{| l | l | l |}
+  \hline    
+  Variables & Intended Interpretation & How many?\\
+  \hline \hline          
+  $T_{i,j,k}$ & True if the tape cell $i$ contains the symbol $j$ at time $k$ & $O(p(|x|)^2)$ \\
+\hline
+  $H_{i,k}$ & True if the head position is at tape cell $i$ at time $k$ & $O(p(|x|)^2)$ \\
+\hline
+  $Q_{q, k}$ & True if the NTM is at state $q$ at time $k$ & $O(p(|x|))$ \\
+  \hline  
+\end{tabular}
+\end{center}
+Now that we've defined polynomially many variables, we will make the clauses of the Boolean formula.
+\begin{center}
+\begin{tabular}{| l | l | l | l |}
+  \hline    
+  Clause & Conditions & Interpretation & How many?\\
+  \hline \hline
+  $T_{i,j,0}$ & \begin{tabular}{l} Cell $i$ contains \\ $j\in \Sigma$ initially \end{tabular} & initial content of tape match $x$ & $O(p(|x|))$ \\
+\hline
+  $Q_{s, 0}$ & & set starting state & 1 \\
+\hline
+  $H_{0,0}$ & & starting head position at 0 & 1 \\
+\hline
+  $\neg T_{i,j,k} \vee \neg T_{i,j', k}$ & $j \neq j'$ & at most one symbol per cell & $O(p(|x|)^2)$\\
+\hline
+ $\bigvee_{j \in \Sigma} T_{i,j,k}$ & & at least one symbol per cell & $O(p(|x|)^2)$ \\
+\hline
+ $T_{i,j,k} \wedge T_{i,j',k+1}\rightarrow H_{i,k}$ & $j \neq j'$ & tape only changes when written & $O(p(|x|)^2)$ \\
+\hline
+ $\neg Q_{q, k} \vee \neg Q_{q', k}$ & $q \neq q'$ & Only one state at a time & $O(p(|x|))$ \\
+\hline
+ $\neg H_{i,k} \vee \neg H_{i', k}$ & $i \neq i'$ & Only one head position at a time & $O(p(|x|)^2)$ \\
+\hline
+$\begin{array}{l}
+(H_{i,k} \wedge Q_{q,k} \wedge T_{i,\sigma,k}) \rightarrow \\
+\bigvee_{(q, \sigma, q', \sigma',d) \in \delta} \\ (H_{i+d, k+1} \wedge Q_{q', k+1} \wedge T_{i,\sigma',k+1}) \end{array}$ & $k \leq p(|x|)$ & possible transitions & $O(p(|x|)^2)$\\
+  \hline  
+$\bigvee_{k \leq p(|x|)} \bigvee_{t\in F} Q_{f,k}$ & & must have an accepting state & 1 \\
+\hline
+\end{tabular}
+\end{center}
+If the formula is satisfiable, then the satisfying assignments corresponds to a branch of the computation on $M$. Likewise, if there is an accepting branch, then the computation through that branch given the values of the variables, since the branch is accepting, all the clauses are satisfied.
+\end{proof}
+
+\begin{theorem}
+\label{thm:cooklevinanalog}
+$\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
