@@ -33,6 +33,7 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{clrscode4e}
+\usepackage{verbatim}
 \urlstyle{same}
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
 \noindent\keywordname\enspace\ignorespaces#1}
@@ -264,6 +265,7 @@ The following is the fewest clues version of the Boolean satisfiability problem.
 We will prove that $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete using the same construction as in the Cook-Levin theorem. We include the theorem here since our proof draws on many of their ideas. The proof is from \cite{Garey}, but the authors give it as it appears in Wikipedia.
 
 \begin{theorem}
+\label{thm:cooklevin}
 SAT is $\NP$-complete.
 \end{theorem}
 
@@ -325,7 +327,73 @@ $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-The proof is similar to that of the Cook-Levin theorem presented in \cite{Garey}. We first turn an arbitrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem to get a Boolean formula $\phi$. 
+We use the reduction from the Cook-Levin theorem, described in Theomem~\ref{thm:cooklevin}.
+
+\begin{enumerate}
+\item We assume that we have a NTM $M$ with input $x$ running in polynomial time.
+\item We compute the Boolean formula $\phi$ corresponding to $M$ with input $x$ as in the Cook-Levin theorem.
+\item Since we assumed that $M$ has branching factor at most $2$, at each step, we add the variables $l_k$ which is True if and only if $M$ takes the left branch of the computation at time $k$.
+\item We transoform each clause $(H_{i,k} \wedge Q_{q,k} \wedge T_{i, \sigma, k}) \rightarrow \bigvee (H_{i+d,k+1} \wedge Q_{q',k+1} \wedge T_{i,\sigma',k+1})$ into 
+\[
+ (H_{i,k} \wedge Q_{q,k} \wedge T_{i,\sigma, k}) \rightarrow \left(\begin{array}{c} (H_{i+d,k+1} \wedge Q_{q', k+1} \wedge T_{i,\sigma', k+1} \wedge l_k) \\ \vee \\ (H_{i+d',k+1} \wedge Q_{q'', k+1} \wedge T_{i,\sigma'', k+1} \wedge \neg l_k) \end{array}\right) \]
+Proof: Here, we are encoding in the variable $l_k$, whether we took the left branch or the right branch. Also, we are using the fact that the non-deterministic transition contains only two possible branches.
+\item We add the following clauses to obtain $\phi'$:
+\[ (H_{i,k} \wedge Q_{q,k} \wedge T_{i,\sigma,k} \wedge l_k) \leftrightarrow a_{l, i, q, \sigma, k} \]
+\[ (H_{i,k} \wedge Q_{q,k} \wedge T_{i,\sigma,k} \wedge \neg l_k) \leftrightarrow a_{\neg l, i, q, \sigma, k} \]
+Proof: We can do this without increasing $\phi$ too much since we have $O(p(|x|)^2)$ clauses.
+\item $\phi'$ is satisfiable if and only if $\phi$ is satisfiable. \\
+Proof: We know whenever $\phi'$ is satisfiable, $\phi$ is satisfiable since it contains more clause requirements. Now if $\phi$ is satisfiable, then we know that for each time $k$, only one of each head, state, and time position variables are True, in addition, we either took the left branch, or right branch, so that gives us the value of $l_k$, so we set the corresponding $a_{l, i,q,\sigma,k}$ or $a_{\neg l, i, q, \sigma, k}$ to True and all other $a_{l, i', q', \sigma', k}$ and $a_{\neg l, i', q', \sigma', k}$ to False.
+\item Let $P$ be the smallest partial assignment of the variables in $\phi'$ such that $\phi'$ is uniquely satisfiable after the assignment.
+\item In order to simplify notation, we use $l'$ be the literal $l$ or $\neg l$.
+\item Suppose some $a_{l', i, q, \sigma, k}$ in $P$ is assigned to False, then we can replace it with some other $a_{l'', i', q', \sigma', k}$ which is assigned to True. \\
+Proof: In the unique solution, there is some $a_{l', i', q', \sigma', k}$ which is True. We also know that $a_{l'', i',q',\sigma',k} \rightarrow \neg a_{l',i, q, \sigma, k}$ since there can only be one state variable, one head position variable, and one tape cell variable for that head position be True at that time. 
+\item We can find this is alternate $a_{l'', i', q', \sigma', k}$ in polynomial time.\\
+Proof: There are polynomially many $a_{l'', i',q',\sigma',k}$ so we can write the formula $\phi'$ which remains after all the $P - \{a_{l', i, q, \sigma, k}\}$ are assigned. Furthermore, we assign $a_{l'', i', q',\sigma', k}$ and check whether the smallest partial assignment of this formula is empty (i.e. there exists a unique solution).
+\item Likewise, if there is any other type of variable in $P$ which is assigned to False, we can replace it with a True variable.\\
+Proof: the same procedure works as in $6$ and $7$ work.
+\item If some variable in $P$ is not a variable of type $a$, then we can replace it by a variable of type $a$.\\
+Proof: Existance holds since at that step, there is an action taken by NTM $M$, and we can find it by the same procedure as in $7$. 
+\item So we can find a smallest partial assignment $P$ made up of all variables of the form 
+\[ a_{l', i,q,\sigma, k} \]
+Proof: follows from $7$ and $9$.
+\item The variables $a_{l', i,q,\sigma, k}$ being True, indicate whether at a given time, $M$ took a left branch or a right branch.\\
+Proof: In fact, we have complete information of the transition NTM $M$ made at the $k$th step. If $l' = l$, then we took a left branch, if $l' = \neg l$, then we took a right branch.
+\item If the partial assignment has a unique satisfying assignment, then the mNTM $M$ has a unique accepting branch. \\
+Proof: This follows from $14$ and the fact that each assignment of the variables corresponds bijectively with a branch of the computation of $M$. 
+\item The smallest partial assignment with a unique satisfying assignment is the same size as the smallest partial certificate with a unique accepting branch.\\
+Proof: For each variable, we have one indication of a branch, and for each transition made by an accepting branch, we have a variable in the partial certificate. 
+\end{enumerate}
+
+\end{proof}
+
+%%%%
+%%%% Thought of a better proof
+%%%%
+\begin{comment}
+\item We make NTM $M'$ with alphabet $\Sigma \times Q$, and whenever $M$ is in state $q$ and will write $\sigma$ on the tape, $M'$ writes $(\sigma, q)$. \\
+Proof: Note that we can do this without increasing the runtime or the description of the NTM significantly. Each branch of the computation of $M'$ corresponds bijectively with a branch in $M$.
+\item We use the Cook-Levin reduction to get a Boolean formula $\phi$ corresponding to that $M'$ with input $x$. \\
+Proof: $\phi$ is still polynomial in the size of $M$ and $x$. 
+\item Let $\Phi$ be a partial assignment of the variables in $\phi$. 
+\item Suppose some variable $a$ in $\Phi$ is assigned to False.\\
+There are three possible cases to check:
+\begin{itemize}
+\item $a = T_{i,j,k}$: In this case, then by the clause $\bigvee_{j' \in \Sigma} T_{i,j',k}$ means one of $T_{i,j',k}$ is True, and by clause $\neg T_{i,j,k} \vee \neg T_{i,j',k}$, we can replace $a$ with $T_{i,j',k}$ assigned to True.
+\item $a = H_{i,k}$: In this case, then by the transition clause $(H_{i,k} \wedge Q_{q,k} \wedge T_{i,\sigma,k}) \rightarrow \bigvee (H_{i+d,k+1} \wedge Q_{q',k+1} \wedge T_{i,\sigma', k+1})$ and $H_{0,0}$, one of $H_{i', k}$ must be set to True, and by clause $\neg H_{i,k} \vee \neg H_{i', k}$, we can replace $a$ with $H_{i',k}$ assigned to True.
+\item $a = Q_{a,k}$: This is almost the exact same argument as the case for head position variables, since we have exactly one state be True at each time step.
+\end{itemize}
+\item So we can replace a variable assigned to False into a variable assigned to True in polynomial time.\\
+Proof: There are polynomially many variables, and we can switch one at a time in polynomial time as shown in 5.
+\item Suppose $a \in \Phi$ is a state variable $Q_{q,k}$ set to True, then we can replace $a$ with some tape variable $T_{i,j,k}$ which is set to True.\\
+Proof: We know that some tape variable was written at time $k$, which contained the value of $Q_{q,k}$, therefore, 
+\end{enumerate}
+%%%
+%%% End of draft proof
+%%%
+\end{proof}
+
+\begin{proof}
+We use  proof is similar to that of the Cook-Levin theorem presented in \cite{Garey}. We first turn an arbitrary NTM into an NTM with a bigger alphabet where at each step, if the NTM in state $q$ writes $a$ into some tape cell, then the other NTM writes $(q,a)$ into the same tape cell. Once we have this, we apply the reduction from the Cook-Levin theorem to get a Boolean formula $\phi$. 
 
 We claim that if $\phi$ has a partial assignment of $k$ variables with a unique complete assignment, then there exists a partial certificate for the NTM with corresponding mNTM having only one accepting branch of the computation.
 
@@ -335,6 +403,7 @@ This implies that we can assume that all assignments are true. If we have a head
 
 Since each complete assignment of the variables corresponds to a unique accepting branch of the computation, knowing the contents of the tape cell at each time tells you which branch of the computation to take. Therefore, if there exists a partial assignment of $k$ variables which yield a unique complete assignment, then there exists a partial certificate of size $k$ whose mNTM has a unique accepting branch.
 \end{proof}
+\end{comment}
 
 From this we can easily show that the fewest clues version of the 3SAT problem is $\mathsf{FCP}$-complete.
 
