@@ -412,16 +412,27 @@ $\mathsf{FCP}$ 3SAT is $\mathsf{FCP}$-complete.
 \end{theorem}
 
 \begin{proof}
-We reduce from $\mathsf{FCP}$ SAT and apply the parsimonious reduction of \cite{yaleclass}. We can assume without loss of generality that the SAT formula is a conjunction of clauses, which are disjunctions, since these are the formulas for the Cook-Levin theorem. Suppose that we have a set of clauses $\{ C_i \}$. Transform the clauses by successively applying the following function $g$ to each clause $C = (x_1 \vee x_2 \vee ... \vee x_k)$:
-\[ g(C) = \left\{ \begin{array}{cc} C & k \leq 3 \\
-						    (z_1 \vee x_1 \vee x_2) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee \overline{x_2}) \wedge (\overline{z_1} \vee x_3 \vee ... \vee x_k) & \text{ otherwise }\end{array} \right. \] 
-
-Suppose $z_i$ is in a partial solution of 3SAT. There are two cases:
+We reduce from $\mathsf{FCP}$ SAT. 
+\begin{enumerate}
+\item We assume without loss of generality that each SAT formula is a conjuction of clauses, where each are disjunctions.\\
+Proof: these are the kind of Boolean formulas we get from the Cook-Levin theorem.
+\item Suppose $C$ is a clause, we define a function $g$ to handle $C$. There are four cases:
 \begin{itemize}
-\item Suppose $z_i$ is set to false. In this case, we know that either $x_1$ or $x_2$ is set to true. If we switch $z_i$ and $x_1$ or $x_2$, one of these will create a partial certificate which is the same size as the previous one. This follows from the fact that the value of $z_i$ is implied by one of $x_1$ or $x_2$. Therefore, we can include $x_1$ or $x_2$ and remove $z$.
-\item $z_i$ is set to true. Then $\overline{z_i}$ is false, which means that whichever clause $\overline{z_i}$ ends up being a part of, at least one of the following two will be true. Analogous to the previous case, if we switch them, one will have a smallest partial certificate which is of the same size. So we can remove $z_i$ and replace it by another variable. 
+\item $C = x_1$. Then we let $g(C) = (x_1 \vee z \vee \overline{z})$.
+\item $C = (x_1 \vee x_2)$. Then we let $g(C) = (x_1 \vee x_2 \vee z) \wedge (x_1 \vee x_2 \vee \overline{z})$.
+\item $C = (x_1 \vee x_2 \vee x_3$), then we just let $g(C) = C$. 
+\item $C = (x_1 \vee x_2 \vee \dots \vee x_n)$, then we let
+\[ g(C) = (x_1 \vee x_2 \vee z_2) \wedge (\overline{x_2} \vee \overline{z_2}) \wedge (x_2 \vee z_2) \wedge g((\overline{z_2} \vee x_3 \vee \dots \vee x_n)) \]
 \end{itemize}
-Note that in the above procedure, we maintained the size of the partial certificate, and either removed $z_i$ and added a variable which was in SAT, or replaced it by $z_{i+1}$. Since there are a limited number of $z_i$, we can repeat this procedure and arrive at a partial assignment of the 3SAT formula which works for the SAT formula as well.
+\item $\phi = \bigvee C_i$ is satisfiable if and only iff $\phi' = \bigvee g(C_i)$ is satisfiable.\\
+Proof: A satisfying assignment for one gives a satisfying assignment for the other. The only case to check is the last case with big clauses. In this case, we let $z_i = \overline{x_i}$, and this gives a satisfying assignment.
+\item If some $z_i$ is in a partial assignment of $\phi'$, we can replace it with a variable $x_i$. \\
+Proof: this is because $z_i \leftrightarrow \overline{x_i}$. 
+\item There exists a smallest partial assignment of $\phi'$ which contains only variables of $\phi$, and we can find it in polynomial time. \\
+Proof: we can replace the added variables using the implication.
+\item the smallest partial assignment of $\phi'$ with a unique satifying assignment containing no added variable is a smallest partial assignment of $\phi$ with a unique satisfying assignment. \\
+Proof: If $\phi'$ yields a unique satisfying assignment, then so does $\phi$. The only thing to check is that it could not be smaller. This is true because a partial assignment of $\phi$ is a partial assignment of $\phi'$ with the same information. 
+\end{enumerate}
 \end{proof}
 
 \subsection{$\mathsf{FCP}$ Triangle Partition}
