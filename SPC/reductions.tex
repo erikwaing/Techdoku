@@ -1,0 +1,157 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[full]{complexity}
+\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amsthm}
+\usepackage{subfigure}
+%\usepackage{caption}
+%\usepackage{subcaption}
+%\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{clrscode4e}
+\usepackage{verbatim}
+\urlstyle{same}
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+% Uniform numbering for previously defined theorem environments (e.g., LNCS).
+\makeatletter
+\let\c@lemma=\c@theorem
+\let\c@corollary=\c@theorem
+\let\c@fact=\c@theorem
+\makeatother
+
+% Redefinition of LNCS or SODA or Springer proof environment to put a \Box at
+% the end of every proof.
+\let\realendproof=\endproof
+\def\endproof{\hspace*{\fill}$\Box$\realendproof}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{The Complexity of Determining Critical Sets}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{The Complexity of Determining Critical Sets}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+%
+\authorrunning{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{MIT,\\
+77 Mass Ave., Cambridge, MA 02139, USA, \\
+\protect\url{{fermima,arielsc,eaw}@mit.edu}}
+
+%
+% NB: a more complex sample for affiliations and the mapping to the
+% corresponding authors can be found in the file "llncs.dem"
+% (search for the string "\mainmatter" where a contribution starts).
+% "llncs.dem" accompanies the document class "llncs.cls".
+%
+
+\maketitle
+
+Given an $NP$ search problem, we have a set of instances $I$, and a set of solutions $S$. We let a clue be a subset of a solution.
+
+The fewest clues problem asks for the smallest clue with a unique solution for a given instance.
+
+\section{Reductions}
+
+\subsubsection{General Clue Reduction}
+We have a function mapping instances of $A$ to instances of $B$, $f: I_A \rightarrow I_B$ such that $x \in A \iff f(x) \in B$. We also want a function $g: C_B \rightarrow C_A$ such that $g$ is surjective, $g$ is a bijection on solutions, and subsets are preserved. So $c \subset c' \iff g(c) \subset g(c')$. We also require that if $c$ is a clue set for $f(x)$, then $g(c)$ is a clue set for $x$. 
+
+So on input $x$, we find the minimum clue problem for $f(x)$, $c_{f(x)}$ and then use $g$ to get a clue $c_x$ for $x$.  
+
+\begin{theorem}
+Suppose $A$ reduces to $B$ with this reduction and $\mathsf{FCP} A$ is $\mathsf{FCP}$-hard, then $\mathsf{FCP} B$ is $\mathsf{FCP}$-hard. 
+\end{theorem}
+
+\begin{proof}
+We want to show that if $c_{f(x)}$ is a minimum clue set, then $g(c_{f(x)})$ is a minimum clue set as well.
+
+First, we show that $g(c_{f(x)})$ is a clue. This is true because $c_{f(x)}$ is a clue. That is, there exists some solution $S_{f(x)}$ such that $c_{f(x)} \subset S_{f(x)}$, which means that $g(c_{f(x)}) \subset g(S_{f(x)})$, which is a solution.
+
+Second, we need to show that $g(c_{f(x)})$ has a unique superset solution. Suppose there were two different solutions, $S_x^{(1)}$ and $S_{x}^{(2)}$, then $g(c_{f(x}) \subset S_x^{(1)}, S_x^{(2)}$, and so $c_{f(x)} \subset S_{f(x)}^{(1)}, S_{f(x)}^{(2)}$ because $g$ is surjective, and because solutions have inverse solutions. Therfore, $c_{f(x)}$ is not unique.
+
+Third, we need to show that $g(c_{f(x)})$ is minimal. Suppose there was some other $c' \subset g(c_{f(x)})$, since the $g$ is surjective, there exists some other $c_{f(x)}' \subset c_{f(x)}$ which is smaller. So by assumption, this must have two distinct solutions. But then mapping them again gives us two distinct solutions for $c'$. 
+
+Therefore, $g(c_{f(x)})$ is a minimal clue set with a unique superset solution for $x$.
+\end{proof}
+
+Sometimes, the requirement that $g$ be a bijection on solutions is too restrictive, so we can give a more specialized sort of reduction that reduces the clue set.
+
+\subsubsection{Special Subset Clue Reduction}
+Suppose we have a problem $A$, with instance set $I_A$, solution set $S_A$, we let the set of clues be $C_A$. Note that $S_A \subset C_A$. We also have a problem $B$ with instance $I_B$, solution set $S_B$ and clue set $C_B$. 
+
+We will first need a function $f: I_A \rightarrow I_B$ such that $x \in I_A$ has a solution if and only if $f(x) \in I_B$ has a solution. Note this is the normal concept of reduction.
+
+We additionally specify $C_B' \subset C_B$ and an algorithm $M$ that maps any minimal clue set in $C_B$ into a minimal clue set in $C_B'$ of the same size which runs in polynomial time.
+
+We will now let $g: C_B' \rightarrow C_A$ which satisfies the following properties:
+\begin{enumerate}
+\item $g$ is surjective.
+\item $g$ is a bijection on solutions, and $S_x$ is a solution for $x$, if and only if $g^{-1}(S_x)$ is a solution to $f(x)$. 
+\item $c \subset c' \iff g(c) \subset g(c')$. 
+\end{enumerate}
+
+\begin{theorem}
+If we can find $f$, algorithm $M$, and function $g$ satisfying the above properties for $A$ and $B$, then if $\mathsf{FCP}A$ is $\mathsf{FCP}$-hard, then $\mathsf{FCP} B$ is $\mathsf{FCP}$-hard.
+\end{theorem}
+
+\begin{proof}
+Suppose $x \in I_a$. We compute $y = f(x)$. If $x$ has no solution, we can identify it by noting that $y$ will have no solution.
+
+Suppose $c_y$ is a fewest clues solution for $y$. Then $c_y' = M(c_y)$ will be another fewest clues solution to $y$. So for now on, suppose $c_y$ is a fewest clues solution for $y$ and $c_y \in C_B'$.
+
+Then let $c_x = g(c_y)$. 
+
+\begin{claim}
+$c_x$ is a fewest clues solution to $x$.
+\end{claim}
+
+We know $c_y \subset S_y$ since $c_y$ is a clue. Which means that $g(c_y) \subset g(S_y)$.
+Now we know that $c_x \subset g(S_y)$ and since $S_y$ is a clue of maximal size, then $c_x \subset S_x$, and by the property 2 of $g$, $S_x$ is a solution. So $c_x$ is a clue.
+
+Suppose $c_x$ does not have a unique solution superset. So $c_x \subset S_x^{(1)}$ and $c_x \subset S_x^{(2)}$. Then since $g$ is bijective on solutions, let $S_y^{(1)}=g^{-1}(S_x^{(1)})$ and $S_y^{(2)}=g^{-1}(S_x^{(2)})$. So $S_y^{(1)}$ and $S_y^{(2)}$ are solutions to $y$, and so by property 3 of $g$, $c_y \subset S_y^{(1)}$ and $c_y \subset S_{y}^{(2)}$, which means $c_y$ does not have a unique superset solution. A contradiction.
+
+Suppose $c_x$ is not minimal. Then let $c_x'$ be the smallest subset of $c_x$ with $S_x$ be the unique superset solution for $c_x'$. Then the smallest of $g^{-1}(c_x') = c_y'$ is a proper subset of $c_y$, and if there exists two superset solutions for $c_y'$, $S_y^{(1)}$ and $S_y^{(2)}$, then $c_x'$ does not have unique superset solutions.
+
+This means that $c_x$ is the minimal set.
+\end{proof}
+
+\end{document}
