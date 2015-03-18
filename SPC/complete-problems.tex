@@ -102,7 +102,7 @@ $g$is surjective, since for each right-branch, left-branch, there exists a set o
 
 \begin{itemize}
 \item $f$ takes all clauses like this: if below $4$ variables, then the obvious. If clause $C$ has $n$ variables, $x_1, ..., x_n$, then map to
-\[ (x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(z_2, x_3, ..., x_n) \]
+\[ (x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_n) \]
 \item $C_B'$ is the set of clues involving $x_i$ and full solutions.
 \item $M$: switch $z_i$ to $x_i$.
 \item $g$ projects
@@ -111,6 +111,16 @@ $g$is surjective, since for each right-branch, left-branch, there exists a set o
 Note that $f$ works, and its parsimonious. $M$ takes a minimal to a minimal since we add an element and remove an element. 
 
 $g$ is actually bijective, since $x_i \leftrightarrow z_i$. Subsets hold since $g$ maps individual elements.
+
+\subsection{NAE-3SAT}
+
+Note that the same reduction holds, since the instance created will never have all the elements in a clause set to true. 
+
+\subsection{1-in-3 SAT}
+
+Also, we if we add the modification to the above reduction where instead of $(x_1 \vee x_2 \vee z_2)$, we write $(x_1 \vee z_1) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee x_2 \vee z_2)$, then we never have more than one thing set to true in each clause. 
+
+Therefore, this reduction would show that $\mathsf{FCP}$ 1-in-3SAT is $\mathsf{FCP}$-hard. 
 
 \section{Triangle Partition}
 
@@ -126,6 +136,11 @@ Note that $M$ is fine becuase if a clause is set to $T$ partition, it doesn't ad
 $g$ is a surjection since it projects. $g$ is also a bijection on solutions since we defined designated how $C_B'$ will assign clauses in light of ambiguity. $g$ preserves subsets since each element maps to another element. 
 
 \section{Latin Squares}
+
+\begin{itemize}
+\item $f$ is the reduction which maps to the defect graph.
+\item sets of triangles correspond to numbers, so $C_B'$ is the same. 
+\end{itemize}
 
 \section{Sudoku}
 
@@ -148,5 +163,32 @@ $g$ is a surjection since it projects. $g$ is also a bijection on solutions sinc
 \end{itemize}
 
 Note that $g$ is surjective, since the reduction gives us a Sudoku. $g$ is bijective on everything and since it maps elements, it preserves subsets. 
+
+\section{3-colorability}
+
+We have a reduction from 3SAT. 
+\begin{figure}
+\centering
+\includegraphics[width=0.3\linewidth, angle=-90]{3colorable-var.jpg}
+\caption{variable gadget}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.3\linewidth]{3colorable-clause.jpg}
+\caption{clause gadget}
+\end{figure}
+
+Now we can do a similar thing as in triangle partition and make the F colors in the clause be the first ones written out. We also note that this throws away information, so it makes sense that it is still $\mathsf{FCP}$-hard. Furthermore, if the formula is planar, then the graph can be turned planar, with the following transformation, where also we keep alternating up between $x, \overline{x}, x, \overline{x}, ... $ so that each appearence connects to one, and since these are connected in a path (also all to $B$), they will have the same color.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\linewidth]{3colorable-planar.jpg}
+\caption{making the reduction planar}
+\end{figure}
+
+\section{Bag - Corral}
+
+If we assume that planar 3-coloring is $\mathsf{FCP}$-hard, then Corral is $\mathsf{FCP}$-hard. The clues here are lists of edges that are included in the graph. We can use the reduction from \url{http://www2.stetson.edu/~efriedma/papers/corral/corral.html} and note that since for each wire there are three possible fillings, the clues can be moved, and each implies the next, until we get to a turn (in particular, this corresponds to the edges that border the colors, but not true ones. Therefore, we can move the final solution to the values of the vertices. And so we can  three-color the graph, since in a vertex, we know how to color them since we know which edge starts the signal.
 
 \end{document}
