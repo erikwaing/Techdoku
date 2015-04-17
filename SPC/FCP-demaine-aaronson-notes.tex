@@ -1,0 +1,52 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{amsmath, amsfonts}
+\usepackage{ amssymb }
+\usepackage{complexity}
+\usepackage{nopageno}
+\usepackage{graphicx}
+\usepackage{parskip}
+\setlength{\parindent}{15pt}
+\setlength{\parindent}{0cm}
+\begin{document}
+
+
+
+\begin{center} \Large
+{Demaine-Aaronson Meeting notes. } \\[1ex]
+{Fermi Ma and Erik Waingarten}
+\end{center}
+
+\section{Hardness of FCP-2SAT}
+
+\textbf{Problem:} Given an instance 2-CNF formula $\phi(x_1,x_2,\dots,x_n)$, find the minimum $k$ such that there is a setting of $k$ variables so that the remaining formula is uniquely satisfiable.
+
+\textbf{Theorem:} FCP-2SAT is NP-hard.
+
+\emph{Proof:} We reduce from the NP-hard problem of finding a minimum independent dominating set. The problem gives a graph $G = (V,E)$ and asks for a the smallest subset of vertices $S \subseteq V$ such that $S$ is a minimum independent dominating set. To state the constraints more clearly, such a set $S$ has the property that every vertex has a vertex in $S$ adjacent to it (every vertex is dominated), and does not have any edges $(u,v)$ where $u,v \in S$ (independence).
+
+The reduction works as follows. For each edge $(u,v)$, we add the constraint $(\neg u \wedge \neg v)$ to the 2SAT formula. We claim that a minimum clue set for the resulting 2SAT formula consists of a setting of $k$ variables to be true, and that the variables in the clue correspond to a minimum independent dominating set. For the other direction, we claim that a minimum independent dominating set gives us a minimum clue set for the 2SAT formula, by simply setting all the variables corresponding to vertices in the set to be true.
+
+(Minimum clue assignment $\to$ minimum independent dominating set) Suppose we have a minimum clue assignment for 2SAT. First, we show that the minimum clue assignment consists only of variables set to be true. Suppose for the sake of contradiction that we have a variable $x_i$ set to be false. Then consider its set  of neighbors $N(x_i)$ (guranteed to be non-empty via construction). If any of the neighbors in $N(x_i)$ are true, then we note that some clue must either say that they are true, or imply that they are true. Either way, the fact that we know a neighbor is true means that we know $x_i$ is true, meaning that we didn't need a clue for $x_i$. Thus, we can assume that if $x_i$ is a necessary clue, then none of its neighbors are true. So then all of its neighbors are false. But if all of its neighbors are false, then simply setting $x_i$ to be true implies that all of its neighbors are false, so we may as well switch $x_i$ to be a true variable. 
+
+Now we show that a minimum clue assignment corresponds to a minimum independent dominating set. Note that if we have a variable that is part of the clue, it is set to be true and thus implies all of its neighbors are false. Thus, we will not have a clue for any of the neighbors, since setting a variable to be false does not imply anything. This gives the independence property. We have a dominating set as well, since if there exists a vertex where no neighbor is a clue, then we cannot possibly know that any neighbors are set to true (since clues can only imply that other vertices are false), and since true variables are the only ones that give implications, we cannot know what this vertex is. This would contradict the fact that we have a uniquely determined solution. So we have that a minimum clue assignment corresponds to an independent dominating set. Suppose the independent dominating set were not minimal. Then via the following paragraph, we can transform that into a clue set that is even smaller.
+
+(Minimum independent dominating set $\to$ minimum clue assignment) Suppose we have a minimum independent dominating set. If we set each variable in the minimum independent dominating set to be true, then we know due to the fact that it is a dominating set that every variable will be implied. So we know that this is a valid clue set. Now suppose that there is a clue set that is even smaller that the resulting clue set we have. Via the previous paragraph, we can use this to get another independent dominating set that is even smaller, contradicting minimality. So we know that the clue assignment is the minimum one.  
+
+This complets the proof. To summarize, we have that a minimum clue assignment implies an independent dominating set of the same size, and that an independent dominating set corresponds to a clue assignment of the same size. So we know that a minimum clue assignment actually implies a minimum independent dominating set, since if it didn't, we could go the other direction to get an even smaller clue assignment.
+
+\section{Valid Clue Problem}
+
+Define the problem $VCP$ to be the question of asking if a given clue $c$ is a valid clue for a certain problem $P$. It is a valid clue if and only if there is a solution $S$ to the problem such that $c \subseteq S$. If the $VCP$ of a problem is in a complexity class $A$, then we claim that the $FCP$ of that problem is in $NP^A$. The algoirthm for solving the $FCP$ version is to simply nondeterministically guess a clue $c$ and a solution $S$ such that $c \subseteq S$, and then query an $A$ oracle to determine if other solutions to the problem exist. We do queries by changing one bit of $S$ at a time, and asking if a solution exists.
+
+\section{Ideas and Comments}
+
+\begin{itemize}
+\item The fact that FCP 2SAT is NP-hard is quite interesting, because is shows that asking for the FCP version of a question is different from simply adding quantifiers to the question (one might suspect that the two are the same thing, since asking for the FCP version of SAT turns out to be equivalent to adding quantifiers). However, quantified 2SAT is a problem that can be solved in linear time, but FCP 2SAT is NP-hard.
+\item There are many reductions from 2SAT to other problems. Is that reduction strong enough for us to claim that the FCP versions of those problems are also ``hard"?
+\item Try to show that for any problem in $P$, the FCP version of that problem is in $NP$.
+\end{itemize}
+
+
+
+\end{document}
