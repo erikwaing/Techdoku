@@ -96,6 +96,21 @@ knowing the length of the minimum size clue with a binary search, we can find a 
 
 \section{Lower Bounds}
 
-Definitely $NP \subset \mathsf{FCP}$. Since we can solve $NP$-hard problems.
+Definitely $NP \subset \mathsf{FCP}$. Since we can solve $NP$-hard problems. We show that $\Sigma_2 \subset \mathsf{FCP}$. 
 
+We take the following $\Sigma_2$ complete problem: $\exists x \forall y \phi(x,y) = 0$. We will write this as an equivalent $\mathsf{FCP}$ question, does there exists a setting of $k$ variables, such that for any setting of the rest, there is one unique solution?
+
+The first thing we do is the following, suppose $|x| = k$
+\begin{align}
+\exists x \forall y \phi(x,y) = 0 &\leftrightarrow \exists 2k \text{ choices from $x, x', y$} \forall \text{rest} \phi(x,y) \vee \bigvee_{i=1}^k (x_i = x_i') = 0
+\end{align}
+Note that if we set the clue size to contain any $y$s, then there will be some $x$ or $x'$ not included, so we can always set $x_i = x_i'$ and satisfy the formula. Therefore, the $2k$ choices will be exactly those only specifying values of $x$ and $x'$. It remains to add a unique solution.
+\begin{align}
+& \leftrightarrow \exists 2k \text{ choices such that any of the rest $x, x', y, y^*$ } (\phi(x,y) \wedge (y^* = 0)) \vee (\bigwedge_i y_i=1) \vee  \bigvee_{i=1}^k (x_i = x_i') \\
+	& \text{ has a unique solution}
+\end{align}
+
+Note that if $\phi(x,*)$ has no solutions, then our constructed formula has a unique solution after we pick $x, x'$. Still if $x, x'$ are not originally set, then picking one of the $x_i'$ or $x_i$ will give many solutions to the formula. If $\phi(x, *)$ has some solution for any $x$, then after we pick $x, x'$, then our constructed formula will have more than 1 solution. 
+
+Therefore, $\Sigma_2 = FCP$. 
 \end{document}
