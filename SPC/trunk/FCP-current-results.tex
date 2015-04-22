@@ -1,0 +1,137 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[full]{complexity}
+\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amsthm}
+\usepackage{subfigure}
+%\usepackage{caption}
+%\usepackage{subcaption}
+%\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{clrscode4e}
+\usepackage{verbatim}
+\urlstyle{same}
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+% Uniform numbering for previously defined theorem environments (e.g., LNCS).
+\makeatletter
+\let\c@lemma=\c@theorem
+\let\c@corollary=\c@theorem
+\let\c@fact=\c@theorem
+\makeatother
+
+% Redefinition of LNCS or SODA or Springer proof environment to put a \Box at
+% the end of every proof.
+\let\realendproof=\endproof
+\def\endproof{\hspace*{\fill}$\Box$\realendproof}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{The Fewest Clues Problem}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{The Fewest Clues Problem}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+%
+\authorrunning{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{MIT,\\
+77 Mass Ave., Cambridge, MA 02139, USA, \\
+\protect\url{{fermima,arielsc,eaw}@mit.edu}}
+
+%
+% NB: a more complex sample for affiliations and the mapping to the
+% corresponding authors can be found in the file "llncs.dem"
+% (search for the string "\mainmatter" where a contribution starts).
+% "llncs.dem" accompanies the document class "llncs.cls".
+%
+
+\maketitle
+
+\section{Introduction}
+\label{sec:introduction}
+
+\section{Related Work}
+\label{sec:relatedwork}
+
+\section{The FCP Complexity Class}
+\label{sec:complexityclass}
+
+\subsection{$FCP-SAT$}
+
+\section{$\mathsf{FCP}$-Complete Problems}
+
+\subsection{Reductions}
+
+\subsection{3SAT}
+
+\subsection{TrianglePartition}
+
+\subsection{Latin Squares}
+
+\subsection{Sudoku}
+
+\section{$FCP = \Sigma_2$}
+
+\subsection{$FCP \subseteq \Sigma_2$}
+
+\subsection{$FCP \supseteq \Sigma_2$}
+
+\section{$\mathsf{FCP}$ Versions of Easy Problems}
+
+\subsection{FCP 2SAT} 
+(Fermi)
+
+\subsection{Other P problems with NP-hard FCP versions}
+
+(open)
+
+\subsection{P problems with $\Sigma_2$-hard FCP versions}
+
+(open)
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+
+\bibliography{references}
+\bibliographystyle{splncs}
+\end{document}
