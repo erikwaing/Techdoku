@@ -32,7 +32,7 @@
 %\usepackage{cite}
 \usepackage{hyperref}
 \usepackage{url}
-\usepackage{clrscode4e}
+%\usepackage{clrscode4e}
 \usepackage{verbatim}
 \urlstyle{same}
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
@@ -94,6 +94,161 @@
 
 \section{The FCP Complexity Class}
 \label{sec:complexityclass}
+
+\subsection{Formalizing the Question}
+
+In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. We will be working with $\NP$ search problems, this is the class of problems whose decision is in $\NP$, but we ask for a particular solution. In the case of Hamiltonian Path, instead of asking does there exists a Hamiltonian path, we are asking to present a Hamiltonian path. It is clear that $\NP$ search problems are ``harder" than decision problems, since one can answer the decision problem once one has found a solution.
+
+In particular, we will have an $\NP$ search problem be comprised of a set of \emph{instances}, which will be strings over some finite alphabet. For a particular instance $x$, there is set of possible \emph{solutions}, which are strings of polynomial size with respect to $|x|$ over some finite alphabet. Each problem also comes with an algorithm $A$ that checks whether a string $s$ is in fact a solution for an instance $x$, which runs in polynomial time. This is the verifier. For a given language $L \in \NP$, $x \in L$ if and onll if $S(x)$ is non-empty.
+
+A \emph{clue} will be an indexed character of a solution. So a clue indicates what character lies at some position of the solution.
+
+\begin{definition}
+Given some $\NP$ search problem $A$, the ``fewest clues" variation of $A$, $(\mathsf{FCP} A)$ asks for an instance of $A$, the minimum number of clues corresponding to a unique solution for any given instance.
+\end{definition}
+
+This set-up allows us to ask $\mathsf{FCP}$ variations to the common puzzles like Sudoku quiet easily. For the classical $9 \times 9$ Sudoku, we let the alphabet be $\Sigma = \{ 1, ..., 9 \} \cup \{ \Box \}$, and we let an instance be a string of length 81 with elements from $\Sigma$, where each position in the string corresponds to a position on the $9 \times 9$ Sudoku board. The presence of $\Box$ indicates that position is unknown. A solution will be a string of length $81$ with no $\Box$ characters. 
+
+The algorithm $A$ checking whether a solution to some instance is correct. It does so by checking all three Sudoku rules: every row, column, and $3 \times 3$ inner-square contains all the numbers from $\{1 , ..., 9\}$. In addition, we check the solution contains the same numbers as the instance at the specified positions.
+
+\begin{figure}
+\centering
+\label{fig:seventeencluesudoku}
+\includegraphics[width=0.5\linewidth]{seventeencluesudoku.jpg}
+\caption{17-Clue $9 \times 9$ Sudoku, taken from \cite{smallsudoku}}
+\end{figure}
+
+The $\mathsf{FCP}$ Sudoku puzzle asks for a given starting point $x$ which is the fewest number of additional squares we must fill in order for the Sudoku to be uniquely solvable. A solution for the $9 \times 9$ case where the instance is initially empty is given in Figure~\ref{fig:seventeencluesudoku}. The fewest clues are given by the yellow squares.
+
+We can also ask the corresponding decision question for some fewest clues problem: does there exist less than $k$ clues which uniquely specify a solution for a given instance? We can solve for the minimum number of clues necessary with a binary search through $k$ by asking the decision problem.
+
+\subsection{The $\mathsf{FCP}$ Class}
+
+We now present definitions that give rise to a complexity class, which we call  $\mathsf{FCP}$ (Fewest Clues Problem). This will sound very familiar to the above notions of solution and clue. We generalize the $\mathsf{FCP}$ variation to all $\NP$ search problems without having to explicitly specify the instance, solution and checker algorithm by framing the problem in terms of non-deterministic Turing machines. This generalization will give us an easy extension of the Cook-Levin theorem, which will show that $\mathsf{FCP}$ SAT is $\mathsf{FCP}$-complete. 
+
+\subsubsection{Main Idea} We define the complexity class by defining a complete problem for the class. We will define a modified type of non-deterministic Turing machine which takes ``advice" for some non-deterministic steps. The advice will specify which branch of non-determinism to take. Then we will say that the complete problem is for a given non-deterministic Turing machine, whether the size of the smallest advice is less than $k$. This definition will allow us to easily show that any fewest clues problem corresponding to an $\NP$ search problem is contained in $\mathsf{FCP}$. 
+
+We can assume without loss of generality that non-deterministic Turing machines (NTMs) have a branching factor of $2$ at each non-deterministic step. In addition, when the NTM performs a non-deterministic step where the computation branches, we assume that we have a canonical ordering of the two branches. We can call one the ``left" branch, and the other the ``right" branch. We also assume without loss of generality that all branches of the computation have length equal to a fixed polynomial since we are only dealing with $\NP$- search problems.
+
+\begin{definition}
+A partial certificate is a read-only tape which contains at each tape cell one of three possible characters, 0, 1, or $\bot$.
+\end{definition}
+
+\begin{definition}
+The size of a partial certificate is the number of non-null entries. 
+\end{definition}
+
+For any $\NP$ search problem, a partial certificate is the generalization of a certificate. Also, any certificate of an $\NP$ problem can be thought of as a partial certificate. We think of partial certificates as ordinary certificates with some tape cells erased.
+
+\begin{definition}
+A modified non-deterministic Turing machine (mNTM) is an NTM where there is an additional input of a partial certificate. At each step of the computation, an mNTM reads the next tape cell of the partial certificate and if the partial certificate contains a 0, it takes the left branch of the computation. If it contains a 1, it takes the right branch of the computation. If it contains $\bot$, then it behaves non-deterministically. Other than that, an mNTM behaves exactly like an NTM.
+\end{definition}
+
+In some sense, a partial certificate makes an mNTM more deterministic. If a partial certificate contains no $\bot$ characters, then the mNTM behaves like a deterministic Turing machine. Alternatively, we can think of the partial certificate as feeding in clues to the mNTM in order to guide its computation. It is clear that given any NTM, we can construct a corresponding mNTM which runs in exactly the same manner, but has an additional input of a partial certificate. With these definitions, we are ready to define the class $\mathsf{FCP}$.
+
+\begin{definition}
+$\mathsf{FCP}$ is the class of function problems with the following complete problem:
+\begin{quote}
+Given an NTM running in polynomial time along with an input $x$, what is the size of the smallest a partial certificate such that the corresponding mNTM running on $x$ with the partial certificate has only one accepting branch?
+\end{quote}
+The corresponding decision version takes as additional input some $k$ and we ask whether the smallest partial certificate has size at most $k$.
+\end{definition}
+
+\begin{proposition}
+Any problem in $\mathsf{FCP}$ can be phrased as a fewest clues problem.
+\end{proposition}
+
+\begin{proof}
+Suppose we are given NTM $M$ which runs in polynomial time with respect to the length of the input. We create a fewest clues problem $\mathsf{FCP} M$:
+\begin{itemize}
+\item Instances: these are the instances of the NTM
+\item Solutions: these are strings with characters in $\Sigma = \{ 0, 1 \}$ of length the runtime of $M$ on instance $x$ which indicate the branch leading to an accepting state.
+\item Checker algorithm: Given an instance $x$ and a solution $s$, simulate an mNTM which corresponds to the NTM $M$ with partial certificate $s$. If the runtime of the mNTM is not equal to $|s|$, then reject. If it is equal, and so the mNTM behaves deterministically and accepts, then accept. 
+\end{itemize}
+Each clue of $\mathsf{FCP} M$ corresponds to a character in the partial certificate. Therefore, a set of clues corresponds to a partial certificate. If $C$ is a set of clues that has a unique solution, then the corresponding partial certificate will have a unique accepting branch. The smallest set of clues with a unique solution will therefore correspond to the smallest partial certificate with a unique accepting branch.
+
+\begin{comment}
+% more in detail.
+\begin{enumerate}
+\item Each clue in $\mathsf{FCP} M$ corresponds to a character in the certificate.\\
+Proof: This is because each clue is an indexed character of the solution, which is in turn an indexed character of a certificate.
+\item A set of clues corresponds to a partial certificate for $M$.\\
+Proof: This follows from $1$ by taking many of characters in the certificate.
+\item If $C$ is a set of clues with a unique solution, then the corresponding partial certificate will have a unique accepting branch.\\
+Proof: Suppose there is another accepting branch in the mNTM. The non-deterministic turns at each step specify two possible solutions for the set of clues $C$. 
+\item If $C$ is the smallest set of clues with a unique solution, then the corresponding partial certificate is the smallest partial certificate with mNTM having a unique accepting branch.\\
+Proof: Follows from 3 and the fact that the size of the partial certificate is the same as the number of clues.
+\item Therefore, a problem in $\mathsf{FCP}$ can be phrased as a fewest clues problem.\\
+Proof: follows from $4$ and because each partial certificate corresponds to a set of clues.
+\end{enumerate}
+\end{comment}
+\end{proof}
+
+\begin{proposition}
+\label{prop:fewesttofcp}
+Any fewest clues problem with solution alphabet $\Sigma = \{ 0 ,1 \}$ is in $\mathsf{FCP}$.
+\end{proposition}
+
+\begin{proof}
+We assume that we have some fewest clues problem, $\mathsf{FCP} A$, where:
+\begin{itemize}
+\item The set of instances is $I$.
+\item The set of solutions is $S(x)$ for each $x \in I$ where each string is a character from some alphabet $\Sigma$ and each $s \in S(x)$ has $|s| \leq p(|x|)$.
+\item We have an algorithm $A$ with inputs $x \in I$, $s \in S$ that decides in polynomial time whether $s$ is a solution to $x$.
+\end{itemize}
+We will construct a NTM $M$ such that the smallest partial certificate for $M$ will correspond to the fewest clues in $\mathsf{FCP} A$. \\
+NTM $M$: Given an instance $x$, non-deterministically, for $p(|x|)$ steps, generate a solution $s$ by writing a character in each step, where the left branch writes $0$ in the solution and the right branch writes $1$ in the solution. Then simulate $A$ with inputs $x$ and $s$. Accept if $A$ accepts, and reject if $A$ rejects. 
+
+The partial certificate only applies to non-deterministic steps, where $M$ writes down a solution. Therefore, a partial certificate tells the mNTM which characters to write at which positions deterministically, which correspond to a set of clues. So a partial certificate corresponds to a set of clues of the same size. Note that a partial certificate has an mNTM with only one accepting branch if and only if the corresponding set of clues has a unique solution. Therefore, the smallest partial certificate with a unique accepting branch will correspond to the smallest set of clues with a unique solution.
+\begin{comment}
+% more detail
+\begin{enumerate}
+\item A partial certificate corresponds to a set of clues of the same size.\\
+Proof: The partial certificate only applies to non-deterministic steps, where $M$ writes down a solution. Therefore, a partial certificate tells the mNTM which characters to write at which positions deterministically, which correspond to a set of clues.
+\item If a partial certificate has an mNTM with only one accepting branch, then the corresponding set of clues has a unique solution.\\
+Proof: If the partial certificate has only one accepting branch, then it means that the corresponding set of clues have only a unique way to complete the clues to have a solution, since each branch explores every possible solution which is a superset of the set of clues.
+\item If there exists a set of clues with a unique solution, there exists a partial certificate with only one accepting branch.\\
+Proof: The set of clues specifies a partial certificate. If there is one way to fill the set of clues to have a solution, each solution will correspond to a branch of the computation. 
+\item The smallest partial certificate with a unique accepting branch in the mNTM is the smallest set of clues with a unique solution.\\
+Proof: follows from 2 and 3 and the fact that corresponding partial certificates and sets of clues have the same size. 
+\end{enumerate}
+\end{comment}
+\end{proof}
+
+We are almost there, we just need to show that the condition that $\Sigma = \{ 0, 1\}$ is unnecessary. The only problem with the above proof for arbitrary \emph{finite} $\Sigma$ is that we simply cannot write down every possible solution in $p(|x|)$ non-deterministic steps. Let $|\Sigma| = \sigma$. If we require the NTM $M$ to have branching factor $2$, it will take at least $\log \sigma$ non-deterministic steps to specify a unique character in $\Sigma$ to write down. This is a problem, since a specific character in the partial certificate might not be a clue, but rather might say, ``the $i$th character of the solution is in the first half of $\Sigma$". We would no longer maintain the number of clues equal to the size of the partial certificate, since each clue would correspond to $\log \sigma$ characters in a partial certificate. 
+
+Instead of taking $\log \sigma$ steps to decide which character of $\Sigma$ to write in the solution, we use $\sigma$ steps. Then we show that a only one character in the partial certificate will be needed, and this character will correspond to a clue.
+
+\begin{proposition}
+Any fewest clues problem is in $\mathsf{FCP}$.
+\end{proposition}
+
+\begin{proof}
+We will have the same construction as Proposition~\ref{prop:fewesttoffcp}, but instead of doing one non-deterministic step, we will use $\sigma$ non-deterministic steps to write a character in the solution.
+
+The first non-deterministic step will choose whether or not to write the first element of $\Sigma$. The second will choose whether or not to write the second. The third step will choose the third element of $\Sigma$ and so on (see Figure~\ref{fig:branching}). Since each branch of the computation must be the same length, once we pick, we continue branching for $\sigma$ steps, and if we ever take a right branch again, will reject. The proof follows from these short claims:
+\begin{enumerate}
+\item Each clue corresponds to a segment of $\sigma$ characters in a certificate.\\
+Proof: This is obvious, since it takes us $\sigma$ non-deterministic steps to make a choice of character.
+\item There are exists a smallest partial certificate with a unique accepting branch with no 0's.\\
+Proof: Suppose there was a 0 in the smallest partial certificate with a unique accepting branch, then that 0 corresponds to a taking some left branch. The left branch was in the process of picking some character, and suppose the unique accepting branch picked $a \in \Sigma$, then replace the 0 in the partial certificate, with the $1$ which picked $a$ in that segment of $\sigma$ branches. This is also a partial certificate of the same size. 
+\item There is at most one character with a 1 in the smallest partial certificate for each chunk of $\sigma$ non-deterministic steps. So assume that all smallest partial certificates contain no zeros and a single one in each chunk of $\sigma$ characters.\\
+Proof: if there were two 1's inside the chunk, the branch will reject.
+\item If the $i$th non-deterministic step of the $j$th chunk took the right branch in the smallest partial certificate, then the fewest clue of picking the $i$th element of $\Sigma$ for index $j$ in the solution.\\
+Proof: follows from the fact that there are only 1's, each in their $\sigma$ long chunks.
+\item Each smallest partial certificate with unique accepting branch corresponds to a set of clues of the same size with a unique solution. \\
+Proof: this follows from 4 and the fact that we know how to go from clues to partial certificates.
+\end{enumerate}
+\end{proof}
+
+\begin{figure}
+\centering
+\label{fig:branching}
+\includegraphics[width=0.4\linewidth]{branching.pdf}
+\caption{Branching to pick $\Sigma = \{ 0, 1, 2, 3 \}$}
+\end{figure}
+
+The above proposition justifies our analysis of this class for answering these questions.
 
 \subsection{$FCP-SAT$}
 
