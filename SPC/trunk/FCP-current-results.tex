@@ -329,21 +329,42 @@ By Proposition~\ref{prop:fcpsigma2}, we know that $\mathsf{FCP} \subset \Sigma_2
 
 \section{$\mathsf{FCP}$ Versions of Easy Problems}
 
-\subsection{FCP 2SAT} 
+We would like to be able to understand what happens to problems in general when their $\mathsf{FCP}$ versions are asked. 
 
-\textbf{Problem:} Given an instance 2-CNF formula $\phi(x_1,x_2,\dots,x_n)$, find the minimum $k$ such that there is a setting of $k$ variables so that the remaining formula is uniquely satisfiable.
+\subsection{$\mathsf{FCP}$ 2SAT} 
 
-\textbf{Theorem:} FCP-2SAT is NP-hard.
+\textbf{Problem:} Given an instance 2-CNF formula $\phi(x_1,x_2,\dots,x_n)$, does there exist a setting of $k$ variables so that the remaining formula is uniquely satisfiable.
 
-\emph{Proof:} We reduce from the NP-hard problem of finding a minimum independent dominating set. The problem gives a graph $G = (V,E)$ and asks for the smallest subset of vertices $S \subseteq V$ such that $S$ is a minimum independent dominating set. To state the constraints more clearly, such a set $S$ has the property that every vertex has a vertex in $S$ adjacent to it (every vertex is dominated), and does not have any edges $(u,v)$ where $u,v \in S$ (independence).
+\begin{proposition}
+$\mathsf{FCP} 2SAT$ is in \NP.
+\end{proposition}
+
+\begin{proof}
+The clue of size $k$ is the certificate. Since $2SAT$ can be satified in polynomial time, we can check whether there is a unique solution in polynomial time.
+\end{proof}
+
+\begin{theorem} 
+$\mathsf{FCP} 2SAT$ is \NP-hard.
+\end{theorem}
+
+We reduce from the NP-hard problem of finding a minimum independent dominating set. The problem gives a graph $G = (V,E)$ and asks for the smallest subset of vertices $S \subseteq V$ such that $S$ is a minimum independent dominating set. To state the constraints more clearly, such a set $S$ has the property that every vertex has a vertex in $S$ adjacent to it (every vertex is dominated), and does not have any edges $(u,v)$ where $u,v \in S$ (independence). \\
+
+\noindent\textbf{Problem:} Given a graph $G = (V, E)$. Does there exists $S \subset V$, with $|S| \leq k$ such that 
+\begin{itemize}
+\item $\forall v \in V$, either $v \in S$ or $(u, v) \in E$, $u \in S$ 
+\item $u, v \in S$ implies that there is no edge between $u$ and $v$. 
+\end{itemize}
 
 The reduction works as follows. For each edge $(u,v)$, we add the constraint $(\neg u \vee \neg v)$ to the 2SAT formula. We claim that a minimum clue set for the resulting 2SAT formula consists of a setting of $k$ variables to be true, and that the variables in the clue correspond to a minimum independent dominating set. For the other direction, we claim that a minimum independent dominating set gives us a minimum clue set for the 2SAT formula, by simply setting all the variables corresponding to vertices in the set to be true.
 
 We will need the following lemma.
 
-\textbf{Lemma:} Given a set of clues of size $k$ with $k_f > 0$ variables set to false, there exists another set of clues of size at most $k$ with strictly fewer than $k_f$ variables set to false.
+\begin{lemma} Given a set of clues of size $k$ with $k_f > 0$ variables set to false, there exists another set of clues of size at most $k$ with strictly fewer than $k_f$ variables set to false.
+\end{lemma}
 
-\textbf{Proof:} Consider a variable $x_i$ set to be false. Consider its set of neighbors $N(x_i)$, guaranteed to be non-empty via construction. First, consider the case where $N(x_i)$ contains nodes set to true. For each of the nodes $v \in N(x_i)$ that are set to true, a clue must either say that $v$ is true, or there must be a clue that implies that $v$ is true. No matter what, we can either remove $x_i$ or replace $x_i$ with a clue that one of its neighbors are true (CHECK THIS). It remains to consider the case where all the neighbors of $x_i$ are set to false. In this case, we can switch the clue that $x_i$ is set to false with a clue that $x_i$ is set to true, which will imply that all of its neighbors are false. $\square$
+\begin{proof} 
+Consider a variable $x_i$ set to be false. Consider its set of neighbors $N(x_i)$, guaranteed to be non-empty via construction. First, consider the case where $N(x_i)$ contains nodes set to true. For each of the nodes $v \in N(x_i)$ that are set to true, a clue must either say that $v$ is true, or there must be a clue that implies that $v$ is true. No matter what, we can either remove $x_i$ or replace $x_i$ with a clue that one of its neighbors are true (CHECK THIS). It remains to consider the case where all the neighbors of $x_i$ are set to false. In this case, we can switch the clue that $x_i$ is set to false with a clue that $x_i$ is set to true, which will imply that all of its neighbors are false.
+\end{proof}
 
 Now, we show that a minimum clue assignment gives an independent dominating set of the same size. Suppose we have a minimum clue assignment for 2SAT. We first apply the lemma above repeatedly until there are no false clues. So if we have a variable that is part of the clue, it is set to be true and implies all of its neighbors are false. Thus, we will not have a clue for any of the neighbors, since setting a variable to be false does not imply anything. This gives the independence property. We have a dominating set as well, since if there exists a vertex where no neighbor is a clue, then we cannot possibly know that any neighbors are set to true (since clues can only imply that other vertices are false), and since true variables are the only ones that give implications, we cannot know what this vertex is. This would contradict the fact that we have a uniquely determined solution.
 
