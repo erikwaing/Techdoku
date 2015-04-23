@@ -266,9 +266,66 @@ The above proposition justifies our analysis of this class for answering these q
 
 \section{$FCP = \Sigma_2$}
 
-\subsection{$FCP \subseteq \Sigma_2$}
+Having established given some complete problems for $\mathsf{FCP}$, we can ask where the complexity class lies in the context our current knowledge of complexity classes. We will be looking at the decision version of $\mathsf{FCP}$. 
 
-\subsection{$FCP \supseteq \Sigma_2$}
+\begin{proposition}
+\label{prop:fcpsigma2}
+$\mathsf{FCP} \subset \Sigma_2$
+\end{proposition}
+
+\begin{proof}
+We give a formulation of the fewest clues problem in terms of a $\Sigma_2$ question. For a given problem $A$,
+\[ (x, k) \in \mathsf{FCP} A \leftrightarrow \exists c, S \forall S' \phi(x, k, c, S, S') \]
+Where $\phi$ checks that $c$ is a clue of size at most $k$, $c \subset S$, $S' \neq S$, $S$ is a solution to $x$ and $S'$ is not. This corresponds to asking for a set of clues $c$ of size at most $k$, which has a solution, $S$, but no other solution.  
+\end{proof}
+
+We now wish to show that $\Sigma_2 \subset \mathsf{FCP}$. We take the following $\Sigma_2$ complete problem: $\exists x \forall y \phi(x,y) = 0$. We will write this problem as an equivalent $\mathsf{FCP} SAT$ question: for a given $\phi$, does there exists a setting of $k$ variables, such that for any setting of the rest, there is one unique solution.
+
+First, we take care of the unique solution. Suppose we had a modified question, $USAT$:
+\begin{quote} 
+Given some $\phi$, does there exists a setting of variables $x$ such that for any setting of varaibles $y$, there is one unique solution? 
+\end{quote}
+
+\begin{lemma}
+$USAT$ is $\Sigma_2$ hard.
+\end{lemma}
+
+\begin{proof}
+We will show that 
+\[ \exists x \forall y \phi(x,y) = 0 \leftrightarrow \exists x \forall y, z \left(\phi'(x, 0, 0) = 1 \right) \wedge \left((y \neq 0 \vee z \neq 0 ) \rightarrow \phi'(x, y, z) = 0 \right) \]
+The left-hand side is the complete problem of alternating $SAT$ for $\Sigma_2$, and the right-hand side says that $\phi'$ has only one solution for a given setting of $x$, $y=0$ and $z =0$. 
+
+Asking $USAT$ for $\phi'$ would solve the alternating $SAT$ question. 
+
+We let 
+\begin{align}
+\phi'(x, y, z) &= C_1 \vee C_2 \\
+		    C_1 &=\left(\phi(x, y) \wedge (z = 1)\right) \\
+		   C_2 &=  \left( y = 0 \wedge z = 0 \right) 
+\end{align}
+Note that $\phi'(x, 0, 0) = 1$. If $\exists x \forall y \phi(x, y)= 0$, then there is a setting of $x$ such that the $C_1 = 0$. The only way to satisfy $\phi'$ is through setting $y = 0$ and $z = 0$. If for any setting of $x$, there exists a setting of $y$ such that $\phi(x, y) = 1$, then we have some setting of $\phi'(x, y, 1) = 1$. So USAT would also be false since that assignment as well as $x, 0, 0$ evaluate to true.
+\end{proof}
+
+\begin{proposition}
+\label{prop:fcpsatsigmacomp}
+$\mathsf{FCP} SAT$ is $\Sigma_2$ hard.
+\end{proposition}
+
+\begin{proof}
+We will reduce from $USAT$. For a given $\phi(x, y)$ with $|x| = k$, we ask, does there exists a setting of $2k$ variables such that $\phi'(x, x', y) = \phi(x, y) \vee \bigvee_i (x_i = x_i')$ has a unique solution?
+
+Suppose $\exists x \forall y \phi(x,y)$ has a unique solution with assignment $\hat{x}$. Then we let $x = \hat{x}$, and for all $i$, we let $x_i' \neq x_i$. Therefore, once we set this, $\phi'(x, x', y)$ has a unique solution. 
+
+Suppose for any setting of $x$, there is more than one setting of $y$'s to get a satisfying assignment, so $\phi(x, y) \notin USAT$. Then if from the $2k$ elements, we set $x$ and $x'$, we are fine, since there will be more than one setting of the $y$'s to satisfy $\phi'$. However, if we set some element not in $x$ or $x'$, then since we can only set $2k$, there will be some $x_i$ or $x_i'$ that is not set. So setting $x_i = x_i'$ will allow an arbitrary setting of the remaining variables, so also, $\phi'$ does not have a unique satisfying assignment.
+\end{proof}
+
+\begin{theorem}
+$\mathsf{FCP} = \Sigma_2$
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:fcpsigma2}, we know that $\mathsf{FCP} \subset \Sigma_2$. In addition, we showed in Proposition~\ref{prop:fcpsatsigmacomp} that $\mathsf{FCP} SAT$ is $\Sigma_2$ hard. Since $\mathsf{FCP} SAT$ is $\mathsf{FCP}$-complete, $\Sigma_2$ complete problems are also $\mathsf{FCP}$-complete, and so $\Sigma_2 \subset \mathsf{FCP}$. Therefore, $\mathsf{FCP} = \Sigma_2$. 
+\end{proof}
 
 \section{$\mathsf{FCP}$ Versions of Easy Problems}
 
