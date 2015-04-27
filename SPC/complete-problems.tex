@@ -144,25 +144,65 @@ $g$ is a surjection since it projects. $g$ is also a bijection on solutions sinc
 
 \section{Sudoku}
 
-\begin{itemize}
-\item $f$ blows up the size of the Latin Squares problem as in this figure:  
-\begin{figure}[H]
-\label{fig:partialLS}
-\centering
-\includegraphics[scale=0.25]{sudoku-3.png}
-\end{figure}
+In Sudoku, or Number Place, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a numbers. We will show this problem is FCP-Complete by providing a reduction from FCP-Latin Squares. 
 
-\begin{figure}[H]
-\label{fig:partialNP}
-\centering
-\includegraphics[scale=0.25]{sudoku-1.png}
-\end{figure}
-\item $C_B$ is the total set of clues.
-\item $M$ does nothing.
-\item $g$ projects the clues in the only way.
+Before showing the main result of this section, we will exhibit a particular way to fill a Sudoku puzzle. Next, we will show how this particular solution can be used to explicitly map instances of Sudoku to instances of Latin Squares. For simplicity, throughout this argument we will be using numbers in the range $0$ through $n^2 - 1$. We will refer to the entry on the $i$-th row and $j$-th column of a Number Place puzzle as $S(i,j)$.
+
+\begin{proposition}
+Let $S_0$ be defined as
+$$S_0 (i,j) = ((i \mod n) n + \lfloor i/n \rfloor + j) \mod n^2. $$
+Then $S_0$ represents a solution to an order $n$ Number Place.
+\end{proposition}
+
+\begin{proof} 
+Omitted. See [Yato and Seta] 
+\end{proof}
+
+\begin{lemma}
+Let $S$ be a Sudoku instance of order $n$ such that
+\begin{displaymath}
+S(i,j) = \left\{
+\begin{array}{lr}
+\perp & : (i,j) \in B\\
+S_0 (i,j) & : \text{otherwise}
+\end{array}
+\right.
+\end{displaymath}
+
+where $B = \{ (i,j) | i < n \text{ and } (j \equiv 0) \mod n \}$. Then a square $S'$ obtained by filling in the blanks of $S$ is a solution to $S$ if and only if
+
+\begin{itemize}
+\item For any $(i,j) \in B$, $S'(i,j) \equiv 0 \mod n$
+\item A square $L$ defined by $L(i, j/n) = S'(i,j)/n$ for all $(i, j) \in B$ is a Latin Square.
 \end{itemize}
 
-Note that $g$ is surjective, since the reduction gives us a Sudoku. $g$ is bijective on everything and since it maps elements, it preserves subsets. 
+\end{lemma}
+
+\begin{proof} 
+Omitted. See [Yato and Seta] 
+\end{proof}
+
+\begin{lemma} 
+FCP-Sudoku is FCP-Complete
+\end{lemma}
+
+\begin{proof} 
+We will show a reduction via FCP-Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described above. Let $C_B$ be the set of set of clues of Sudoku. Then we can let $g(C_B)=C_B$, mapping the clues from $S(i,j)$ (where the $(i,j) \in B$) to $L(i, j/n)$.This mapping is surjective, bijective on solutions by the lemma above and preserves subsets. Therefore, FCP-Sudoku is FCP-Complete. 
+\end{proof}
+
+\begin{figure}[H]
+\begin{minipage}{0.45\textwidth}
+\includegraphics[scale=0.25]{sudoku-3.png}
+\label{fig:partialNP}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+\label{fig:partialLS}
+\includegraphics[scale=0.25]{sudoku-1.png}
+\end{minipage}
+\caption{Example of a mapping between instances of Latin Squares and Sudoku.}
+\end{figure}
 
 \section{3-colorability}
 

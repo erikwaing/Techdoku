@@ -1,0 +1,52 @@
+\begin{thebibliography}{1}
+
+\bibitem{mcguire2012there}
+McGuire, G., Tugemann, B., Civario, G.:
+\newblock There is no 16-clue sudoku: Solving the sudoku minimum number of
+  clues problem.
+\newblock arXiv preprint arXiv:1201.0749 (2012)
+
+\bibitem{Ghandehari2005121}
+Ghandehari, M., Hatami, H., Mahmoodian, E.:
+\newblock On the size of the minimum critical set of a latin square.
+\newblock Discrete Mathematics \textbf{293}(1–3) (2005)  121 -- 127 19th
+  British Combinatorial Conference 19th British Combinatorial Conference.
+
+\bibitem{Cooper:2014:CSS:2612293.2612628}
+Cooper, J., Kirkpatrick, A.:
+\newblock Critical sets for sudoku and general graph colorings.
+\newblock Discrete Math. \textbf{315-316} (February 2014)  112--119
+
+\bibitem{smallsudoku}
+Royle, G.:
+\newblock Good at sudoku? here’s some you’ll never complete
+
+\bibitem{Garey}
+Garey, M.R., Johnson, D.S.:
+\newblock Computers and Intractability; A Guide to the Theory of
+  NP-Completeness.
+\newblock W. H. Freeman \& Co., New York, NY, USA (1990)
+
+\bibitem{holyer1981np}
+Holyer, I.:
+\newblock The np-completeness of some edge-partition problems.
+\newblock SIAM Journal on Computing \textbf{10}(4) (1981)  713--717
+
+\bibitem{colbourn1984complexity}
+Colbourn, C.J.:
+\newblock The complexity of completing partial latin squares.
+\newblock Discrete Applied Mathematics \textbf{8}(1) (1984)  25--30
+
+\bibitem{takayuki2003complexity}
+Takayuki, Y., Takahiro, S.:
+\newblock Complexity and completeness of finding another solution and its
+  application to puzzles.
+\newblock IEICE transactions on fundamentals of electronics, communications and
+  computer sciences \textbf{86}(5) (2003)  1052--1060
+
+\bibitem{blass1982unique}
+Blass, A., Gurevich, Y.:
+\newblock On the unique satisfiability problem.
+\newblock Information and Control \textbf{55}(1) (1982)  80--88
+
+\end{thebibliography}
