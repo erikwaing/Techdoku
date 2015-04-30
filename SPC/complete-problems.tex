@@ -184,33 +184,34 @@ $\mathsf{FCP}-NAE-3SAT$ is $\mathsf{FCP}$-complete.
 We claim that the reduction for 3SAT is sufficient to show this. Note that the 3SAT instance created will never have all the elements in a clause set to true, therefore being a valid NAE-3SAT instance. 
 \end{proof}
 
-\subsection{1-in-3 SAT}
-
-
-\begin{theorem}
-$\mathsf{FCP}-1-in-3SAT$ is $\mathsf{FCP}$-complete. 
-\end{theorem} 
-
-\begin{proof}
-We claim that the reduction for 3SAT is also sufficient to show this. Consider the following change in the mapping presented. Rewrite the clauses of the form  $(x_1 \vee x_2 \vee z_2)$ to 
-
-$$(x_1 \vee z_1) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee x_2 \vee z_2).$$
-
-Then no clause will ever have more than one variable set to true, creating a valid 1-in-3SAT instance.  
-\end{proof}
+%\subsection{1-in-3 SAT}
+%
+%
+%\begin{theorem}
+%$\mathsf{FCP}-1-in-3SAT$ is $\mathsf{FCP}$-complete. 
+%\end{theorem} 
+%
+%\begin{proof}
+%We claim that the reduction for 3SAT is also sufficient to show this. Consider the following change in the mapping presented. Rewrite the clauses of the form  $(x_1 \vee x_2 \vee z_2)$ to 
+%
+%$$(x_1 \vee z_1) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee x_2 \vee z_2).$$
+%
+%Then no clause will ever have more than one variable set to true, creating a valid 1-in-3SAT instance.  
+%\end{proof}
 
 \section{Triangle Partition}
-[TO DO]
-\begin{itemize}
-\item $f$ is Holyer construction.
-\item $C_B$ is the clues with at most one particular triangle per $H_{3,p}$ graph, not in unions, the first true literal of each clause is set to $F$-partition. 
-\item $M$ translates the triangles to particular triangle. It also moves the triangles in the clauses so that the first true literal is set $F$-partition.
-\item $g$ projects variables. 
-\end{itemize}
+[TO CHECK] 
+In the triangle partition problem we are given a graph $G = (V,E)$ and want to find a partition of the $V$ into vertex-disjoint triangles. Holyer  \cite{holyer1981np} showed this problem is $\NP$-complete. We claim that it is also $\mathsf{FCP}$-complete and refer to elements of his proof. 
 
-Note that $M$ is fine becuase if a clause is set to $T$ partition, it doesn't add information, so we put whichever literal to $F$ partition that we need. 
+\begin{theorem}
+$\mathsf{FCP}$ Triangle Partition is $\mathsf{FCP}$-complete.
+\end{theorem}
 
-$g$ is a surjection since it projects. $g$ is also a bijection on solutions since we defined designated how $C_B'$ will assign clauses in light of ambiguity. $g$ preserves subsets since each element maps to another element. 
+\begin{proof}
+We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We will show a special subset clue reduction from $\mathsf{FCP}$-SAT. 
+
+We define $f$ to map instances of SAT to Triangle Partition as in \cite{holyer1981np}. For a given instance of Triangle Partition with clues, we let its special clue set $C_B'$ be the clues with at most one particular triangle per $H_{3,p}$ graph. We map the first true literal of each clause to an $F$-partition. The algorithm $M$ then translates toe triangles to these particular triangles and moves the triangles in clauses so that the first true literal is in $F$-partition. The mapping $g$ then simply projects variables, making it a surjective function that also preserves subsets since it maps elements to elements. It is also bijective on solutions since we made $C_B'$ assign clauses in ambiguous cases.   
+\end{proof}
 
 \section{Latin Squares}
 

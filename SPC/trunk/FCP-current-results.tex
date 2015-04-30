@@ -254,15 +254,141 @@ The above proposition justifies our analysis of this class for answering these q
 
 \section{$\mathsf{FCP}$-Complete Problems}
 
-\subsection{Reductions}
-
 \subsection{3SAT}
 
-\subsection{TrianglePartition}
+In this section we show that the $\mathsf{FCP}$ version of 3-SAT is also $\mathsf{FCP}-$complete. 
+
+\begin{theorem}
+$\mathsf{FCP}-3SAT$ is $\mathsf{FCP}$-complete. 
+\end{theorem} 
+
+\begin{proof}
+We reduce from $\mathsf{FCP}-3SAT$. We will define a recursive mapping $f$ from instances of SAT to those of 3-SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
+\[ 
+(x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
+\]
+
+where the last term indicates we keep recursing until each clause has at most $3$ variables. Note that on each step we reduce the number of variables in the longest clause by at least $1$, so after $O(n)$ steps (per clause) we will have a valid 3-SAT instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \iff \overline{z_i}$. 
+
+Suppose we are given a clue set $C_B$ for 3-SAT. The mapping $g$ from $C_B$ can return a set of the same size that is valid for SAT by assigning $x_i = \overline{z_i}$ if given $z_i$ or simply returning the same $x_i$. This implies that if we are given a minimal clue set for 3SAT we can return a minimal clue set for SAT as well (because whenever we add a clue we remove another one). It is clear that $g$ maps subsets since it is bijective and maps individual elements. 
+
+\end{proof}
+
+\subsection{NAE-3SAT}
+
+\begin{theorem}
+$\mathsf{FCP}-NAE-3SAT$ is $\mathsf{FCP}$-complete. 
+\end{theorem} 
+
+\begin{proof}
+We claim that the reduction for 3SAT is sufficient to show this. Note that the 3SAT instance created will never have all the elements in a clause set to true, therefore being a valid NAE-3SAT instance. 
+\end{proof}
+
+%\subsection{1-in-3 SAT}
+%
+%
+%\begin{theorem}
+%$\mathsf{FCP}-1-in-3SAT$ is $\mathsf{FCP}$-complete. 
+%\end{theorem} 
+%
+%\begin{proof}
+%We claim that the reduction for 3SAT is also sufficient to show this. Consider the following change in the mapping presented. Rewrite the clauses of the form  $(x_1 \vee x_2 \vee z_2)$ to 
+%
+%$$(x_1 \vee z_1) \wedge (\overline{z_1} \vee \overline{x_1}) \wedge (\overline{z_1} \vee x_2 \vee z_2).$$
+%
+%Then no clause will ever have more than one variable set to true, creating a valid 1-in-3SAT instance.  
+%\end{proof}
+
+\subsection{Triangle Partition}
+[TO CHECK] 
+In the triangle partition problem we are given a graph $G = (V,E)$ and want to find a partition of the $V$ into vertex-disjoint triangles. Holyer  \cite{holyer1981np} showed this problem is $\NP$-complete. We claim that it is also $\mathsf{FCP}$-complete and refer to elements of his proof. 
+
+\begin{theorem}
+$\mathsf{FCP}$ Triangle Partition is $\mathsf{FCP}$-complete.
+\end{theorem}
+
+\begin{proof}
+We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We will show a special subset clue reduction from $\mathsf{FCP}$-SAT. 
+
+We define $f$ to map instances of SAT to Triangle Partition as in \cite{holyer1981np}. For a given instance of Triangle Partition with clues, we let its special clue set $C_B'$ be the clues with at most one particular triangle per $H_{3,p}$ graph. We map the first true literal of each clause to an $F$-partition. The algorithm $M$ then translates toe triangles to these particular triangles and moves the triangles in clauses so that the first true literal is in $F$-partition. The mapping $g$ then simply projects variables, making it a surjective function that also preserves subsets since it maps elements to elements. It is also bijective on solutions since we made $C_B'$ assign clauses in ambiguous cases.   
+\end{proof}
 
 \subsection{Latin Squares}
 
+In Latin Squares we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. It is known that such problem is $\NP$-complete and it can be shown that its $\mathsf{FCP}$ version is $\mathsf{FCP}-complete$. 
+
+\begin{theorem}
+$\mathsf{FCP}$ Latin Squares is $\mathsf{FCP}$-complete.
+\end{theorem}
+
+\begin{proof}
+We do this via reduction from $\mathsf{FCP}$ TrianglePartition. Throughout this proof we will be using constructions and results from  \cite{colbourn1984complexity}.
+
+Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G;2n,2n,2n)$ in polynomial time  \cite{colbourn1984complexity}. This Latin framework is constructed so that $G$ is the defect graph of $LF(G;2n,2n,2n)$. We then simply map via $f$ instances of defect graphs $G$ to partial Latin Squares. The Latin Squares clues are mapped to triangles with vertices on different parts of the partition. Each clue is mapped, by construction, bijectively to a triangle (since the triangle takes into account the row, column and number of the clue). As Colbourn shows, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to its Latin Square. This completes the proof. 
+
+\end{proof}
+
 \subsection{Sudoku}
+
+In Sudoku, or Number Place, we are given a $n^2 \times n^2$ grid consisting of $n^2$ $n \times n$ bolded blocks, some of whose entries have been filled in with number from $1$ to $n^2$. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $n^2$ while enforcing that no row, column or bolded square repeats a numbers. We will show this problem is FCP-Complete by providing a reduction from FCP-Latin Squares. 
+
+Before showing the main result of this section, we will exhibit a particular way to fill a Sudoku puzzle. Next, we will show how this particular solution can be used to explicitly map instances of Sudoku to instances of Latin Squares. For simplicity, throughout this argument we will be using numbers in the range $0$ through $n^2 - 1$. We will refer to the entry on the $i$-th row and $j$-th column of a Number Place puzzle as $S(i,j)$.
+
+\begin{proposition}
+Let $S_0$ be defined as
+$$S_0 (i,j) = ((i \mod n) n + \lfloor i/n \rfloor + j) \mod n^2. $$
+Then $S_0$ represents a solution to an order $n$ Number Place.
+\end{proposition}
+
+\begin{proof} 
+Omitted. See [Yato and Seta] 
+\end{proof}
+
+\begin{lemma}
+Let $S$ be a Sudoku instance of order $n$ such that
+\begin{displaymath}
+S(i,j) = \left\{
+\begin{array}{lr}
+\perp & : (i,j) \in B\\
+S_0 (i,j) & : \text{otherwise}
+\end{array}
+\right.
+\end{displaymath}
+
+where $B = \{ (i,j) | i < n \text{ and } (j \equiv 0) \mod n \}$. Then a square $S'$ obtained by filling in the blanks of $S$ is a solution to $S$ if and only if
+
+\begin{itemize}
+\item For any $(i,j) \in B$, $S'(i,j) \equiv 0 \mod n$
+\item A square $L$ defined by $L(i, j/n) = S'(i,j)/n$ for all $(i, j) \in B$ is a Latin Square.
+\end{itemize}
+
+\end{lemma}
+
+\begin{proof} 
+Omitted. See [Yato and Seta] 
+\end{proof}
+
+\begin{lemma} 
+FCP-Sudoku is FCP-Complete
+\end{lemma}
+
+\begin{proof} 
+We will show a reduction via FCP-Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described above. Let $C_B$ be the set of set of clues of Sudoku. Then we can let $g(C_B)=C_B$, mapping the clues from $S(i,j)$ (where the $(i,j) \in B$) to $L(i, j/n)$.This mapping is surjective, bijective on solutions by the lemma above and preserves subsets. Therefore, FCP-Sudoku is FCP-Complete. 
+\end{proof}
+
+\begin{figure}[H]
+\begin{minipage}{0.45\textwidth}
+\includegraphics[scale=0.25]{sudoku-3.png}
+\label{fig:partialNP}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+\label{fig:partialLS}
+\includegraphics[scale=0.25]{sudoku-1.png}
+\end{minipage}
+\caption{Example of a mapping between instances of Latin Squares and Sudoku.}
+\end{figure}
 
 \section{$FCP = \Sigma_2$}
 
