@@ -89,6 +89,21 @@
 \section{Introduction}
 \label{sec:introduction}
 
+In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. It had long been known that 17 clues was sufficient, and there exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed.
+
+We consider a following generalization of the above Sudoku question: 
+\begin{quote}
+For any given problem, what is the fewest number of clues necessary to make it uniquely solvable?
+\end{quote}
+
+For example, if the problem is to find a Hamiltonian cycle in a given graph $G = (V,E)$, our question would be to determine the minimum number of edges you can specify before only one Hamiltonian cycle contains all of these edges. This general problem is motivated by possible applications to puzzle-making. 
+
+A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper). The input to the problem is an idea of a partially filled puzzle, and the output is the least number of additional clues needed for the puzzle to be uniquely solvable.
+
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a new complexity class and show that its equivalence to $\Sigma_2$. We consider the idea of $\mathsf{FCP}$-hard problems, which in turn are also $\Sigma_2$ hard. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. 
+
+The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this sort of problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the complexity class $\mathsf{FCP}$. We state what it means for a problem to be $\mathsf{FCP}$, and provide a framework for $\mathsf{FCP}$ reductions. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\mathsf{FCP}$-hard. Then in Section~\ref{sec:relationship}, we show how the complexity class $\mathsf{FCP}$ fits into the landscape of well-known classes such as $\mathsf{P}, \mathsf{NP}, \Sigma_2^P$, and $\mathsf{PSPACE}$. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
+
 \section{Related Work}
 \label{sec:relatedwork}
 
