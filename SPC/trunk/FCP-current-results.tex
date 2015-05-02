@@ -267,9 +267,64 @@ The above proposition justifies our analysis of this class for answering these q
 
 \subsection{$FCP-SAT$}
 
-<<<<<<< HEAD
 \section{$\mathsf{FCP}$-Complete Problems}
 
+\subsection{Reductions}
+
+We define a special type of reductions that will allow us to show problems are $\mathsf{FCP}$-complete. 
+
+\subsubsection{General Clue Reduction}
+We need a function mapping instances of $A$ to instances of $B$, $f: I_A \rightarrow I_B$ such that $x \in A \iff f(x) \in B$. This is the usual definition of a reduction. We also want a function $g$ mapping the clues of $B$ to clues of $A$. We require that $g$ is surjective, $g$ is a bijection on solutions, and subsets are preserved. So $c \subset c' \iff g(c) \subset g(c')$. We also require that if $c$ is a clue set for $f(x)$, then $g(c)$ is a clue set for $x$. All these functions are computable in polynomial time.
+
+So on input $x$, we find the minimum clue problem for $f(x)$, $c_{f(x)}$ and then use $g$ to get a clue $c_x$ for $x$.  
+
+\begin{theorem}
+Suppose $A$ reduces to $B$ with a general clue reduction and $\mathsf{FCP} A$ is $\mathsf{FCP}$-hard, then $\mathsf{FCP} B$ is $\mathsf{FCP}$-hard. 
+\end{theorem}
+
+\begin{proof}
+We want to show that if $c_{f(x)}$ is a minimum clue set, then $g(c_{f(x)})$ is a minimum clue set as well.
+
+First, we show that $g(c_{f(x)})$ is a clue. This is true because $c_{f(x)}$ is a clue. That is, there exists some solution $S_{f(x)}$ such that $c_{f(x)} \subset S_{f(x)}$, which means that $g(c_{f(x)}) \subset g(S_{f(x)})$, which is a solution.
+
+Second, we need to show that $g(c_{f(x)})$ has a unique superset solution. Suppose there were two different solutions, $S_x^{(1)}$ and $S_{x}^{(2)}$, then $g(c_{f(x)}) \subset S_x^{(1)}, S_x^{(2)}$. This implies $c_{f(x)} \subset S_{f(x)}^{(1)}, S_{f(x)}^{(2)}$ because $g$ is surjective, and because solutions have inverses. Therfore, $c_{f(x)}$ is not unique.
+
+Third, we need to show that $g(c_{f(x)})$ is minimal. Suppose there was some other $c' \subset g(c_{f(x)})$, since the $g$ is surjective, there exists some other $c_{f(x)}' \subset c_{f(x)}$ which is smaller. So by assumption, this must have two distinct solutions. But then mapping them again gives us two distinct solutions for $c'$. 
+
+Therefore, $g(c_{f(x)})$ is a minimal clue set with a unique superset solution for $x$.
+\end{proof}
+
+\subsection{3SAT}
+
+\begin{theorem}
+$\mathsf{FCP}-3SAT$ is $\mathsf{FCP}$-complete. 
+\end{theorem} 
+
+\begin{proof}
+We reduce from $\mathsf{FCP} 3SAT$ via a general clue reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3-SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
+\[ 
+(x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
+\]
+
+where the last term indicates we keep recursing until each clause has at most $3$ variables. Note that on each step we reduce the number of variables in the longest clause by at least $1$, so after $O(n)$ steps (per clause) we will have a valid 3-SAT instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \iff \overline{z_i}$. 
+
+Now I will define $g$. $g$ will take a clue for 3SAT, or a partial assignment of the variables in $f(\phi)$ and give a partial assignment of the variables in $\phi$, it does this by mapping each variable individually. $g$ is the identity on the $x_i$ variables, and $g$ maps $z_i$ to $\overline{x_i}$. We check the properties of $g$:
+\begin{enumerate}
+\item $g$ is surjective. If there is any clue of $\phi$, it is also a clue of $f(\phi)$. 
+\item $g$ is bijective on solutions. An assignment of $f(\phi)$ gives the assignment for $\phi$, and that same assignment uniquely describes the assignments for $z_i$, so $g$ bijectively maps them.
+\item $g$ preserves subsets. This comes from the fact that $g$ maps individual assignments of the variables. 
+\end{enumerate}
+\end{proof}
+
+\begin{corollary}
+Not-All-Equal 3SAT (NAE 3SAT) is $\mathsf{FCP}$-complete.
+\end{corollary}
+
+\begin{proof}
+The reduction for 3SAT above also works for NAE 3SAT. $x_i = \overline{z_i}$ which means that no satisfying assignment will have all three literals true in a clause. 
+\end{proof}
+
+\begin{comment}
 \subsection{3SAT}
 
 In this section we show that the $\mathsf{FCP}$ version of 3-SAT is also $\mathsf{FCP}-$complete. 
@@ -299,7 +354,7 @@ $\mathsf{FCP}-NAE-3SAT$ is $\mathsf{FCP}$-complete.
 \begin{proof}
 We claim that the reduction for 3SAT is sufficient to show this. Note that the 3SAT instance created will never have all the elements in a clause set to true, therefore being a valid NAE-3SAT instance. 
 \end{proof}
-
+\end{comment}
 %\subsection{1-in-3 SAT}
 %
 %
@@ -317,7 +372,7 @@ We claim that the reduction for 3SAT is sufficient to show this. Note that the 3
 
 \subsection{Triangle Partition}
 [TO CHECK] 
-In the triangle partition problem we are given a graph $G = (V,E)$ and want to find a partition of the $V$ into vertex-disjoint triangles. Holyer  \cite{holyer1981np} showed this problem is $\NP$-complete. We claim that it is also $\mathsf{FCP}$-complete and refer to elements of his proof. 
+In the triangle partition problem we are given a graph $G = (V,E)$ and want to find a partition of the $V$ into edge-disjoint triangles. Holyer  \cite{holyer1981np} showed this problem is $\NP$-complete. We claim that it is also $\mathsf{FCP}$-complete and refer to elements of his proof. 
 
 \begin{theorem}
 $\mathsf{FCP}$ Triangle Partition is $\mathsf{FCP}$-complete.
@@ -405,134 +460,6 @@ We will show a reduction via FCP-Latin Squares. We use the injective map from in
 \end{minipage}
 \caption{Example of a mapping between instances of Latin Squares and Sudoku.}
 \end{figure}
-
-=======
->>>>>>> 31d299c28e62e3c2e44e1a127e620c69f8a3f7c7
-\section{$FCP = \Sigma_2$}
-
-Having established given some complete problems for $\mathsf{FCP}$, we can ask where the complexity class lies in the context our current knowledge of complexity classes. We will be looking at the decision version of $\mathsf{FCP}$. 
-
-\begin{proposition}
-\label{prop:fcpsigma2}
-$\mathsf{FCP} \subset \Sigma_2$
-\end{proposition}
-
-\begin{proof}
-We give a formulation of the fewest clues problem in terms of a $\Sigma_2$ question. For a given problem $A$,
-\[ (x, k) \in \mathsf{FCP} A \leftrightarrow \exists c, S \forall S' \phi(x, k, c, S, S') \]
-Where $\phi$ checks that $c$ is a clue of size at most $k$, $c \subset S$, $S' \neq S$, $S$ is a solution to $x$ and $S'$ is not. This corresponds to asking for a set of clues $c$ of size at most $k$, which has a solution, $S$, but no other solution.  
-\end{proof}
-
-We now wish to show that $\Sigma_2 \subset \mathsf{FCP}$. We take the following $\Sigma_2$ complete problem: $\exists x \forall y \phi(x,y) = 0$. We will write this problem as an equivalent $\mathsf{FCP} SAT$ question: for a given $\phi$, does there exists a setting of $k$ variables, such that for any setting of the rest, there is one unique solution.
-
-First, we take care of the unique solution. Suppose we had a modified question, $USAT$:
-\begin{quote} 
-Given some $\phi$, does there exists a setting of variables $x$ such that for any setting of varaibles $y$, there is one unique solution? 
-\end{quote}
-
-\begin{lemma}
-$USAT$ is $\Sigma_2$ hard.
-\end{lemma}
-
-\begin{proof}
-We will show that 
-\[ \exists x \forall y \phi(x,y) = 0 \leftrightarrow \exists x \forall y, z \left(\phi'(x, 0, 0) = 1 \right) \wedge \left((y \neq 0 \vee z \neq 0 ) \rightarrow \phi'(x, y, z) = 0 \right) \]
-The left-hand side is the complete problem of alternating $SAT$ for $\Sigma_2$, and the right-hand side says that $\phi'$ has only one solution for a given setting of $x$, $y=0$ and $z =0$. 
-
-Asking $USAT$ for $\phi'$ would solve the alternating $SAT$ question. 
-
-We let 
-\begin{align}
-\phi'(x, y, z) &= C_1 \vee C_2 \\
-		    C_1 &=\left(\phi(x, y) \wedge (z = 1)\right) \\
-		   C_2 &=  \left( y = 0 \wedge z = 0 \right) 
-\end{align}
-Note that $\phi'(x, 0, 0) = 1$. If $\exists x \forall y \phi(x, y)= 0$, then there is a setting of $x$ such that the $C_1 = 0$. The only way to satisfy $\phi'$ is through setting $y = 0$ and $z = 0$. If for any setting of $x$, there exists a setting of $y$ such that $\phi(x, y) = 1$, then we have some setting of $\phi'(x, y, 1) = 1$. So USAT would also be false since that assignment as well as $x, 0, 0$ evaluate to true.
-\end{proof}
-
-\begin{proposition}
-\label{prop:fcpsatsigmacomp}
-$\mathsf{FCP} SAT$ is $\Sigma_2$ hard.
-\end{proposition}
-
-\begin{proof}
-We will reduce from $USAT$. For a given $\phi(x, y)$ with $|x| = k$, we ask, does there exists a setting of $2k$ variables such that $\phi'(x, x', y) = \phi(x, y) \vee \bigvee_i (x_i = x_i')$ has a unique solution?
-
-Suppose $\exists x \forall y \phi(x,y)$ has a unique solution with assignment $\hat{x}$. Then we let $x = \hat{x}$, and for all $i$, we let $x_i' \neq x_i$. Therefore, once we set this, $\phi'(x, x', y)$ has a unique solution. 
-
-Suppose for any setting of $x$, there is more than one setting of $y$'s to get a satisfying assignment, so $\phi(x, y) \notin USAT$. Then if from the $2k$ elements, we set $x$ and $x'$, we are fine, since there will be more than one setting of the $y$'s to satisfy $\phi'$. However, if we set some element not in $x$ or $x'$, then since we can only set $2k$, there will be some $x_i$ or $x_i'$ that is not set. So setting $x_i = x_i'$ will allow an arbitrary setting of the remaining variables, so also, $\phi'$ does not have a unique satisfying assignment.
-\end{proof}
-
-\begin{theorem}
-$\mathsf{FCP} = \Sigma_2$
-\end{theorem}
-
-\begin{proof}
-By Proposition~\ref{prop:fcpsigma2}, we know that $\mathsf{FCP} \subset \Sigma_2$. In addition, we showed in Proposition~\ref{prop:fcpsatsigmacomp} that $\mathsf{FCP} SAT$ is $\Sigma_2$ hard. Since $\mathsf{FCP} SAT$ is $\mathsf{FCP}$-complete, $\Sigma_2$ complete problems are also $\mathsf{FCP}$-complete, and so $\Sigma_2 \subset \mathsf{FCP}$. Therefore, $\mathsf{FCP} = \Sigma_2$. 
-\end{proof}
-
-\section{$\mathsf{FCP}$-Complete Problems}
-
-\subsection{Reductions}
-
-We define a special type of reductions that will allow us to show problems are $\mathsf{FCP}$-complete. 
-
-\subsubsection{General Clue Reduction}
-We need a function mapping instances of $A$ to instances of $B$, $f: I_A \rightarrow I_B$ such that $x \in A \iff f(x) \in B$. This is the usual definition of a reduction. We also want a function $g$ mapping the clues of $B$ to clues of $A$. We require that $g$ is surjective, $g$ is a bijection on solutions, and subsets are preserved. So $c \subset c' \iff g(c) \subset g(c')$. We also require that if $c$ is a clue set for $f(x)$, then $g(c)$ is a clue set for $x$. All these functions are computable in polynomial time.
-
-So on input $x$, we find the minimum clue problem for $f(x)$, $c_{f(x)}$ and then use $g$ to get a clue $c_x$ for $x$.  
-
-\begin{theorem}
-Suppose $A$ reduces to $B$ with a general clue reduction and $\mathsf{FCP} A$ is $\mathsf{FCP}$-hard, then $\mathsf{FCP} B$ is $\mathsf{FCP}$-hard. 
-\end{theorem}
-
-\begin{proof}
-We want to show that if $c_{f(x)}$ is a minimum clue set, then $g(c_{f(x)})$ is a minimum clue set as well.
-
-First, we show that $g(c_{f(x)})$ is a clue. This is true because $c_{f(x)}$ is a clue. That is, there exists some solution $S_{f(x)}$ such that $c_{f(x)} \subset S_{f(x)}$, which means that $g(c_{f(x)}) \subset g(S_{f(x)})$, which is a solution.
-
-Second, we need to show that $g(c_{f(x)})$ has a unique superset solution. Suppose there were two different solutions, $S_x^{(1)}$ and $S_{x}^{(2)}$, then $g(c_{f(x)}) \subset S_x^{(1)}, S_x^{(2)}$. This implies $c_{f(x)} \subset S_{f(x)}^{(1)}, S_{f(x)}^{(2)}$ because $g$ is surjective, and because solutions have inverses. Therfore, $c_{f(x)}$ is not unique.
-
-Third, we need to show that $g(c_{f(x)})$ is minimal. Suppose there was some other $c' \subset g(c_{f(x)})$, since the $g$ is surjective, there exists some other $c_{f(x)}' \subset c_{f(x)}$ which is smaller. So by assumption, this must have two distinct solutions. But then mapping them again gives us two distinct solutions for $c'$. 
-
-Therefore, $g(c_{f(x)})$ is a minimal clue set with a unique superset solution for $x$.
-\end{proof}
-
-\subsection{3SAT}
-
-\begin{theorem}
-$\mathsf{FCP}-3SAT$ is $\mathsf{FCP}$-complete. 
-\end{theorem} 
-
-\begin{proof}
-We reduce from $\mathsf{FCP} 3SAT$ via a general clue reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3-SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
-\[ 
-(x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
-\]
-
-where the last term indicates we keep recursing until each clause has at most $3$ variables. Note that on each step we reduce the number of variables in the longest clause by at least $1$, so after $O(n)$ steps (per clause) we will have a valid 3-SAT instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \iff \overline{z_i}$. 
-
-Now I will define $g$. $g$ will take a clue for 3SAT, or a partial assignment of the variables in $f(\phi)$ and give a partial assignment of the variables in $\phi$, it does this by mapping each variable individually. $g$ is the identity on the $x_i$ variables, and $g$ maps $z_i$ to $\overline{x_i}$. We check the properties of $g$:
-\begin{enumerate}
-\item $g$ is surjective. If there is any clue of $\phi$, it is also a clue of $f(\phi)$. 
-\item $g$ is bijective on solutions. An assignment of $f(\phi)$ gives the assignment for $\phi$, and that same assignment uniquely describes the assignments for $z_i$, so $g$ bijectively maps them.
-\item $g$ preserves subsets. This comes from the fact that $g$ maps individual assignments of the variables. 
-\end{enumerate}
-\end{proof}
-
-\begin{corollary}
-Not-All-Equal 3SAT (NAE 3SAT) is $\mathsf{FCP}$-complete.
-\end{corollary}
-
-\begin{proof}
-The reduction for 3SAT above also works for NAE 3SAT. $x_i = \overline{z_i}$ which means that no satisfying assignment will have all three literals true in a clause. 
-\end{proof}
-
-\subsection{TrianglePartition}
-
-\subsection{Latin Squares}
-
-\subsection{Sudoku}
 
 \section{$\mathsf{FCP}$ Versions of Easy Problems}
 

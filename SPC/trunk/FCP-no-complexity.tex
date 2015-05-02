@@ -1,0 +1,507 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[full]{complexity}
+\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amsthm}
+\usepackage{subfigure}
+%\usepackage{caption}
+%\usepackage{subcaption}
+%\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+%\usepackage{clrscode4e}
+\usepackage{verbatim}
+\urlstyle{same}
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+% Uniform numbering for previously defined theorem environments (e.g., LNCS).
+\makeatletter
+\let\c@lemma=\c@theorem
+\let\c@corollary=\c@theorem
+\let\c@fact=\c@theorem
+\makeatother
+
+% Redefinition of LNCS or SODA or Springer proof environment to put a \Box at
+% the end of every proof.
+\let\realendproof=\endproof
+\def\endproof{\hspace*{\fill}$\Box$\realendproof}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{The Fewest Clues Problem}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{The Fewest Clues Problem}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+%
+\authorrunning{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{MIT,\\
+77 Mass Ave., Cambridge, MA 02139, USA, \\
+\protect\url{{fermima,arielsc,eaw}@mit.edu}}
+
+%
+% NB: a more complex sample for affiliations and the mapping to the
+% corresponding authors can be found in the file "llncs.dem"
+% (search for the string "\mainmatter" where a contribution starts).
+% "llncs.dem" accompanies the document class "llncs.cls".
+%
+
+\maketitle
+
+\section{Introduction}
+\label{sec:introduction}
+
+In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. It had long been known that 17 clues was sufficient, and there exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed. They arrived at this answer following a year-long computation. Is there any notion of computatational hardness to these sorts of problems?
+
+We consider a following generalization of the above Sudoku question: 
+\begin{quote}
+For any given problem, what is the fewest number of clues necessary to make it uniquely solvable?
+\end{quote}
+
+For example, if the problem is to find a Hamiltonian cycle in a given graph $G = (V,E)$, our question would be to determine the minimum number of edges you can specify before only one Hamiltonian cycle contains all of these edges. This general problem is motivated by possible applications to puzzle-making. 
+
+A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper). The input to the problem is an idea of a partially filled puzzle, and the output is the least number of additional clues needed for the puzzle to be uniquely solvable.
+
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\mathsf{NP}$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms which their $\mathsf{FCP}$ versions are $\mathsf{NP}$-complete.
+
+The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this sort of problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the transformation $\mathsf{FCP}$. We state what it means for a problem to be a fewest clues problem, and provide a framework for reducing between these problems. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\Sigma_2$-complete. Then we discuss the $\mathsf{FCP}$ transformation affects problems with polynomial time algorithms. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
+
+\section{Related Work}
+\label{sec:relatedwork}
+
+\section{The $\mathsf{FCP}$ Transformation}
+\label{sec:prelim}
+
+\subsection{Formalizing the Question}
+
+In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. We will be working with $\NP$ search problems, this is the class of problems whose decision is in $\NP$, but we ask for a particular solution. In the case of Hamiltonian Path, instead of asking does there exists a Hamiltonian path, we are asking to present a Hamiltonian path. It is clear that $\NP$ search problems are ``harder" than decision problems, since one can answer the decision problem once one has found a solution.
+
+In particular, we will have an $\NP$ search problem be comprised of a set of \emph{instances}, which will be strings over some finite alphabet. For a particular instance $x$, there is set of possible \emph{solutions}, which are strings of polynomial size with respect to $|x|$ over some finite alphabet. Each problem also comes with an algorithm $A$ that checks whether a string $s$ is in fact a solution for an instance $x$, which runs in polynomial time. This is the verifier. For a given language $L \in \NP$, $x \in L$ if and onll if $S(x)$ is non-empty.
+
+A \emph{clue} will be an indexed character of a solution. So a clue indicates what character lies at some position of the solution.
+
+\begin{definition}
+Given some $\NP$ search problem $A$, the ``fewest clues" variation of $A$, $(\mathsf{FCP} A)$ asks for an instance of $A$, the minimum number of clues corresponding to a unique solution for any given instance.
+\end{definition}
+
+This set-up allows us to ask $\mathsf{FCP}$ variations to the common puzzles like Sudoku quiet easily. For the classical $9 \times 9$ Sudoku, we let the alphabet be $\Sigma = \{ 1, ..., 9 \} \cup \{ \Box \}$, and we let an instance be a string of length 81 with elements from $\Sigma$, where each position in the string corresponds to a position on the $9 \times 9$ Sudoku board. The presence of $\Box$ indicates that position is unknown. A solution will be a string of length $81$ with no $\Box$ characters. 
+
+The algorithm $A$ checking whether a solution to some instance is correct. It does so by checking all three Sudoku rules: every row, column, and $3 \times 3$ inner-square contains all the numbers from $\{1 , ..., 9\}$. In addition, we check the solution contains the same numbers as the instance at the specified positions.
+
+\begin{figure}
+\centering
+\label{fig:seventeencluesudoku}
+\includegraphics[width=0.5\linewidth]{seventeencluesudoku.jpg}
+\caption{17-Clue $9 \times 9$ Sudoku, taken from \cite{smallsudoku}}
+\end{figure}
+
+The $\mathsf{FCP}$ Sudoku puzzle asks for a given starting point $x$ which is the fewest number of additional squares we must fill in order for the Sudoku to be uniquely solvable. A solution for the $9 \times 9$ case where the instance is initially empty is given in Figure~\ref{fig:seventeencluesudoku}. The fewest clues are given by the yellow squares.
+
+We can also ask the corresponding decision question for some fewest clues problem: does there exist less than $k$ clues which uniquely specify a solution for a given instance? We can solve for the minimum number of clues necessary with a binary search through $k$ by asking the decision problem.
+
+\begin{theorem}
+\label{thm:satinsig2}
+If some language $L \in \NP$, then $\mathsf{FCP} L \in \Sigma_2$. 
+\end{theorem}
+
+\begin{proof}
+We can write the $\mathsf{FCP}$ question in terms of a $\Sigma_2$ question. The original question for $L$ is
+\[ x \in L \leftrightarrow \exists y, A(x, y) = 1 \]
+The corresponding $\mathsf{FCP} L$ question is
+\[ (x, k) \in \mathsf{FCP} L \leftrightarrow \exists c_y, y \forall y' A'(x, c_y, y, y') = 1 \]
+Where $A'$ checks that $c_y \subset y$, that $c_y \subset y' \neq y$, and that $A(x,y) = 1$, $A(x, y') = 0$ and that $|c_y| \leq k$. In other words, $c_y$ is a clue of $y$, and $y'$ is another solution. $A'$ checks that $c_y$ has at most $k$ elements, and that it is a clue of the solution $y$, and that there are no other solutions. 
+\end{proof}
+
+In general, this proof says that if $L \in NTIME[f(n)]$, then $\mathsf{FCP} L \in \Sigma_2 NTIME[f(n)]$, when $f(n) > n$. 
+
+\subsection{$\mathsf{FCP}$ SAT}
+
+The $\mathsf{FCP}$ SAT problem is the following:
+\begin{quote}
+\textbf{Instance}: A Boolean formula $\phi$, and a number $k$.\\
+\textbf{Question}: Does there exists a partial assignment of at most $k$ variables such that the remaining formula $\phi'$ has only one satisfying assignment?
+\end{quote}
+We show that the corresponding decision version of the problem, with an additional input $k$ signifying the length of the partial satisfying assignment is $\Sigma_2$-complete.
+
+From Theorem~\ref{thm:satinsig2}, we know that $\mathsf{FCP}$ SAT $\in \Sigma_2$. We now wish to show that $\mathsf{FCP}$ SAT is $\Sigma_2$-complete. We take the following $\Sigma_2$ complete problem: QSAT $=\{ \langle \phi, x, y \rangle | \exists x \forall y \phi(x,y) = 0\}$. We will write this problem as an equivalent $\mathsf{FCP} SAT$ question.
+
+First, we take care of the unique solution. Suppose we had a modified question, $USAT$:
+\begin{quote} 
+\textbf{Instance}: A Boolean $\phi$ on variables $x$ and $y$. \\
+\textbf{Question}: Does there exists a setting of the variables in $x$ such that for any setting of $y$, there is one unique solution?
+\end{quote}
+
+\begin{lemma}
+$USAT$ is $\Sigma_2$-hard.
+\end{lemma}
+
+\begin{proof}
+We will show that 
+\[ \exists x \forall y \phi(x,y) = 0 \leftrightarrow \exists x \forall y, z \left(\phi'(x, 0, 0) = 1 \right) \wedge \left((y \neq 0 \vee z \neq 0 ) \rightarrow \phi'(x, y, z) = 0 \right) \]
+The left-hand side is the complete problem of alternating $SAT$ for $\Sigma_2$, and the right-hand side says that $\phi'$ has only one solution for a given setting of $x$, $y=0$ and $z =0$. 
+
+Asking $USAT$ for $\phi'$ would solve the alternating $SAT$ question. 
+
+We let 
+\begin{align}
+\phi'(x, y, z) &= C_1 \vee C_2 \\
+		    C_1 &=\left(\phi(x, y) \wedge (z = 1)\right) \\
+		   C_2 &=  \left( y = 0 \wedge z = 0 \right) 
+\end{align}
+Note that $\phi'(x, 0, 0) = 1$. If $\exists x \forall y \phi(x, y)= 0$, then there is a setting of $x$ such that the $C_1 = 0$. The only way to satisfy $\phi'$ is through setting $y = 0$ and $z = 0$. If for any setting of $x$, there exists a setting of $y$ such that $\phi(x, y) = 1$, then we have some setting of $\phi'(x, y, 1) = 1$. So USAT would also be false since that assignment as well as $x, 0, 0$ evaluate to true.
+\end{proof}
+
+\begin{proposition}
+\label{prop:fcpsatsigmacomp}
+$\mathsf{FCP} SAT$ is $\Sigma_2$-hard.
+\end{proposition}
+
+\begin{proof}
+We will reduce from $USAT$. For a given $\phi(x, y)$ with $|x| = k$, we ask, does there exists a setting of $2k$ variables such that $\phi'(x, x', y) = \phi(x, y) \vee \bigvee_i (x_i = x_i')$ has a unique solution?
+
+Suppose $\exists x \forall y \phi(x,y)$ has a unique solution with assignment $\hat{x}$. Then we let $x = \hat{x}$, and for all $i$, we let $x_i' \neq x_i$. Therefore, once we set this, $\phi'(x, x', y)$ has a unique solution. 
+
+Suppose for any setting of $x$, there is more than one setting of $y$'s to get a satisfying assignment, so $\phi(x, y) \notin USAT$. Then if from the $2k$ elements, we set $x$ and $x'$, we are fine, since there will be more than one setting of the $y$'s to satisfy $\phi'$. However, if we set some element not in $x$ or $x'$, then since we can only set $2k$, there will be some $x_i$ or $x_i'$ that is not set. So setting $x_i = x_i'$ will allow an arbitrary setting of the remaining variables, so also, $\phi'$ does not have a unique satisfying assignment.
+\end{proof}
+
+\section{Complete Problems}
+
+\subsection{Reductions}
+
+We define a special type of reductions that will allow us to reduce $\mathsf{FCP}$ problems of one kind to the other. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the Genearl Clue Reduction.
+
+\subsubsection{General Clue Reduction}
+We need a function mapping instances of $A$ to instances of $B$, $f: I_A \rightarrow I_B$ such that $x \in A \iff f(x) \in B$. This is the usual definition of a reduction. We also want a function $g$ mapping the clues of $B$ to clues of $A$. We require that $g$ is surjective, $g$ is a bijection on solutions, and subsets are preserved. So $c \subset c' \iff g(c) \subset g(c')$. We also require that if $c$ is a clue set for $f(x)$, then $g(c)$ is a clue set for $x$. All these functions are computable in polynomial time.
+
+So on input $x$, we find the minimum clue problem for $f(x)$, $c_{f(x)}$ and then use $g$ to get a clue $c_x$ for $x$.  
+
+\begin{theorem}
+\label{thm:reduction}
+Suppose $A$ reduces to $B$ with a general clue reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
+\end{theorem}
+
+\begin{proof}
+We want to show that if $c_{f(x)}$ is a minimum clue set, then $g(c_{f(x)})$ is a minimum clue set as well.
+
+First, we show that $g(c_{f(x)})$ is a clue. This is true because $c_{f(x)}$ is a clue. That is, there exists some solution $S_{f(x)}$ such that $c_{f(x)} \subset S_{f(x)}$, which means that $g(c_{f(x)}) \subset g(S_{f(x)})$, which is a solution.
+
+Second, we need to show that $g(c_{f(x)})$ has a unique superset solution. Suppose there were two different solutions, $S_x^{(1)}$ and $S_{x}^{(2)}$, then $g(c_{f(x)}) \subset S_x^{(1)}, S_x^{(2)}$. This implies $c_{f(x)} \subset S_{f(x)}^{(1)}, S_{f(x)}^{(2)}$ because $g$ is surjective, and because solutions have inverses. Therfore, $c_{f(x)}$ is not unique.
+
+Third, we need to show that $g(c_{f(x)})$ is minimal. Suppose there was some other $c' \subset g(c_{f(x)})$, since the $g$ is surjective, there exists some other $c_{f(x)}' \subset c_{f(x)}$ which is smaller. So by assumption, this must have two distinct solutions. But then mapping them again gives us two distinct solutions for $c'$. 
+
+Therefore, $g(c_{f(x)})$ is a minimal clue set with a unique superset solution for $x$.
+\end{proof}
+
+One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. In general, this constraint is too strong, so we define a different kind of reduction which will have more requirements, but which will apply to a greater variety of cases.
+
+\subsubsection{Special Subset Clue Reduction} We will first need a function $f: I_A \rightarrow I_B$ such that $x \in I_A$ has a solution if and only if $f(x) \in I_B$ has a solution. We additionally specify $C_B' \subset C_B$ and an algorithm $M$ that maps any minimal clue set in $C_B$ into a minimal clue set in $C_B'$ of the same size which runs in polynomial time. We will now let $g: C_B' \rightarrow C_A$ which satisfies the following properties:
+\begin{enumerate}
+\item $g$ is surjective.
+\item $g$ is a bijection on solutions, and $S_x$ is a solution for $x$, if and only if $g^{-1}(S_x)$ is a solution to $f(x)$. 
+\item $c \subset c' \iff g(c) \subset g(c')$. 
+\end{enumerate} 
+This type of reduction generalizes the General Clue Reduction, since we can specify a special subset of clues. Now on an input instance of $A$, we first map it to an input instance of $B$ using $f$. Then we solve $\mathsf{FCP} B$ and use the algorithm $M$ to transform the minimal clue into a minimal clue in the set $C_B'$. Then we transform the clue back to a clue for $A$. 
+
+A Special Subset Clue Reduction is like a General Clue Reduction. We restrict a the problem to have a specific kind of clues, and we give a way to tranform the clues. The proof of correctness is exactly the same as in Theorem~\ref{thm:reduction}. 
+
+\subsection{3SAT}
+
+\begin{theorem}
+$\mathsf{FCP}$ 3SAT is $\Sigma_2$-complete. 
+\end{theorem} 
+
+\begin{proof}
+We reduce from $\mathsf{FCP}$ 3SAT via a general clue reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
+\[ 
+(x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
+\]
+
+where the last term indicates we keep recursing until each clause has at most $3$ variables. Note that on each step we reduce the number of variables in the longest clause by at least $1$, so after $O(n)$ steps (per clause) we will have a valid 3SAT instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \iff \overline{z_i}$. 
+
+Now I will define $g$. $g$ will take a clue for 3SAT, or a partial assignment of the variables in $f(\phi)$ and give a partial assignment of the variables in $\phi$, it does this by mapping each variable individually. $g$ is the identity on the $x_i$ variables, and $g$ maps $z_i$ to $\overline{x_i}$. We check the properties of $g$:
+\begin{enumerate}
+\item $g$ is surjective. If there is any clue of $\phi$, it is also a clue of $f(\phi)$. 
+\item $g$ is bijective on solutions. An assignment of $f(\phi)$ gives the assignment for $\phi$, and that same assignment uniquely describes the assignments for $z_i$, so $g$ bijectively maps them.
+\item $g$ preserves subsets. This comes from the fact that $g$ maps individual assignments of the variables. 
+\end{enumerate}
+\end{proof}
+
+\begin{corollary}
+Not-All-Equal 3SAT (NAE 3SAT) is $\Sigma_2$-complete.
+\end{corollary}
+
+\begin{proof}
+The reduction for 3SAT above also works for NAE 3SAT. $x_i = \overline{z_i}$ which means that no satisfying assignment will have all three literals true in a clause. 
+\end{proof}
+
+\subsection{Triangle Partition}
+
+The Triangle Partition problem is the following:
+\begin{quote}
+\textbf{Instance}: A undirected graph $G = (V, E)$.\\
+\textbf{Question}: Can we partition $E$ into disjoint triangles?
+\end{quote}
+
+Holyer \cite{holyer1981np} showed this problem is $\NP$-complete. His main tool (shown in Figure~\ref{fig:holyergraph} was the graph $H_{3, p}$, which has only two possible triangle partitions.
+\begin{figure}
+\label{fig:holyergraph}
+\centering
+\includegraphics[width=0.4\linewidth]{Tpatch.pdf}
+\caption{Holyer's $H_{3,p}$ graph}
+\end{figure}
+
+The $\mathsf{FCP}$ version of the problem is to find the fewest number of triangles that we must give in order for there to be a unique triangle partition. For example, note that in Figure~\ref{fig:holyergraph}, once you specify one triangle in the partition, there is only one way to partition the graph in accordance with that triangle. The answer would therefore be any one triangle. We claim $\mathsf{FCP}$ Triangle Partition is also $\Sigma$-complete.
+
+We give a quick summary of Holyer's reduction which highlights the ideas we will use to show $\Sigma_2$ completeness. Holyer uses the graph in Figure~\ref{fig:holyergraph} to represent variables and literals. Since each graph can only be partitioned in one of two ways, one way will correspond to a true setting, the other will correspond to a false setting. He calls these the $T$-partition and the $F$-partition. 
+
+He also uses the graphs to make clauses. He gives a join between three $H_{3,p}$ graphs such that exactly one of them will be $F$-partitioned. The three graphs will correspond to literals in the clause. Then he gives a way to combine the literals with the variables such that if a literal is set to an $F$-partition, then corresponding variable must be set to either a $T$-partition (in the case where the literal is positive), or an $F$-partition (if the literal is negative). However, if the literal is a $T$-partition, then it does not matter what the variable is set to. 
+
+\begin{theorem}
+$\mathsf{FCP}$ Triangle Partition is $\Sigma_2$-complete.
+\end{theorem}
+
+\begin{proof}
+We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We will show a special subset clue reduction from $\mathsf{FCP}$ 3SAT. 
+
+We define $f$ to map instances of 3SAT to Triangle Partition as in \cite{holyer1981np}.
+
+We let the special clue set $C_B'$ be the clues where if a triangle appears in a literal graph, then a triangle appears in a literal graph of the same clause which corresponds to an $F$-partition, and the $F$-partition corresponds to the first true literal.
+
+The algorithm $M$: 
+\begin{enumerate}
+\item If we get a clue with a triangle in a literal corresponding to a $T$-partition, we exchange it with a triangle for a literal in the same clause corresponding to an $F$-partition. This does not change the solution since the $F$-partition triangle must appear and it implies the $T$-partition triangle. 
+\item If the $F$-partition literal corresponds to the second or third true literal in the clause, then exchange it for the $F$-partition triangle corresponding to the first true literal in the clause. This changes the solution to the triangle partition, but doens't change the variable graphs, only that particular clause graph, and the solution is still unique.
+\end{enumerate}
+
+Now $g$ maps the triangles in variable graphs to the corresponding assignment and the $F$-partition literals to the correspoding variable assignments. We check the conditions for $g$.
+\begin{itemize}
+\item $g$ is surjective, since the variable assignments correspond to variable gadget partitions.
+\item $g$ is a bijection on solutions, since once the variable graphs are partitioned, we force the first true literal to be $F$-partitioned. 
+\item Since we are mapping individual triangles, subsets are preserved.
+\end{itemize}
+\end{proof}
+
+\subsection{Latin Squares}
+
+In Latin Squares we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. It is known that such problem is $\NP$-complete and it can be shown that its $\mathsf{FCP}$ version is $\Sigma_2$-complete. 
+
+\begin{theorem}
+$\mathsf{FCP}$ Latin Squares is $\Sigma_2$-complete.
+\end{theorem}
+
+TO DO: put this reduction in terms of the general clue reduction!
+
+\begin{proof}
+We do this via reduction from $\mathsf{FCP}$ TrianglePartition. Throughout this proof we will be using constructions and results from \cite{colbourn1984complexity}.
+
+Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G;2n,2n,2n)$ in polynomial time  \cite{colbourn1984complexity}. This Latin framework is constructed so that $G$ is the defect graph of $LF(G;2n,2n,2n)$. We then simply map via $f$ instances of defect graphs $G$ to partial Latin Squares. The Latin Squares clues are mapped to triangles with vertices on different parts of the partition. Each clue is mapped, by construction, bijectively to a triangle (since the triangle takes into account the row, column and number of the clue). As Colbourn shows, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to its Latin Square. This completes the proof. 
+\end{proof}
+
+\subsection{Sudoku}
+
+In Sudoku, or Number Place, we are given a $9 \times 9$ grid consisting of $9$ $3 \times 3$ bolded blocks, some of whose entries have been filled in with number from $1$ to $9$. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $9$ while enforcing that no row, column or bolded square repeats a numbers. We generalize Sudoku in the following manner:
+
+\begin{quote}
+\textbf{Instance}: A board of $n^2 \times n^2$ numbers in the range of $1$ to $n^2$, divided into $n^2$ blocks of $n \times n$.\\
+\textbf{Quetion}: Can we fill up the remaining board with numbers in the range $1$ to $n^2$ such that each row, column and $n \times n$ block does not have repeated numbers?
+\end{quote}
+
+The $\mathsf{FCP}$ version of the problem asks for the least number of additional numbers we must give in order to have the Sudoku be uniquely filled in. We will show this problem is $\Sigma_2$-complete by providing a reduction from $\mathsf{FCP}$ Latin Squares. 
+
+Before showing the main result of this section, we will exhibit a particular way to fill a Sudoku puzzle. Next, we will show how this particular solution can be used to explicitly map instances of Sudoku to instances of Latin Squares. For simplicity, throughout this argument we will be using numbers in the range $0$ through $n^2 - 1$. We will refer to the entry on the $i$-th row and $j$-th column of a Number Place puzzle as $S(i,j)$.
+
+\begin{proposition}
+Let $S_0$ be defined as
+$$S_0 (i,j) = ((i \mod n) n + \lfloor i/n \rfloor + j) \mod n^2. $$
+Then $S_0$ represents a solution to an order $n$ Number Place.
+\end{proposition}
+
+\begin{proof} 
+Omitted. See [Yato and Seta] 
+\end{proof}
+
+\begin{lemma}
+Let $S$ be a Sudoku instance of order $n$ such that
+\begin{displaymath}
+S(i,j) = \left\{
+\begin{array}{lr}
+\perp & : (i,j) \in B\\
+S_0 (i,j) & : \text{otherwise}
+\end{array}
+\right.
+\end{displaymath}
+
+where $B = \{ (i,j) | i < n \text{ and } (j \equiv 0) \mod n \}$. Then a square $S'$ obtained by filling in the blanks of $S$ is a solution to $S$ if and only if
+
+\begin{itemize}
+\item For any $(i,j) \in B$, $S'(i,j) \equiv 0 \mod n$
+\item A square $L$ defined by $L(i, j/n) = S'(i,j)/n$ for all $(i, j) \in B$ is a Latin Square.
+\end{itemize}
+
+\end{lemma}
+
+\begin{proof} 
+Omitted. See [Yato and Seta] 
+\end{proof}
+
+\begin{lemma} 
+$\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete.
+\end{lemma}
+
+\begin{proof} 
+We will show a general clue reduction via $\mathsf{FCP}$ Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described above. Let $C_B$ be the set of set of clues of Sudoku. Then we define $g$, by mapping a clue of Sudoku indicating that location $(i,j)$ contains $S(i,j)$ to the clue sayin that the $(i, j/n)$ position of the Latin Square is $S(i, j)/n$.This mapping is surjective, bijective on solutions by the lemma above and preserves subsets. Therefore, $\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete. 
+\end{proof}
+
+\begin{figure}[H]
+\begin{minipage}{0.45\textwidth}
+\includegraphics[scale=0.25]{sudoku-3.png}
+\label{fig:partialNP}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+\label{fig:partialLS}
+\includegraphics[scale=0.25]{sudoku-1.png}
+\end{minipage}
+\caption{Example of a mapping between instances of Latin Squares and Sudoku.}
+\end{figure}
+
+\section{$\mathsf{FCP}$ Versions of Some Easy Problems}
+
+We would like to be able to understand what happens to problems in general when their $\mathsf{FCP}$ versions are asked. 
+
+\subsection{$\mathsf{FCP}$ 2SAT} 
+
+\begin{quote}
+\textbf{Instance}: a 2-CNF Boolean formula $\phi$ on variables $x_1, ..., x_n$. \\
+\textbf{Question}: Does there exist a setting of $k$ variables so that the remaining formula is uniquely satisfiable?
+\end{quote}
+
+\begin{proposition}
+$\mathsf{FCP} 2SAT$ is in \NP.
+\end{proposition}
+
+\begin{proof}
+The clue of size $k$ is the certificate. Since $2SAT$ can be satified in polynomial time, we can check whether there is a unique solution in polynomial time.
+\end{proof}
+
+\begin{theorem} 
+$\mathsf{FCP} 2SAT$ is \NP-hard.
+\end{theorem}
+
+We reduce from the NP-hard problem of finding a minimum independent dominating set. The problem gives a graph $G = (V,E)$ and asks for the smallest subset of vertices $S \subseteq V$ such that $S$ is a minimum independent dominating set. To state the constraints more clearly, such a set $S$ has the property that every vertex has a vertex in $S$ adjacent to it (every vertex is dominated), and does not have any edges $(u,v)$ where $u,v \in S$ (independence). \\
+
+\noindent\textbf{Problem:} Given a graph $G = (V, E)$. Does there exists $S \subset V$, with $|S| \leq k$ such that 
+\begin{itemize}
+\item $\forall v \in V$, either $v \in S$ or $(u, v) \in E$, $u \in S$ 
+\item $u, v \in S$ implies that there is no edge between $u$ and $v$. 
+\end{itemize}
+
+The reduction works as follows. For each edge $(u,v)$, we add the constraint $(\neg u \vee \neg v)$ to the 2SAT formula. We claim that a minimum clue set for the resulting 2SAT formula consists of a setting of $k$ variables to be true, and that the variables in the clue correspond to a minimum independent dominating set. For the other direction, we claim that a minimum independent dominating set gives us a minimum clue set for the 2SAT formula, by simply setting all the variables corresponding to vertices in the set to be true.
+
+We will need the following lemma.
+
+\begin{lemma} Given a set of clues of size $k$ with $k_f > 0$ variables set to false, there exists another set of clues of size at most $k$ with strictly fewer than $k_f$ variables set to false.
+\end{lemma}
+
+\begin{proof} 
+Consider a variable $x_i$ set to be false. Consider its set of neighbors $N(x_i)$, guaranteed to be non-empty via construction. First, consider the case where $N(x_i)$ contains nodes set to true. For each of the nodes $v \in N(x_i)$ that are set to true, a clue must either say that $v$ is true, or there must be a clue that implies that $v$ is true. No matter what, we can either remove $x_i$ or replace $x_i$ with a clue that one of its neighbors are true (CHECK THIS). It remains to consider the case where all the neighbors of $x_i$ are set to false. In this case, we can switch the clue that $x_i$ is set to false with a clue that $x_i$ is set to true, which will imply that all of its neighbors are false.
+\end{proof}
+
+Now, we show that a minimum clue assignment gives an independent dominating set of the same size. Suppose we have a minimum clue assignment for 2SAT. We first apply the lemma above repeatedly until there are no false clues. So if we have a variable that is part of the clue, it is set to be true and implies all of its neighbors are false. Thus, we will not have a clue for any of the neighbors, since setting a variable to be false does not imply anything. This gives the independence property. We have a dominating set as well, since if there exists a vertex where no neighbor is a clue, then we cannot possibly know that any neighbors are set to true (since clues can only imply that other vertices are false), and since true variables are the only ones that give implications, we cannot know what this vertex is. This would contradict the fact that we have a uniquely determined solution.
+
+Now we show that an independent dominating set gives a clue assignment of the same size. Suppose we have a minimum independent dominating set. If we set each variable in the minimum independent dominating set to be true, then we know due to the fact that it is a dominating set that every variable will be implied. So we know that this is a valid clue set.
+
+To complete the proof, we claim that a minimum clue assignment actually corresponds to a $\emph{minimum}$ independent dominating set. If this were not the case, and a smaller independent dominating set existed, then we could go backwards to get a strictly smaller clue assignment. This would be a contradiction. 
+
+\subsection{Other P problems with NP-hard FCP versions}
+
+(open)
+
+\subsection{P problems with $\Sigma_2$-hard FCP versions}
+
+(open)
+
+\subsection{Generalizing}
+
+Ideally, we would like to generalize what we've shown above. One particular question is whether the $\mathsf{FCP}$ versions of problems with polynomial time algorithms have a better upper bound than $\Sigma_2$. Consider the following example:
+\[ L = \{ \phi' = \phi \vee \left( \bigwedge_i x_i \right) | \phi \text{ is a Boolean formula }\} \]
+Clearly, $L \in P$. Since on each input, we check whether the Boolean formula takes the following form, and if so, we accept. The clause with all variables being $1$ indicates that the formula has a satisfying assignment. In addition, the search problem for finding a satisfying assignment also has a polynomial time algorithm. We simply set all variables to $1$. However, what happens to the $\mathsf{FCP}$ version?
+
+$\mathsf{FCP} L$ 
+\begin{quote}
+\textbf{Instance}: a Boolean formula $\phi \vee \left( \bigwedge_i x_i\right)$, along with a $k$.\\
+\textbf{Question}: Is there a partial assignment of at most $k$ variables such that the remaining formula is a unique satisfying solution?
+\end{quote}
+
+\begin{proposition}
+$\mathsf{FCP} L$ is co\NP-hard.
+\end{proposition}
+
+\begin{proof}
+We can reduce from $\overline{SAT}$. 
+\begin{align}
+\phi \in \overline{SAT} &\leftrightarrow \forall x \phi(x) = 0 \\
+				    & \leftrightarrow \langle (\phi \wedge \overline{z}) \vee \left(z \wedge \bigwedge_i x_i \right), 0 \rangle \in \mathsf{FCP} L
+\end{align}
+\end{proof}
+
+Alternatively, we could look at another contrived language:
+\[ L' = \{ \phi' = (\phi \wedge \overline{z}) \vee z | \phi \text{ is a Boolean formula and $z$ does not appear in $\phi$} \} \]
+So $L' \in P$ and the search problem also has a polynomial time algorithm. However, it seems like $\mathsf{FCP} L'$ should be able to analyze what happens inside $\phi$. 
+
+\begin{proposition}
+$\mathsf{FCP} L'$ is $\Sigma_2$-complete. 
+\end{proposition}
+
+\begin{proof}
+We reduce from $\mathsf{FCP} SAT$. If $\phi$ has a partial assignment of size at most $k$ with a unique solution, then $\phi' = (\phi \wedge \overline{z}) \vee z$ has a partial assignment of size at most $k+1$ with a unique solution. We simply add the assignment for variable $z$. 
+
+If $\phi$ has no satisfying assignment, then $\phi'$ requires $n$ clues for a partial assignment with a unique solution. If $\phi$ has a partial assignment, but it requires more than $k$ clues, then if $\textbf{x}$ is a particular satisfying assignment to $\phi'$, if $z  \in \textbf{x}$, then $\textbf{x}$ needs at least $n$ solutions to be specified, if $\overline{z} \in \textbf{x}$, then we must specify $\overline{z}$ in the clue, and by assumption we must specify more than $k$ variables. Therefore, if $\phi$ needs more than $k$ clues, $\phi'$ will need more than $k+1$ clues. 
+\end{proof}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+
+\bibliography{references}
+\bibliographystyle{splncs}
+\end{document}
