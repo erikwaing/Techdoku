@@ -89,7 +89,7 @@
 \section{Introduction}
 \label{sec:introduction}
 
-In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. It had long been known that 17 clues was sufficient, and there exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed. They arrived at this answer following a year-long computation. Is there any notion of computatational hardness to these sorts of problems?
+In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. It had long been known that 17 clues were sufficient, and there exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed. They arrived at this answer following a year-long computation. Is there any notion of computatational hardness to these sorts of problems?
 
 We consider a following generalization of the above Sudoku question: 
 \begin{quote}
@@ -100,9 +100,9 @@ For example, if the problem is to find a Hamiltonian cycle in a given graph $G =
 
 A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper). The input to the problem is an idea of a partially filled puzzle, and the output is the least number of additional clues needed for the puzzle to be uniquely solvable.
 
-We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\mathsf{NP}$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms which their $\mathsf{FCP}$ versions are $\mathsf{NP}$-complete.
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\mathsf{NP}$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\mathsf{NP}$-complete.
 
-The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this sort of problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the transformation $\mathsf{FCP}$. We state what it means for a problem to be a fewest clues problem, and provide a framework for reducing between these problems. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\Sigma_2$-complete. Then we discuss the $\mathsf{FCP}$ transformation affects problems with polynomial time algorithms. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
+The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the transformation $\mathsf{FCP}$. We state what it means for a problem to be a fewest clues problem, and provide a framework for reducing between these problems. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\Sigma_2$-complete. Then we discuss the $\mathsf{FCP}$ transformation affects problems with polynomial time algorithms. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
 
 \section{Related Work}
 \label{sec:relatedwork}
@@ -112,9 +112,9 @@ The paper is organized as follows. In Section~\ref{sec:related}, we discuss prev
 
 \subsection{Formalizing the Question}
 
-In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. We will be working with $\NP$ search problems, this is the class of problems whose decision is in $\NP$, but we ask for a particular solution. In the case of Hamiltonian Path, instead of asking does there exists a Hamiltonian path, we are asking to present a Hamiltonian path. It is clear that $\NP$ search problems are ``harder" than decision problems, since one can answer the decision problem once one has found a solution.
+In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. We will be working with $\NP$ search problems, the class of problems whose decision is in $\NP$, but we ask for a particular solution. In the case of Hamiltonian Path, instead of asking if there exists a Hamiltonian path, we are asking to present a Hamiltonian path. It is clear that $\NP$ search problems are ``harder" than decision problems, since one can answer the decision problem once one has found a solution.
 
-In particular, we will have an $\NP$ search problem be comprised of a set of \emph{instances}, which will be strings over some finite alphabet. For a particular instance $x$, there is set of possible \emph{solutions}, which are strings of polynomial size with respect to $|x|$ over some finite alphabet. Each problem also comes with an algorithm $A$ that checks whether a string $s$ is in fact a solution for an instance $x$, which runs in polynomial time. This is the verifier. For a given language $L \in \NP$, $x \in L$ if and onll if $S(x)$ is non-empty.
+In particular, we will have an $\NP$ search problem be comprised of a set of \emph{instances}, which will be strings over some finite alphabet. For a particular instance $x$, there is set of possible \emph{solutions}, which are strings of polynomial size with respect to $|x|$ over some finite alphabet. Each problem also comes with an algorithm $A$ that checks whether a string $s$ is in fact a solution for an instance $x$, which runs in polynomial time. This is the verifier. For a given language $L \in \NP$, $x \in L$ if and only if $S(x)$ is non-empty.
 
 A \emph{clue} will be an indexed character of a solution. So a clue indicates what character lies at some position of the solution.
 
@@ -323,16 +323,32 @@ Now $g$ maps the triangles in variable graphs to the corresponding assignment an
 
 In Latin Squares we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. It is known that such problem is $\NP$-complete and it can be shown that its $\mathsf{FCP}$ version is $\Sigma_2$-complete. 
 
+Before showing the main result of this section, we introduce some definitions and notation from \cite{colbourn1984complexity} that will make the proof easier to follow. For simplicity, we will refer to the entry on the $i$-th row and $j$-th column of the Latin Square as $L(i,j)$. 
+
+Colbourn \cite{colbourn1984complexity} first argues that it suffices to consider the cases where we are given a tripartite graph and are asked to decide whether or not a triangle partition of it exists. He introduces the concept of a defect graph $G(P)$, a tripartite graph that has a triangle partition if and only if it's originating Latin Square $P$ is completable. 
+
+Suppose we are given a partial Latin Square $P$ of order $n$. The \textbf{defect graph $G(P) = (V,E)$} of $P$ is the graph whose vertex set is given by $\{ r_i | \text{ row } i \text{ contains an empty square} \} \cup \{ c_j | \text{ column } j \text{ contains an empty square} \} \cup \{ e_k | \text{ element } k\text{ appears less than } n \text{ times } \} $. The edge set of $G(P)$ is defined as follows: 
+
+\begin{itemize}
+	\item If $L(i,j)$ is blank, then we add an edge between $r_i$ and $c_j$. 
+	\item If row $i$ does not have item $k$ then we add an edge between $r_i$ and $e_k$. 
+	\item If column $j$ does not have item $k$ then we add an edge between $c_j$ and $e_k$.
+\end{itemize}
+
+Colbourn \cite{colbourn1984complexity} shows that $G(P)$ has a triangle partition if, and only if, $P$ has a valid solution. One direction is obvious by construction. The other direction  consists of showing that every uniform tripartite graph is the defect graph of some partial Latin Square. Colbourn \cite{colbourn1984complexity} proves this by introducing Latin Frameworks $LG(G)$, which are arrays constructed from tripartite graphs $G$. The idea of Latin Frameworks is to revert the operations of defect graphs. Colbourn shows  that given an $n$-vertex uniform tripartite graph one can recover an order $2n$ Latin Square whose solutions match and the construction can be done in polynomial time. 
+
 \begin{theorem}
 $\mathsf{FCP}$ Latin Squares is $\Sigma_2$-complete.
 \end{theorem}
 
-TO DO: put this reduction in terms of the general clue reduction!
-
 \begin{proof}
 We do this via reduction from $\mathsf{FCP}$ TrianglePartition. Throughout this proof we will be using constructions and results from \cite{colbourn1984complexity}.
 
-Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G;2n,2n,2n)$ in polynomial time  \cite{colbourn1984complexity}. This Latin framework is constructed so that $G$ is the defect graph of $LF(G;2n,2n,2n)$. We then simply map via $f$ instances of defect graphs $G$ to partial Latin Squares. The Latin Squares clues are mapped to triangles with vertices on different parts of the partition. Each clue is mapped, by construction, bijectively to a triangle (since the triangle takes into account the row, column and number of the clue). As Colbourn shows, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to its Latin Square. This completes the proof. 
+Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G)$ in polynomial time \cite{colbourn1984complexity}. This Latin framework is constructed so that $G$ is the defect graph of $LF(G)$. We then simply map via $f$ instances of defect graphs $G$ to partial Latin Squares. This map is bijective, as shown by Colbourn \cite{colbourn1984complexity}. As Colbourn shows, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to its Latin Square. 
+
+The mapping $g$ sends Latin Squares clues $L(i,j) = k$ to triangles with vertices $(i,j,k)$ on different parts of the partition. Each clue is mapped, by construction, bijectively to a triangle (since the triangle takes into account the row, column and number of the clue). The function $g$ preserves subsets since we are mapping filled squares to triangles individually. Finally, it is surjective since it maps a Latin Squares clue to a valid Triangle Partition clue. This completes the proof.
+
+[need to complete some more stuff?]
 \end{proof}
 
 \subsection{Sudoku}
