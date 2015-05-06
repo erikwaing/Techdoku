@@ -321,7 +321,12 @@ Now $g$ maps the triangles in variable graphs to the corresponding assignment an
 
 \subsection{Latin Squares}
 
-In Latin Squares we are given a $n \times n$ grid, some of whose entries have been filled in with numbers from $1$ to $n$. The goal of the game is to fill the rest of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeats a number. It is known that such problem is $\NP$-complete and it can be shown that its $\mathsf{FCP}$ version is $\Sigma_2$-complete. 
+The Latin Squares problem is the following:
+\begin{quote}
+\textbf{Instance}: An $n \times n$ grid, with some entries filled in with the numbers $1$ to $n$.\\
+\textbf{Question}: Can we fill in the remainder of the grid while enforcing that no row or column repeat a number?
+\end{quote}
+The problem is $\NP$-complete.Here we study its  $\mathsf{FCP}$ version, which asks what is the smallest number of numbers we must fill in so that it becomes uniquely solvable. This problem is $\Sigma_2$-complete. 
 
 Before showing the main result of this section, we introduce some definitions and notation from \cite{colbourn1984complexity} that will make the proof easier to follow. For simplicity, we will refer to the entry on the $i$-th row and $j$-th column of the Latin Square as $L(i,j)$. 
 
