@@ -107,6 +107,15 @@ The paper is organized as follows. In Section~\ref{sec:related}, we discuss prev
 \section{Related Work}
 \label{sec:relatedwork}
 
+\subsection{The Another Solution Problem}
+
+Our approach the $\mathsf{FCP}$ problem transformation is related to the \emph{Another Solution Problem} ($\mathsf{ASP}$). (CITATION NEEDED). For a given problem, the $\mathsf{ASP}$ version asks: Given a solution to this problem, find another solution. There is a notion of an $\mathsf{ASP}$-reduction, defined in (CITATION NEEDED). If $\mathsf{ASP} A$ can be $\mathsf{ASP}$-reduced to $\mathsf{ASP} B$, then $\mathsf{NP}$-hardness of $\mathsf{ASP} A$ implies $\mathsf{NP}$-hardness of $\mathsf{ASP} B$. We use a similar approach to analyzing hardness of $\mathsf{FCP}$-hard problems. We consider the $\mathsf{FCP}$ version of the boolean satisfiability problem $(SAT)$, and show that it is $\sigma_2$-complete. We then define an $\mathsf{FCP}$-reduction similar in flavor to an $\mathsf{ASP}$-reduction, and show $\sigma_2$-completenss of various $\mathsf{FCP}$ problems with these reductions.
+
+\subsection{Boolean Formula Minimization}
+
+Our approach to showing $\sigma_2$-hardness of boolean formula minimization has many connections to boolean formula minimization. (ELABORATE ON UMANS WORK HERE)
+
+
 \section{The $\mathsf{FCP}$ Transformation}
 \label{sec:prelim}
 
@@ -425,9 +434,13 @@ We will show a general clue reduction via $\mathsf{FCP}$ Latin Squares. We use t
 \caption{Example of a mapping between instances of Latin Squares and Sudoku.}
 \end{figure}
 
-\section{$\mathsf{FCP}$ Versions of Some Easy Problems}
+\section{$\mathsf{FCP}$ Versions of Easy Problems}
 
-We would like to be able to understand what happens to problems in general when their $\mathsf{FCP}$ versions are asked. 
+We would like to be able to understand what happens to problems in general when their $\mathsf{FCP}$ versions are asked.
+
+\subsection{Connection to Counting Problems}
+
+For any search probelm, the related counting problem asks for the number of valid solutions. We suspect that problems in $\mathsf{P}$ with $\sharp \mathsf{P}$-hard counting problems also have hard $\mathsf{FCP}$ versions.
 
 \subsection{$\mathsf{FCP}$ 2SAT} 
 
