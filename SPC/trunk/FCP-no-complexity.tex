@@ -66,7 +66,7 @@
 % their surnames. This ensures that the names appear correctly in
 % the running heads and the author index.
 %
-\author{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
+\author{Erik D. Demaine \and Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
 %
 \authorrunning{Fermi Ma \and Ariel Schvartzman \and Erik Waingarten}
 % (feature abused for this document to repeat the title also on left hand pages)
@@ -104,7 +104,7 @@ For example, if the problem is to find a Hamiltonian cycle in a given graph $G =
 
 A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper). The input to the problem is an idea of a partially filled puzzle, and the output is the least number of additional clues needed for the puzzle to be uniquely solvable.
 
-We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\mathsf{NP}$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\sigma_2$-complete.
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\NP$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\sigma_2$-complete.
 
 The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the transformation $\mathsf{FCP}$. We state what it means for a problem to be a fewest clues problem, and provide a framework for reducing between these problems. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\Sigma_2$-complete. Then we discuss the $\mathsf{FCP}$ transformation affects problems with polynomial time algorithms. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
 
@@ -113,7 +113,7 @@ The paper is organized as follows. In Section~\ref{sec:related}, we discuss prev
 
 \subsection{The Another Solution Problem}
 
-Our approach the $\mathsf{FCP}$ problem transformation is related to the \emph{Another Solution Problem} ($\mathsf{ASP}$). (CITATION NEEDED). For a given problem, the $\mathsf{ASP}$ version asks: Given a solution to this problem, find another solution. There is a notion of an $\mathsf{ASP}$-reduction, defined in (CITATION NEEDED). If $\mathsf{ASP} A$ can be $\mathsf{ASP}$-reduced to $\mathsf{ASP} B$, then $\mathsf{NP}$-hardness of $\mathsf{ASP} A$ implies $\mathsf{NP}$-hardness of $\mathsf{ASP} B$. We use a similar approach to analyzing hardness of $\mathsf{FCP}$-hard problems. We consider the $\mathsf{FCP}$ version of the boolean satisfiability problem $(SAT)$, and show that it is $\sigma_2$-complete. We then define an $\mathsf{FCP}$-reduction similar in flavor to an $\mathsf{ASP}$-reduction, and show $\sigma_2$-completenss of various $\mathsf{FCP}$ problems with these reductions.
+Our approach the $\mathsf{FCP}$ problem transformation is related to the \emph{Another Solution Problem} ($\mathsf{ASP}$) \cite{Seta01}. For a given problem, the $\mathsf{ASP}$ version asks: Given a solution to this problem, find another solution. There is a notion of an $\mathsf{ASP}$-reduction, defined in \cite{Seta01}. If $\mathsf{ASP} A$ can be $\mathsf{ASP}$-reduced to $\mathsf{ASP} B$, then $\mathsf{NP}$-hardness of $\mathsf{ASP} A$ implies $\mathsf{NP}$-hardness of $\mathsf{ASP} B$. We use a similar approach to analyzing hardness of $\mathsf{FCP}$-hard problems. We consider the $\mathsf{FCP}$ version of the boolean satisfiability problem $(SAT)$, and show that it is $\Sigma_2$-complete. We then define an $\mathsf{FCP}$-reduction similar in flavor to an $\mathsf{ASP}$-reduction, and show $\Sigma_2$-completenss of various $\mathsf{FCP}$ problems with these reductions.
 
 \subsection{Boolean Formula Minimization}
 
@@ -308,11 +308,30 @@ Holyer \cite{holyer1981np} showed this problem is $\NP$-complete. His main tool 
 \caption{Holyer's $H_{3,p}$ graph}
 \end{figure}
 
-The $\mathsf{FCP}$ version of the problem is to find the fewest number of triangles that we must give in order for there to be a unique triangle partition. For example, note that in Figure~\ref{fig:holyergraph}, once you specify one triangle in the partition, there is only one way to partition the graph in accordance with that triangle. The answer would therefore be any one triangle. We claim $\mathsf{FCP}$ Triangle Partition is also $\Sigma$-complete.
+The $\mathsf{FCP}$ version of the problem is to find the fewest number of triangles that we must give in order for there to be a unique triangle partition. For example, note that in Figure~\ref{fig:holyergraph}, once you specify one triangle in the partition, there is only one way to partition the graph in accordance with that triangle.
 
-We give a quick summary of Holyer's reduction which highlights the ideas we will use to show $\Sigma_2$ completeness. Holyer uses the graph in Figure~\ref{fig:holyergraph} to represent variables and literals. Since each graph can only be partitioned in one of two ways, one way will correspond to a true setting, the other will correspond to a false setting. He calls these the $T$-partition and the $F$-partition. 
+We claim $\mathsf{FCP}$ Triangle Partition is $\Sigma_2$-complete. We give a quick summary of Holyer's reduction which highlights the ideas we will use to show $\Sigma_2$ completeness. 
 
-He also uses the graphs to make clauses. He gives a join between three $H_{3,p}$ graphs such that exactly one of them will be $F$-partitioned. The three graphs will correspond to literals in the clause. Then he gives a way to combine the literals with the variables such that if a literal is set to an $F$-partition, then corresponding variable must be set to either a $T$-partition (in the case where the literal is positive), or an $F$-partition (if the literal is negative). However, if the literal is a $T$-partition, then it does not matter what the variable is set to. 
+\subsubsection{Holyer's Reduction for Triangle Partition}
+%
+% Fermi, do you think we need both paragraph version of summary and important properties?
+%
+% 
+Holyer uses the graph in Figure~\ref{fig:holyergraph} to represent variables and literals. Since each graph can only be partitioned in one of two ways, one way will correspond to a true setting, the other will correspond to a false setting. He calls these the $T$-partition and the $F$-partition. 
+
+He also uses the graphs to make clauses. He shows a way to join three $H_{3,p}$ graphs such that exactly one of them will be $F$-partitioned. The three graphs will correspond to literals in the clause. Then he gives a way to combine the literals with the variables such that if a literal is set to an $F$-partition, then corresponding variable must be set to either a $T$-partition (in the case where the literal is positive), or an $F$-partition (if the literal is negative). However, if the literal is a $T$-partition, then it does not matter what the variable is set to. 
+
+In particular, there are three important properties of Holyer's reduction which we utilize:
+\begin{enumerate}
+\item We have variable and literal gadgets which are a graph which can be partitioned in two possible ways, we call one $T$-partitioned (corresponding to setting the variable to true) and $F$-partitioned (corresponding to setting the variable to false).  
+\item A clause gadget is a join between three literal gadgets. The clause gadget has a triangle partition if exactly one of the literals is $F$-partitioned.
+\item A literal is joined with a variable. If the literal is $F$-partitioned, then there are two options:
+\begin{itemize}
+\item If the literal is the positive variable, then the variable must be $T$-partitioned.
+\item If the literal is the negative variable, then the variable must be $F$-partitioned.
+\end{itemize}
+\end{enumerate}
+So the argument is: if the graph can be triangle partitioned, then each clause is satisfied by at least one literal. That literal gadget will be $F$-partitioned and it will cause the variable to take a particular partition, giving it its assignment. 
 
 \begin{theorem}
 $\mathsf{FCP}$ Triangle Partition is $\Sigma_2$-complete.
@@ -498,17 +517,7 @@ Now, we show that a clue assignment gives an independent dominating set of the s
 
 Now we show that an independent dominating set gives a clue assignment of the same size. Suppose we have a minimum independent dominating set. If we set each variable in the minimum independent dominating set to be true, then we know due to the fact that it is a dominating set that every variable will be implied. So we know that this is a valid clue set.
 
-\subsection{Other P problems with NP-hard FCP versions}
-
-(open)
-
-\subsection{P problems with $\Sigma_2$-hard FCP versions}
-
-(open)
-
-\subsection{Generalizing}
-
-Ideally, we would like to generalize what we've shown above. One particular question is whether the $\mathsf{FCP}$ versions of problems with polynomial time algorithms have a better upper bound than $\Sigma_2$. Consider the following example:
+Ideally, we would like to generalize what we've shown above. One particular question is whether the $\mathsf{FCP}$ versions of problems with polynomial time algorithms have a better upper bound than $\Sigma_2$. In general the answer is no. Consider the following example:
 \[ L = \{ \phi' = \phi \vee \left( \bigwedge_i x_i \right) | \phi \text{ is a Boolean formula }\} \]
 Clearly, $L \in P$. Since on each input, we check whether the Boolean formula takes the following form, and if so, we accept. The clause with all variables being $1$ indicates that the formula has a satisfying assignment. In addition, the search problem for finding a satisfying assignment also has a polynomial time algorithm. We simply set all variables to $1$. However, what happens to the $\mathsf{FCP}$ version?
 
@@ -543,6 +552,21 @@ We reduce from $\mathsf{FCP} SAT$. If $\phi$ has a partial assignment of size at
 
 If $\phi$ has no satisfying assignment, then $\phi'$ requires $n$ clues for a partial assignment with a unique solution. If $\phi$ has a partial assignment, but it requires more than $k$ clues, then if $\textbf{x}$ is a particular satisfying assignment to $\phi'$, if $z  \in \textbf{x}$, then $\textbf{x}$ needs at least $n$ solutions to be specified, if $\overline{z} \in \textbf{x}$, then we must specify $\overline{z}$ in the clue, and by assumption we must specify more than $k$ variables. Therefore, if $\phi$ needs more than $k$ clues, $\phi'$ will need more than $k+1$ clues. 
 \end{proof}
+
+\subsection{What can we say about easy languages?}
+
+NEED TO FORMALIZE THIS A BIT MORE.
+
+We can say something about a particular set of easy problems. 
+\begin{proposition}
+Suppose $A$ in a search problem with a polynomial time algorithm. Furthermore, suppose $x$ is an instance of $A$. If $c$ is some clue for $x$ and $x \cup c$ is another instance of $x$, then $\mathsf{FCP} A \in \NP$. 
+\end{proposition}
+
+\begin{proof}
+The certificate is the clue, along with the solution. We only need to specify that the clue is the required size, the solution corresponds to the clue, and that there is a unique solution. We do this by showing by asking whether $x \cup c \cup \{ c' \}$ has a solution for each possible additional clue $c'$ (for which there are polynomially many). If we can find more than one solution, we reject. If there is only one solution, we accept. Since $x \cup c \cup \{ c' \}$ is an instance to $A$, and $A$ has a polynomial time algorithm, we can verify that $c$ is a clue with a unique solution in polynomial time.
+\end{proof}
+
+We know that many polynomial time problems which we care about satisfy the above self-reducibility property. These include 2SAT, Horn-satisfiability, and matching. The languages $L$ and $L'$ do not satisfy the above properties.
 
 \section{Conclusion}
 \label{sec:conclusion}
