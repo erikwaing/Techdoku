@@ -86,9 +86,14 @@
 
 \maketitle
 
+<<<<<<< HEAD
 \begin{abstract}
 We study the problem of finding the fewest number of clues needed for a particular puzzle to be unique. We define a general transformation from search problems to fewest clues problems, and explore how their computational complexity changes. We define two types of reductions to relate various fewest clues problems, and show that various \NP-complete problems have fewest clues versions which are $\Sigma_2$-complete. We explore how this tranformation among problems changes their computational complexity. This line of research is very similar to exploring the power of counting, as in \#P and ASP (another solution problem).
 \end{abstract}
+=======
+
+
+>>>>>>> 7dc34183091f2b24e46a59990ae73ab597d8e08d
 
 \section{Introduction}
 \label{sec:introduction}
@@ -104,7 +109,7 @@ For example, if the problem is to find a Hamiltonian cycle in a given graph $G =
 
 A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper). The input to the problem is an idea of a partially filled puzzle, and the output is the least number of additional clues needed for the puzzle to be uniquely solvable.
 
-We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\mathsf{NP}$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\mathsf{NP}$-complete.
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\mathsf{NP}$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\sigma_2$-complete.
 
 The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the transformation $\mathsf{FCP}$. We state what it means for a problem to be a fewest clues problem, and provide a framework for reducing between these problems. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\Sigma_2$-complete. Then we discuss the $\mathsf{FCP}$ transformation affects problems with polynomial time algorithms. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
 
@@ -123,19 +128,26 @@ Our approach to showing $\sigma_2$-hardness of boolean formula minimization has 
 \section{The $\mathsf{FCP}$ Transformation}
 \label{sec:prelim}
 
-\subsection{Formalizing the Question}
+\subsection{Definitions}
 
-In this section, we formalize the question of determining the fewest number of clues for a given instance of a problem. We will be working with $\NP$ search problems, the class of problems whose decision is in $\NP$, but we ask for a particular solution. In the case of Hamiltonian Path, instead of asking if there exists a Hamiltonian path, we are asking to present a Hamiltonian path. It is clear that $\NP$ search problems are ``harder" than decision problems, since one can answer the decision problem once one has found a solution.
+For a given instance of $x$ of a \emph{search} problem A, we can think of the set of solutions to $x$ as a set of polynomial-size strings. For example, for the case of $SAT$, an instance consists of a specific $SAT$ formula on variables $x_1,x_2,\dots,x_n$. Solutions can be written as indexed length-$n$ strings of boolean values, where the value at index $i$ is the assignment to variable $x_i$. In this case, a $\emph{clue}$ for the problem would be an assignment of a specific index to some boolean value. For general problems, the precise definition of a clue depends on how solutions are encoded as strings.
 
-In particular, we will have an $\NP$ search problem be comprised of a set of \emph{instances}, which will be strings over some finite alphabet. For a particular instance $x$, there is set of possible \emph{solutions}, which are strings of polynomial size with respect to $|x|$ over some finite alphabet. Each problem also comes with an algorithm $A$ that checks whether a string $s$ is in fact a solution for an instance $x$, which runs in polynomial time. This is the verifier. For a given language $L \in \NP$, $x \in L$ if and only if $S(x)$ is non-empty.
+We say that a solution to $x$ \emph{satisfies} a set of clues if each clue matches the solution at that clue's index. For example, in the case of SAT on variables $x_1,x_2,\dots,x_5$, then the solution $``01011"$ would match the clue set $\{x_1 = 0,x_3 = 0,x_4 = 1\}$.
 
-A \emph{clue} will be an indexed character of a solution. So a clue indicates what character lies at some position of the solution.
+Given these definitions, we define $\mathsf{FCP}-A$ to be the following decision problem:
+\begin{quote}
+Given $A$ and a valid encoding of solutions of $A$, is there a set of clues of size at most $k$ such that exactly one solution satisfies these clues?
+\end{quote}
+%
+%In particular, we will have an $\NP$ search problem be comprised of a set of \emph{instances}, which will be strings over some finite alphabet. For a particular instance $x$, there is set of possible \emph{solutions}, which are strings of polynomial size with respect to $|x|$ over some finite alphabet. Each problem also comes with an algorithm $A$ that checks whether a string $s$ is in fact a solution for an instance $x$, which runs in polynomial time. This is the verifier. For a given language $L \in \NP$, $x \in L$ if and only if $S(x)$ is non-empty.
+%
+%A \emph{clue} will be an indexed character of a solution. So a clue indicates what character lies at some position of the solution.
+%
+%\begin{definition}
+%Given some $\NP$ search problem $A$, the ``fewest clues" version of $A$, $(\mathsf{FCP} A)$ asks for an instance of $A$, the minimum number of clues corresponding to a unique solution for any given instance?
+%\end{definition}
 
-\begin{definition}
-Given some $\NP$ search problem $A$, the ``fewest clues" variation of $A$, $(\mathsf{FCP} A)$ asks for an instance of $A$, the minimum number of clues corresponding to a unique solution for any given instance.
-\end{definition}
-
-This set-up allows us to ask $\mathsf{FCP}$ variations to the common puzzles like Sudoku quiet easily. For the classical $9 \times 9$ Sudoku, we let the alphabet be $\Sigma = \{ 1, ..., 9 \} \cup \{ \Box \}$, and we let an instance be a string of length 81 with elements from $\Sigma$, where each position in the string corresponds to a position on the $9 \times 9$ Sudoku board. The presence of $\Box$ indicates that position is unknown. A solution will be a string of length $81$ with no $\Box$ characters. 
+This set-up allows us to ask $\mathsf{FCP}$ variations to the common puzzles like Sudoku quite easily. For the classical $9 \times 9$ Sudoku, we let the alphabet be $\Sigma = \{ 1, ..., 9 \} \cup \{ \Box \}$, and we let an instance be a string of length 81 with elements from $\Sigma$, where each position in the string corresponds to a position on the $9 \times 9$ Sudoku board. The presence of $\Box$ indicates that position is unknown. A solution will be a string of length $81$ with no $\Box$ characters. 
 
 The algorithm $A$ checking whether a solution to some instance is correct. It does so by checking all three Sudoku rules: every row, column, and $3 \times 3$ inner-square contains all the numbers from $\{1 , ..., 9\}$. In addition, we check the solution contains the same numbers as the instance at the specified positions.
 
@@ -146,7 +158,7 @@ The algorithm $A$ checking whether a solution to some instance is correct. It do
 \caption{17-Clue $9 \times 9$ Sudoku, taken from \cite{smallsudoku}}
 \end{figure}
 
-The $\mathsf{FCP}$ Sudoku puzzle asks for a given starting point $x$ which is the fewest number of additional squares we must fill in order for the Sudoku to be uniquely solvable. A solution for the $9 \times 9$ case where the instance is initially empty is given in Figure~\ref{fig:seventeencluesudoku}. The fewest clues are given by the yellow squares.
+$\mathsf{FCP}$-Sudoku asks for a given starting point $x$ which is the fewest number of additional squares we must fill in order for the Sudoku to be uniquely solvable. A solution for the $9 \times 9$ case where the instance is initially empty is given in Figure~\ref{fig:seventeencluesudoku}. The fewest clues are given by the yellow squares.
 
 We can also ask the corresponding decision question for some fewest clues problem: does there exist less than $k$ clues which uniquely specify a solution for a given instance? We can solve for the minimum number of clues necessary with a binary search through $k$ by asking the decision problem.
 
@@ -444,7 +456,7 @@ We would like to be able to understand what happens to problems in general when 
 
 \subsection{Connection to Counting Problems}
 
-For any search probelm, the related counting problem asks for the number of valid solutions. We suspect that problems in $\mathsf{P}$ with $\sharp \mathsf{P}$-hard counting problems also have hard $\mathsf{FCP}$ versions.
+For any search problem, the related counting problem asks for the number of valid solutions. We suspect that problems in $\mathsf{P}$ with $\sharp \mathsf{P}$-hard counting problems also have hard $\mathsf{FCP}$ versions.
 
 \subsection{$\mathsf{FCP}$ 2SAT} 
 
