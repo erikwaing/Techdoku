@@ -142,7 +142,7 @@ For a given instance of $x$ of a \emph{search} problem A, we can think of the se
 
 We say that a solution to $x$ \emph{satisfies} a set of clues if each clue matches the solution at that clue's index. For example, in the case of SAT on variables $x_1,x_2,\dots,x_5$, then the solution $``01011"$ would match the clue set $\{x_1 = 0,x_3 = 0,x_4 = 1\}$.
 
-Given these definitions, we define $\mathsf{FCP}-A$ to be the following decision problem:
+Given these definitions, we define $\mathsf{FCP} A$ to be the following decision problem:
 \begin{quote}
 Given $A$ and a valid encoding of solutions of $A$, is there a set of clues of size at most $k$ such that exactly one solution satisfies these clues?
 \end{quote}
@@ -157,7 +157,7 @@ Given $A$ and a valid encoding of solutions of $A$, is there a set of clues of s
 
 This set-up allows us to ask $\mathsf{FCP}$ variations to the common puzzles like Sudoku quite easily. For the classical $9 \times 9$ Sudoku, we let the alphabet be $\Sigma = \{ 1, ..., 9 \} \cup \{ \Box \}$, and we let an instance be a string of length 81 with elements from $\Sigma$, where each position in the string corresponds to a position on the $9 \times 9$ Sudoku board. The presence of $\Box$ indicates that position is unknown. A solution will be a string of length $81$ with no $\Box$ characters. 
 
-The algorithm $A$ checking whether a solution to some instance is correct. It does so by checking all three Sudoku rules: every row, column, and $3 \times 3$ inner-square contains all the numbers from $\{1 , ..., 9\}$. In addition, we check the solution contains the same numbers as the instance at the specified positions.
+The algorithm $A$ checks whether a solution to some instance is correct. It does so by checking all three Sudoku rules: every row, column, and $3 \times 3$ inner-square contains all the numbers from $\{1 , ..., 9\}$. In addition, we check the solution contains the same numbers as the instance at the specified positions.
 
 \begin{figure}
 \centering
@@ -166,9 +166,11 @@ The algorithm $A$ checking whether a solution to some instance is correct. It do
 \caption{17-Clue $9 \times 9$ Sudoku, taken from \cite{smallsudoku}}
 \end{figure}
 
-$\mathsf{FCP}$-Sudoku asks for a given starting point $x$ which is the fewest number of additional squares we must fill in order for the Sudoku to be uniquely solvable. A solution for the $9 \times 9$ case where the instance is initially empty is given in Figure~\ref{fig:seventeencluesudoku}. The fewest clues are given by the yellow squares.
+$\mathsf{FCP}$ Sudoku asks for a given starting point $x$ which is the fewest number of additional squares we must fill in order for the Sudoku to be uniquely solvable. A solution for the $9 \times 9$ case where the instance is initially empty is given in Figure~\ref{fig:seventeencluesudoku}. The fewest clues are given by the yellow squares.
 
-We can also ask the corresponding decision question for some fewest clues problem: does there exist less than $k$ clues which uniquely specify a solution for a given instance? We can solve for the minimum number of clues necessary with a binary search through $k$ by asking the decision problem.
+\subsection{Upper Bounds}
+
+Usually, we will talk about $\NP$ search problems which we transform to $\mathsf{FCP}$ versions. We can obtain an immediate upper bound.
 
 \begin{theorem}
 \label{thm:satinsig2}
@@ -176,14 +178,14 @@ If some language $L \in \NP$, then $\mathsf{FCP} L \in \Sigma_2$.
 \end{theorem}
 
 \begin{proof}
-We can write the $\mathsf{FCP}$ question in terms of a $\Sigma_2$ question. The original question for $L$ is
+We can write the $\mathsf{FCP}$ question in terms of a $\Sigma_2$ question. The original $\NP$ question for $L$ is
 \[ x \in L \leftrightarrow \exists y, A(x, y) = 1 \]
-The corresponding $\mathsf{FCP} L$ question is
+For some polynomial time algorithm $A$. The corresponding $\mathsf{FCP} L$ question is
 \[ (x, k) \in \mathsf{FCP} L \leftrightarrow \exists c_y, y \forall y' A'(x, c_y, y, y') = 1 \]
 Where $A'$ checks that $c_y \subset y$, that $c_y \subset y' \neq y$, and that $A(x,y) = 1$, $A(x, y') = 0$ and that $|c_y| \leq k$. In other words, $c_y$ is a clue of $y$, and $y'$ is another solution. $A'$ checks that $c_y$ has at most $k$ elements, and that it is a clue of the solution $y$, and that there are no other solutions. 
 \end{proof}
 
-In general, this proof says that if $L \in NTIME[f(n)]$, then $\mathsf{FCP} L \in \Sigma_2 NTIME[f(n)]$, when $f(n) > n$. 
+We could generlize our statement a bit. The above proof says that if $L \in NTIME[f(n)]$, then $\mathsf{FCP} L \in \Sigma_2 NTIME[f(n)]$, when $f(n) > n$. 
 
 \subsection{$\mathsf{FCP}$ SAT}
 
@@ -192,26 +194,30 @@ The $\mathsf{FCP}$ SAT problem is the following:
 \textbf{Instance}: A Boolean formula $\phi$, and a number $k$.\\
 \textbf{Question}: Does there exists a partial assignment of at most $k$ variables such that the remaining formula $\phi'$ has only one satisfying assignment?
 \end{quote}
-We show that the corresponding decision version of the problem, with an additional input $k$ signifying the length of the partial satisfying assignment is $\Sigma_2$-complete.
 
-From Theorem~\ref{thm:satinsig2}, we know that $\mathsf{FCP}$ SAT $\in \Sigma_2$. We now wish to show that $\mathsf{FCP}$ SAT is $\Sigma_2$-complete. We take the following $\Sigma_2$ complete problem: QSAT $=\{ \langle \phi, x, y \rangle | \exists x \forall y \phi(x,y) = 0\}$. We will write this problem as an equivalent $\mathsf{FCP} SAT$ question.
+From Theorem~\ref{thm:satinsig2}, we know that $\mathsf{FCP}$ SAT $\in \Sigma_2$. We now wish to show that $\mathsf{FCP}$ SAT is $\Sigma_2$-complete. We take the following $\Sigma_2$ complete problem: QSAT 
+\begin{quote}
+\textbf{Instance}: $\phi$ a Boolean function on $x$ and $y$ sets of variables. \\ 
+\textbf{Question}: Does there exists a setting of the $x$ variables, such that for all the setting of the $y$ variables, $\phi(x,y) = 0$? Equivalently,$\exists x \forall y \phi(x,y) = 0$?
+\end{quote}
+We will write this problem as an equivalent $\mathsf{FCP}$ SAT question.
 
-First, we take care of the unique solution. Suppose we had a modified question, $USAT$:
+First, we take add a unique solution. We look at the modified question, $UQSAT$:
 \begin{quote} 
-\textbf{Instance}: A Boolean $\phi$ on variables $x$ and $y$. \\
-\textbf{Question}: Does there exists a setting of the variables in $x$ such that for any setting of $y$, there is one unique solution?
+\textbf{Instance}: A Boolean formula $\phi$ on $x$ and $y$ sets of variables. \\
+\textbf{Question}: Does there exists a setting of the variables in $x$ such that $phi(x)$ has a unique solution on the $y$'s?
 \end{quote}
 
 \begin{lemma}
-$USAT$ is $\Sigma_2$-hard.
+$UQSAT$ is $\Sigma_2$-hard.
 \end{lemma}
 
 \begin{proof}
-We will show that 
-\[ \exists x \forall y \phi(x,y) = 0 \leftrightarrow \exists x \forall y, z \left(\phi'(x, 0, 0) = 1 \right) \wedge \left((y \neq 0 \vee z \neq 0 ) \rightarrow \phi'(x, y, z) = 0 \right) \]
-The left-hand side is the complete problem of alternating $SAT$ for $\Sigma_2$, and the right-hand side says that $\phi'$ has only one solution for a given setting of $x$, $y=0$ and $z =0$. 
+We will want to reduce from $QSAT$. We do this by starting with the expression $\phi(x,y)$ and transform it into an expression $\phi'(x, y, z)$, where $z$ is an additional variable. We show
+\[ \exists x \forall y \phi(x,y) = 0 \leftrightarrow \exists x \forall y\cup \{z\} \left(\phi'(x, 0, 0) = 1 \right) \wedge \left((y \neq 0 \vee z \neq 0 ) \rightarrow \phi'(x, y, z) = 0 \right). \]
+The expression $\phi'(x, 0, 0)$ corresponds to setting all variables in $y$ to $0$ as well as $z$ to 0. The expression $y \neq 0$ is short-hand for $\bigvee_{y_i \in y} y_i \neq 0$. 
 
-Asking $USAT$ for $\phi'$ would solve the alternating $SAT$ question. 
+The left-hand side is $QSAT$. The right-hand side says that once we set $x$, $\phi'$ has only one solution at $y=0$ and $z = 0$. Running $UQSAT$ on $\phi'$ with variables $x$ and $y \cup \{z\}$ will be true if and only if $QSAT$ on $\phi$, $x$ and $y$ is true. Therefore, showing the above expression is true proves the lemma.
 
 We let 
 \begin{align}
