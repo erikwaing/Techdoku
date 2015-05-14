@@ -75,7 +75,7 @@
 % unless you accept that it will be published
 \institute{MIT,\\
 77 Mass Ave., Cambridge, MA 02139, USA, \\
-\protect\url{{fermima,arielsc,eaw}@mit.edu}}
+\protect\url{{edemaine,fermima,arielsc,eaw}@mit.edu}}
 
 %
 % NB: a more complex sample for affiliations and the mapping to the
@@ -87,37 +87,50 @@
 \maketitle
 
 \begin{abstract}
-We study the problem of finding the fewest number of clues needed for a particular puzzle to be unique. We define a general transformation from search problems to fewest clues problems, and explore how their computational complexity changes. We define two types of reductions to relate various fewest clues problems, and show that various \NP-complete problems have fewest clues versions which are $\Sigma_2$-complete. We explore how this tranformation among problems changes their computational complexity. This line of research is very similar to exploring the power of counting, as in \#P and ASP (another solution problem).
+We study the problem of finding the fewest number of clues needed for a particular puzzle to be unique. We define a general transformation from search problems to fewest clues problems. We explore how the computational complexity of the problems change when we apply the transformation. We define two types of reductions relating fewest clues problems, and we show various \NP-complete problems have fewest clues versions which are $\Sigma_2$-complete. This line of research is similar to exploring the power of counting, as in \#P and ASP (another solution problem).
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 
-In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. It had long been known that 17 clues were sufficient, and there exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed. They arrived at this answer following a year-long computation. Is there any notion of computatational hardness to these sorts of problems?
+In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. It had long been known that 17 clues were sufficient. There exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed. They arrived at this answer following a year-long computation. Is there any notion of computatational hardness to these sorts of problems?
 
 We consider a following generalization of the above Sudoku question: 
 \begin{quote}
 For any given problem, what is the fewest number of clues necessary to make it uniquely solvable?
 \end{quote}
 
-For example, if the problem is to find a Hamiltonian cycle in a given graph $G = (V,E)$, our question would be to determine the minimum number of edges you can specify before only one Hamiltonian cycle contains all of these edges. This general problem is motivated by possible applications to puzzle-making. 
+For example, if the problem is to find a Hamiltonian cycle in a given graph $G = (V,E)$, our question would be to determine the minimum number of edges you must specify before only one Hamiltonian cycle contains all of these edges. This general problem is motivated by possible applications to puzzle-making. 
 
 A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper). The input to the problem is an idea of a partially filled puzzle, and the output is the least number of additional clues needed for the puzzle to be uniquely solvable.
 
-We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\NP$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\sigma_2$-complete.
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\NP$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\Sigma_2$-complete.
 
-The paper is organized as follows. In Section~\ref{sec:related}, we discuss previous research done on this problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while this specific problem has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the transformation $\mathsf{FCP}$. We state what it means for a problem to be a fewest clues problem, and provide a framework for reducing between these problems. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\Sigma_2$-complete. Then we discuss the $\mathsf{FCP}$ transformation affects problems with polynomial time algorithms. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
+The paper is organized as follows. In Section~\ref{sec:relatedwork}, we discuss previous research done on this problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while fewest clues problems has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the transformation $\mathsf{FCP}$. We state what it means for a problem to be a fewest clues problem, and provide a framework for reducing between these problems. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\Sigma_2$-complete. Then in Section~\ref{sec:easyproblems} we discuss how the $\mathsf{FCP}$ transformation affects problems with polynomial time algorithms. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
 
 \section{Related Work}
 \label{sec:relatedwork}
 
-\subsection{The Another Solution Problem}
+Our work touches upon three major areas: Another Problem Solution, boolean formula minimization, and critical sets. 
 
-Our approach the $\mathsf{FCP}$ problem transformation is related to the \emph{Another Solution Problem} ($\mathsf{ASP}$) \cite{Seta01}. For a given problem, the $\mathsf{ASP}$ version asks: Given a solution to this problem, find another solution. There is a notion of an $\mathsf{ASP}$-reduction, defined in \cite{Seta01}. If $\mathsf{ASP} A$ can be $\mathsf{ASP}$-reduced to $\mathsf{ASP} B$, then $\mathsf{NP}$-hardness of $\mathsf{ASP} A$ implies $\mathsf{NP}$-hardness of $\mathsf{ASP} B$. We use a similar approach to analyzing hardness of $\mathsf{FCP}$-hard problems. We consider the $\mathsf{FCP}$ version of the boolean satisfiability problem $(SAT)$, and show that it is $\Sigma_2$-complete. We then define an $\mathsf{FCP}$-reduction similar in flavor to an $\mathsf{ASP}$-reduction, and show $\Sigma_2$-completenss of various $\mathsf{FCP}$ problems with these reductions.
+\subsection{The Another Solution Problem ($\mathsf{ASP}$)}
+
+Our approach the $\mathsf{FCP}$ transformation is related to the \emph{Another Solution Problem} ($\mathsf{ASP}$) \cite{Seta01}. For a given problem, the $\mathsf{ASP}$ version asks: given an instance and a solution for that instance, find another solution for that instance. There is a notion of an $\mathsf{ASP}$-reduction, defined in \cite{Seta01}. If $\mathsf{ASP} A$ can be $\mathsf{ASP}$-reduced to $\mathsf{ASP} B$, then $\mathsf{NP}$-hardness of $\mathsf{ASP} A$ implies $\mathsf{NP}$-hardness of $\mathsf{ASP} B$. In a follow-up paper, \cite{takayuki2003complexity} shows $\mathsf{ASP}$-completeness of Slither Link, Sudoku (or Number Place), and Fillomino. We use a similar approach to analyzing hardness of $\mathsf{FCP}$-hard problems. 
+
+We consider the $\mathsf{FCP}$ version of the boolean satisfiability problem ($SAT$), and show that it is $\Sigma_2$-complete. We then define an $\mathsf{FCP}$-reduction similar in flavor to an $\mathsf{ASP}$-reduction, and show $\Sigma_2$-completenss of various $\mathsf{FCP}$ problems with these reductions.
 
 \subsection{Boolean Formula Minimization}
 
-Our approach to showing $\sigma_2$-hardness of boolean formula minimization has many connections to boolean formula minimization. (ELABORATE ON UMANS WORK HERE)
+Our approach to showing $\Sigma_2$-hardness of boolean formula minimization has many connections to boolean formula minimization. \cite{umans}\cite{umans2001minimum} explores the problem of Minimum Equivalent Expression and Shortest Implicant. The problem is very similar to the problem we consider when applied to SAT. In the shortest implicant problem, they ask for the minimum number of variables needed so that the formula is always satisfiable, no matter what assignment the other variables receive. They show this problem is $\Sigma_2$-complete.  
+
+\subsection{Critical Sets}
+
+Another line of research which is also very similar has been that of determining the size of critical sets. \cite{Cooper:2014:CSS:2612293.2612628} defines critical sets in much the same way we do; determining the fewest number of clues needed to obtain a unique solution. They focus on colorings on graphs. They can think of the Sudoku graph. This is a graph with $n^2$ vertices (one for each square), which has edges between vertices whose corresponding squares cannot be the same values. They ask for the smallest number of vertices needed to color in order for the remaining graph to have a unique $n$ color coloring. This is phrasing the problem of \cite{mcguire2012there} in graph and coloring notation. 
+
+They prove some results regarding the sizes of critical sets for graph colorings and show that the problem is $\NP$-hard. Our results improve on these results by showing that these graph colorings are in fact $\Sigma_2$-complete, which fully characterizes their complexity.
+
+\cite{Ghandehari2005121} did a similar type of analysis, where they bound the size of the smallest critical set for Latin Squares. \cite{colbourn1984computational} also analyzes the complexity of recognizing critical sets. He asks exactly the ASP question for Latin Squares, and shows it is $\NP$-complete.
+
 
 
 \section{The $\mathsf{FCP}$ Transformation}
@@ -223,6 +236,7 @@ Suppose for any setting of $x$, there is more than one setting of $y$'s to get a
 \end{proof}
 
 \section{Complete Problems}
+\label{sec:The Problems}
 
 \subsection{Reductions}
 
@@ -431,7 +445,7 @@ Let $S_0$ be defined as
 Then $S_0$ represents a solution to an order $n$ Sudoku.
 \end{proposition}
 
-The proof of the Proposition~\ref{prop:s_0} appears in \cite{takayaku2003complexity}. We show an example construction for $n=3$, the classic Sudoku puzzle.
+The proof of the Proposition~\ref{prop:s_0} appears in \cite{takayaki2003complexity}. We show an example construction for $n=3$, the classic Sudoku puzzle.
 
 \begin{figure}
 \centering
@@ -478,6 +492,7 @@ We will show a general clue reduction via $\mathsf{FCP}$ Latin Squares. We use t
 \end{proof}
 
 \section{$\mathsf{FCP}$ Versions of Easy Problems}
+\label{sec:easyproblems}
 
 We would like to be able to understand what happens to problems in general when their $\mathsf{FCP}$ versions are asked.
 
