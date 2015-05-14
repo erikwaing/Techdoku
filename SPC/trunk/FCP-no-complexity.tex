@@ -413,28 +413,35 @@ The mapping $g$ sends Latin Squares clues $L(i,j) = k$ to triangles with vertice
 
 \subsection{Sudoku}
 
-In Sudoku, or Number Place, we are given a $9 \times 9$ grid consisting of $9$ $3 \times 3$ bolded blocks, some of whose entries have been filled in with number from $1$ to $9$. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $9$ while enforcing that no row, column or bolded square repeats a numbers. We generalize Sudoku in the following manner:
+In Sudoku, or Number Place, we are given a $9 \times 9$ grid consisting of nine $3 \times 3$ bolded blocks. Some entries have been filled in with a number from $1$ to $9$. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $9$ while enforcing that no row, column or bolded square repeats a numbers. We generalize Sudoku in the following manner:
 
 \begin{quote}
-\textbf{Instance}: A board of $n^2 \times n^2$ numbers in the range of $1$ to $n^2$, divided into $n^2$ blocks of $n \times n$.\\
-\textbf{Quetion}: Can we fill up the remaining board with numbers in the range $1$ to $n^2$ such that each row, column and $n \times n$ block does not have repeated numbers?
+\textbf{Instance}: A board of $n^2 \times n^2$ numbers in the range of $1$ to $n^2$, divided into $n^2$ blocks of size $n \times n$.\\
+\textbf{Question}: Can we fill up the remaining squares with numbers in the range $1$ to $n^2$ such that each row, column and $n \times n$ block does not have repeated numbers?
 \end{quote}
 
-The $\mathsf{FCP}$ version of the problem asks for the least number of additional numbers we must give in order to have the Sudoku be uniquely filled in. We will show this problem is $\Sigma_2$-complete by providing a reduction from $\mathsf{FCP}$ Latin Squares. 
+The $\mathsf{FCP}$ version of the problem asks for the least number of additional numbers we must give in order to have the Sudoku be uniquely solvable. We will show this problem is $\Sigma_2$-complete by providing a reduction from $\mathsf{FCP}$ Latin Squares. 
 
-Before showing the main result of this section, we will exhibit a particular way to fill a Sudoku puzzle. Next, we will show how this particular solution can be used to explicitly map instances of Sudoku to instances of Latin Squares. For simplicity, throughout this argument we will be using numbers in the range $0$ through $n^2 - 1$. We will refer to the entry on the $i$-th row and $j$-th column of a Number Place puzzle as $S(i,j)$.
+Before showing the main result of this section, we will exhibit a particular way to fill a Sudoku puzzle. Next, we will show how this particular solution can be used to explicitly map instances of Sudoku to instances of Latin Squares. For simplicity, throughout this argument we will be using numbers in the range $0$ through $n^2 - 1$. This does not change the problem. The $n^2$ symbols in Sudoku have no relation to each other, only their equality or inequality. We will refer to the entry on the $i$-th row and $j$-th column of a Sudoku puzzle as $S(i,j)$.
 
-\begin{proposition}
+\begin{proposition}[\cite{takayuki2003complexity}]
+\label{prop:s_0}
 Let $S_0$ be defined as
-$$S_0 (i,j) = ((i \mod n) n + \lfloor i/n \rfloor + j) \mod n^2. $$
-Then $S_0$ represents a solution to an order $n$ Number Place.
+\[ S_0 (i,j) = ((i \mod n) n + \lfloor i/n \rfloor + j) \mod n^2 \]
+Then $S_0$ represents a solution to an order $n$ Sudoku.
 \end{proposition}
 
-\begin{proof} 
-Omitted. See [Yato and Seta] 
-\end{proof}
+The proof of the Proposition~\ref{prop:s_0} appears in \cite{takayaku2003complexity}. We show an example construction for $n=3$, the classic Sudoku puzzle.
 
-\begin{lemma}
+\begin{figure}
+\centering
+\label{fig:s_0}
+\includegraphics[width=0.6\linewidth]{sudoku_s_0.pdf}
+\caption{Complete $S_0$ Sudoku for $n = 3$. The construction is defined in Proposition~\ref{prop:s_0}.}
+\end{figure}
+
+\begin{lemma}[\cite{takayuki2003complexity}]
+\label{lem:sudoku_reduction}
 Let $S$ be a Sudoku instance of order $n$ such that
 \begin{displaymath}
 S(i,j) = \left\{
@@ -444,41 +451,31 @@ S_0 (i,j) & : \text{otherwise}
 \end{array}
 \right.
 \end{displaymath}
-
-where $B = \{ (i,j) | i < n \text{ and } (j \equiv 0) \mod n \}$. Then a square $S'$ obtained by filling in the blanks of $S$ is a solution to $S$ if and only if
-
+where $B = \{ (i,j) | i < n \text{ and } (j \equiv 0) \mod n \}$. Let $S'$ be the Sudoku obtained by filling in the blanks of $S$. Then $S'$ is a correct Sudoku solution if and only if the following conditions hold:
 \begin{itemize}
 \item For any $(i,j) \in B$, $S'(i,j) \equiv 0 \mod n$
-\item A square $L$ defined by $L(i, j/n) = S'(i,j)/n$ for all $(i, j) \in B$ is a Latin Square.
+\item A square $L$ defined by $L(i, j/n) = S'(i,j)/n$ for all $(i, j) \in B$ is a complete Latin Square.
 \end{itemize}
-
 \end{lemma}
 
-\begin{proof} 
-Omitted. See [Yato and Seta] 
-\end{proof}
+The proof of Lemma~\ref{lem:sudoku_reduction} is also in \cite{takayuki2003complexity}. Figure~\ref{fig:latinsquare_to_sudoku} shows how the latin square corresponds to certain sections of the Sudoku puzzle for $n=3$. The three columns of the Latin square are mapped to the parts of columns of the Sudoku. In the mapping,the values are scaled by $n$. 
+
+\begin{figure}
+\centering
+\label{fig:latinsquare_to_sudoku}
+\includegraphics[width=0.7\linewidth]{latinsquare_to_sudoku.pdf}
+\caption{Latin square taken from parts of $S_0$.}
+\end{figure}
+
+Lemma ~\ref{lem:sudoku_reduction} gives us the reduction from Latin Square to Sudoku. Given a Latin Square, we can create a Sudoku instance $S$ from the lemma. This is the reduction from \cite{takayuki2003complexity}.
 
 \begin{lemma} 
 $\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete.
 \end{lemma}
 
 \begin{proof} 
-We will show a general clue reduction via $\mathsf{FCP}$ Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described above. Let $C_B$ be the set of set of clues of Sudoku. Then we define $g$, by mapping a clue of Sudoku indicating that location $(i,j)$ contains $S(i,j)$ to the clue sayin that the $(i, j/n)$ position of the Latin Square is $S(i, j)/n$.This mapping is surjective, bijective on solutions by the lemma above and preserves subsets. Therefore, $\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete. 
+We will show a general clue reduction via $\mathsf{FCP}$ Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described in Lemma~\ref{lem:sudoku_reduction}. Let $C_B$ be the set of set of clues of Sudoku. We define $g$, by mapping a clue of Sudoku indicating that location $(i,j)$ contains $S(i,j)$ to the clue saying that the $(i, j/n)$ position of the Latin Square is $S(i, j)/n$. This mapping is surjective, bijective on solutions by the lemma above and preserves subsets. Therefore, $\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete. 
 \end{proof}
-
-\begin{figure}[H]
-\begin{minipage}{0.45\textwidth}
-\includegraphics[scale=0.25]{sudoku-3.png}
-\label{fig:partialNP}
-\end{minipage}
-\hfill
-\begin{minipage}{0.45\textwidth}
-\centering
-\label{fig:partialLS}
-\includegraphics[scale=0.25]{sudoku-1.png}
-\end{minipage}
-\caption{Example of a mapping between instances of Latin Squares and Sudoku.}
-\end{figure}
 
 \section{$\mathsf{FCP}$ Versions of Easy Problems}
 
