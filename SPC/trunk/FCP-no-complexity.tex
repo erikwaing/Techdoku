@@ -300,15 +300,15 @@ The Triangle Partition problem is the following:
 \textbf{Question}: Can we partition $E$ into disjoint triangles?
 \end{quote}
 
-Holyer \cite{holyer1981np} showed this problem is $\NP$-complete. His main tool (shown in Figure~\ref{fig:holyergraph} was the graph $H_{3, p}$, which has only two possible triangle partitions.
+Holyer \cite{holyer1981np} showed this problem is $\NP$-complete. His main tool (shown in Figure~\ref{fig:holyergraph}) was the graph $H_{3, p}$, which has only two possible triangle partitions. Note this is a small section of the graph, and it continues with these type of tilings.
 \begin{figure}
 \label{fig:holyergraph}
 \centering
-\includegraphics[width=0.4\linewidth]{Tpatch.pdf}
+\includegraphics[width=0.4\linewidth]{Holyergraph.pdf}
 \caption{Holyer's $H_{3,p}$ graph}
 \end{figure}
 
-The $\mathsf{FCP}$ version of the problem is to find the fewest number of triangles that we must give in order for there to be a unique triangle partition. For example, note that in Figure~\ref{fig:holyergraph}, once you specify one triangle in the partition, there is only one way to partition the graph in accordance with that triangle.
+The $\mathsf{FCP}$ version of the problem is to find the fewest number of triangles we must give in order for there to be a unique triangle partition. For example, in $H_{3,p}$ (Figure~\ref{fig:holyergraph}), once you specify one triangle in the partition, there is only one way to partition the graph in accordance with that triangle.
 
 We claim $\mathsf{FCP}$ Triangle Partition is $\Sigma_2$-complete. We give a quick summary of Holyer's reduction which highlights the ideas we will use to show $\Sigma_2$ completeness. 
 
@@ -317,7 +317,23 @@ We claim $\mathsf{FCP}$ Triangle Partition is $\Sigma_2$-complete. We give a qui
 % Fermi, do you think we need both paragraph version of summary and important properties?
 %
 % 
-Holyer uses the graph in Figure~\ref{fig:holyergraph} to represent variables and literals. Since each graph can only be partitioned in one of two ways, one way will correspond to a true setting, the other will correspond to a false setting. He calls these the $T$-partition and the $F$-partition. 
+Holyer uses the graph $H_{3,p}$ in Figure~\ref{fig:holyergraph} to represent variables and literals. Since each graph can only be partitioned in one of two ways, one way will correspond to a true setting, the other will correspond to a false setting. He calls the two possible partitions the $T$-partition and the $F$-partition. 
+
+\begin{figure}
+\begin{minipage}{0.5\linewidth}
+\centering
+\includegraphics[scale=0.5]{Tpartition.pdf}
+\label{fig:tpart}
+\caption{$H_{3,p}$ partitioned like a $T$-partition. In a particular part of the graph, one triangle specified.}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\linewidth}
+\centering
+\label{fig:fpart}
+\includegraphics[scale=0.5]{Fpartition.pdf}
+\caption{$H_{3,p}$ partitioned like an $F$-partition. In a particular part of the graph, three triangles specified.}
+\end{minipage}
+\end{figure}
 
 He also uses the graphs to make clauses. He shows a way to join three $H_{3,p}$ graphs such that exactly one of them will be $F$-partitioned. The three graphs will correspond to literals in the clause. Then he gives a way to combine the literals with the variables such that if a literal is set to an $F$-partition, then corresponding variable must be set to either a $T$-partition (in the case where the literal is positive), or an $F$-partition (if the literal is negative). However, if the literal is a $T$-partition, then it does not matter what the variable is set to. 
 
@@ -365,7 +381,7 @@ The Latin Squares problem is the following:
 \textbf{Instance}: An $n \times n$ grid, with some entries filled in with the numbers $1$ to $n$.\\
 \textbf{Question}: Can we fill in the remainder of the grid while enforcing that no row or column repeat a number?
 \end{quote}
-The problem is $\NP$-complete.Here we study its  $\mathsf{FCP}$ version, which asks what is the smallest number of numbers we must fill in so that it becomes uniquely solvable. This problem is $\Sigma_2$-complete. 
+The problem is $\NP$-complete. Here, we study its  $\mathsf{FCP}$ version, which asks what is the smallest number of numbers we must fill in so the latin square becomes uniquely solvable. This problem is $\Sigma_2$-complete. 
 
 Before showing the main result of this section, we introduce some definitions and notation from \cite{colbourn1984complexity} that will make the proof easier to follow. For simplicity, we will refer to the entry on the $i$-th row and $j$-th column of the Latin Square as $L(i,j)$. 
 
