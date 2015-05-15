@@ -251,12 +251,13 @@ Having shown that $\mathsf{FCP}$ SAT is $\Sigma_2$-complete, we will be able to 
 
 \subsection{Reductions}
 
-We define a special type of reductions that will allow us to reduce $\mathsf{FCP}$ problems of one kind to the other. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the Genearl Clue Reduction.
+We define a special type of reductions that will allow us to reduce between $\mathsf{FCP}$ problems. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the General Clue Reduction.
 
 \subsubsection{General Clue Reduction}
-We need a function mapping instances of $A$ to instances of $B$, $f: I_A \rightarrow I_B$ such that $x \in A \iff f(x) \in B$. This is the usual definition of a reduction. We also want a function $g$ mapping the clues of $B$ to clues of $A$. We require that $g$ is surjective, $g$ is a bijection on solutions, and subsets are preserved. So $c \subset c' \iff g(c) \subset g(c')$. We also require that if $c$ is a clue set for $f(x)$, then $g(c)$ is a clue set for $x$. All these functions are computable in polynomial time.
 
-So on input $x$, we find the minimum clue problem for $f(x)$, $c_{f(x)}$ and then use $g$ to get a clue $c_x$ for $x$.  
+We need a function mapping instances of $A$ to instances of $B$, $f: I_A \rightarrow I_B$ such that $x \in A \iff f(x) \in B$. This is the usual notion of reduction. We also want a function $g$ mapping the clues of $B$, $C_B$, to clues of $A$, $C_A$. We require that $g$ is surjective, $g$ is a bijection on solutions, and subsets are preserved. If $c$ and $c'$ are clues, then $c \subset c' \iff g(c) \subset g(c')$. We also require that if $c$ is a clue set for $f(x)$, then $g(c)$ is a clue set for $x$. All these functions are computable in polynomial time.
+
+On input $x$, we find the minimum clue problem for $f(x)$, $c_{f(x)}$ and then use $g$ to get a clue $c_x$ for $x$.  
 
 \begin{theorem}
 \label{thm:reduction}
@@ -285,7 +286,7 @@ One downside to the General Clue Reduction is that it requires the solutions to 
 \end{enumerate} 
 This type of reduction generalizes the General Clue Reduction, since we can specify a special subset of clues. Now on an input instance of $A$, we first map it to an input instance of $B$ using $f$. Then we solve $\mathsf{FCP} B$ and use the algorithm $M$ to transform the minimal clue into a minimal clue in the set $C_B'$. Then we transform the clue back to a clue for $A$. 
 
-A Special Subset Clue Reduction is like a General Clue Reduction. We restrict a the problem to have a specific kind of clues, and we give a way to tranform the clues. The proof of correctness is exactly the same as in Theorem~\ref{thm:reduction}. 
+A Special Subset Clue Reduction is like a General Clue Reduction. We restrict the problem to have a specific kind of clues, and we give a way to tranform the clues. The proof of correctness is exactly the same as in Theorem~\ref{thm:reduction}.
 
 \subsection{3SAT}
 
