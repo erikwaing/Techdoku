@@ -225,21 +225,26 @@ We let
 		    C_1 &=\left(\phi(x, y) \wedge (z = 1)\right) \\
 		   C_2 &=  \left( y = 0 \wedge z = 0 \right) 
 \end{align}
-Note that $\phi'(x, 0, 0) = 1$. If $\exists x \forall y \phi(x, y)= 0$, then there is a setting of $x$ such that the $C_1 = 0$. The only way to satisfy $\phi'$ is through setting $y = 0$ and $z = 0$. If for any setting of $x$, there exists a setting of $y$ such that $\phi(x, y) = 1$, then we have some setting of $\phi'(x, y, 1) = 1$. So USAT would also be false since that assignment as well as $x, 0, 0$ evaluate to true.
+Note that $\phi'(x, 0, 0) = 1$. If $\exists x \forall y \phi(x, y)= 0$, then there is a setting of $x$ such that the $C_1 = 0$. The only way to satisfy $\phi'$ is through setting $y = 0$ and $z = 0$. If for any setting of $x$, there exists a setting of $y$ such that $\phi(x, y) = 1$, then we have some setting of $\phi'(x, y, 1) = 1$. So $UQSAT$ would also be false since that assignment as well as $x, 0, 0$ evaluate to true.
 \end{proof}
 
 \begin{proposition}
 \label{prop:fcpsatsigmacomp}
-$\mathsf{FCP} SAT$ is $\Sigma_2$-hard.
+$\mathsf{FCP} $SAT is $\Sigma_2$-hard.
 \end{proposition}
 
 \begin{proof}
-We will reduce from $USAT$. For a given $\phi(x, y)$ with $|x| = k$, we ask, does there exists a setting of $2k$ variables such that $\phi'(x, x', y) = \phi(x, y) \vee \bigvee_i (x_i = x_i')$ has a unique solution?
+We will reduce from $UQSAT$. For a given $\phi(x, y)$ with $|x| = k$, we ask, does there exists a setting of $2k$ variables such that $\phi'(x, x', y) = \phi(x, y) \vee \bigvee_i (x_i = x_i')$ has a unique solution?
 
-Suppose $\exists x \forall y \phi(x,y)$ has a unique solution with assignment $\hat{x}$. Then we let $x = \hat{x}$, and for all $i$, we let $x_i' \neq x_i$. Therefore, once we set this, $\phi'(x, x', y)$ has a unique solution. 
+First we prove one direction: $\exists x$ such that $\phi(x,y)$ has a unique satisfying assignment on $y$'s implies that $\exists x, x'$ such that $\phi'(x,x',y)$ has a unique satisfying assignment on $y$'s.
+Suppose $\exists x$ such that $\phi(x,y)$ has a unique satisfying assignment on $y$'s. Let $\hat{x}$ be the one such assignment on $x$. Let $x = \hat{x}$, and for all $i$, we let $x_i' \neq x_i$. The remaining formula $\phi'(x, x', y)$ on $y$s has a unique solution. This is because once we set $x$ and $x'$, 
+\[ \phi(x, y) \leftrightarrow \phi'(x,x',y) \]
 
-Suppose for any setting of $x$, there is more than one setting of $y$'s to get a satisfying assignment, so $\phi(x, y) \notin USAT$. Then if from the $2k$ elements, we set $x$ and $x'$, we are fine, since there will be more than one setting of the $y$'s to satisfy $\phi'$. However, if we set some element not in $x$ or $x'$, then since we can only set $2k$, there will be some $x_i$ or $x_i'$ that is not set. So setting $x_i = x_i'$ will allow an arbitrary setting of the remaining variables, so also, $\phi'$ does not have a unique satisfying assignment.
+Now we prove the other direction: If for every $x$, $\phi(x,y)$ does not have a unique solution on the $y$'s, then for any assignment of $2k$ variables, $\phi'(x,x',y)$ does not have a unique solution on the remaining variables. 
+Suppose for any setting of $x$, there is more than one setting of $y$s with a satisfying assignment. In other words, $\phi(x, y) \notin UQSAT$. Let $C$ be a set of variable assignments, where $|C| \leq 2k$. If $x, x' \subset C$, then we know that for all $i$, $x_i \neq x_i'$. If they were for one such $i$, then any other assignment on the remaining variables will satisfy $\phi'(x,x',y)$. Furthermore, there will be more than one setting of $y$'s to satisfy $\phi'(x,x',y)$ since multiple $y$'s can satisfy $\phi(x,y)$. However, if some $y_i \in y$ is set, so $y \cap C \neq \emptyset$, there will be some $x_i$ or $x_i'$ not in $C$. Setting $x_i = x_i'$ will allow an arbitrary setting of the remaining variables. $\phi'$ therefore does not have a unique satisfying assignment. If $\phi(x,y)$ has no satisfying assignment, then $\phi'(x,x',y)$ has either 0 or many satisfying assignments. This finishes the reduction.
 \end{proof}
+
+Having shown that $\mathsf{FCP}$ SAT is $\Sigma_2$-complete, we will be able to reduce $\mathsf{FCP}$ problems to $\mathsf{FCP}$ SAT.
 
 \section{Complete Problems}
 \label{sec:The Problems}
