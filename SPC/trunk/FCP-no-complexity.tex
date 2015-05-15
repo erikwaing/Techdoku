@@ -324,35 +324,10 @@ This type of reduction generalizes the General Clue Reduction, since we can spec
 
 A Special Subset Clue Reduction is like a General Clue Reduction. We restrict the problem to have a specific kind of clues, and we give a way to tranform the clues. 
 
-\begin{theorem}
+\begin{corollary}
 \label{thm:special_reduc}
 Suppose $A$ reduces to $B$ with a special subset clue reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
-\end{theorem}
-
-The proof is very similar to Theorem~\ref{thm:reduction}. 
-
-\begin{proof}
-We want to show that $g(c_{f(x)}')$ is a minimal clue for $x$. The three properties are: 
-\begin{enumerate}
-\item $g(c_{f(x)}')$ is a clue of $x$. 
-\item $g(c_{f(x)}')$ has a unique superset solution.
-\item $g(c_{f(x)}')$ is minimal.
-\end{enumerate}
-The three conditions are proved in the same way as in Theorem~\ref{thm:reduction}. 
-
-1. $c_{f(x)}'$ is a clue. Let $S_{f(x)}$ be the corresponding solution. 
-\begin{align} c_{f(x)}' \subset S_{f(x)} \rightarrow g(c_{f(x)}') \subset g(S_{f(x)}) \end{align}
-Since $g$ is a bijection on solutions, we know $g(c_{f(x)}')$ is a clue.
-
-2. If $g(c_{f(x)}')$ had two different solutions, $S_x^{(1)}, S_x^{(2)}$, 
-\begin{align}
-g(c_{f(x)}') \subset S_x^{(1)}&& g(c_{f(x)}') \subset S_x^{(2)} \\
-c_{f(x)}' \subset g^{-1}(S_x^{(1)}) && c_{f(x)}' \subset g^{-1}(S_x^{(2)})
-\end{align}
-Since $g$ is a bijection on solutions, $c_{f(x)}'$ would not have a unique solution.
-
-3. If $g(c_{f(x)'})$ was not minimal.
-\end{proof}
+\end{corollary}
 
 \subsection{3SAT}
 
