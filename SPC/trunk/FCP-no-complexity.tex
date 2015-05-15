@@ -264,7 +264,7 @@ Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue set
 \item $g$ is surjective. 
 \item $g$ is a bijection on solutions.
 \item $c \subset c' \Rightarrow g(c) \subset g(c')$. In addition, if $g(c) \subset S$ is a solution of $x \in A$, then $c \subset g^{-1}(S')$.
-\item $|c| = |g(c)|$. 
+\item $|c| \geq |g(c)|$, with equality for minimal clues. 
 \end{itemize}
 \end{enumerate}
 \end{definition}
@@ -308,11 +308,14 @@ Suppose $A$ reduces to $B$ with a general clue reduction and $\mathsf{FCP} A$ is
 
 One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. In general, this constraint is too strong, so we define a different kind of reduction which will have more requirements, but which will apply to a greater variety of cases.
 
-\subsubsection{Special Subset Clue Reduction} We will first need a function $f: I_A \rightarrow I_B$ such that $x \in I_A$ has a solution if and only if $f(x) \in I_B$ has a solution. We additionally specify $C_B' \subset C_B$ and an algorithm $M$ that maps any minimal clue set in $C_B$ into a minimal clue set in $C_B'$ of the same size which runs in polynomial time. We will now let $g: C_B' \rightarrow C_A$ which satisfies the following properties:
+\subsubsection{Special Subset Clue Reduction} This will be similar to the General Clue reduction, except we only look at a particular subset of clues.
+
+We will first need a function $f: I_A \rightarrow I_B$ such that $x \in I_A$ has a solution if and only if $f(x) \in I_B$ has a solution. We additionally specify $C_B' \subset C_B$ and an algorithm $M$ that maps any minimal clue set in $C_B$ into a minimal clue set in $C_B'$ of the same size which runs in polynomial time. We will now let $g: C_B' \rightarrow C_A$ which satisfies the following properties:
 \begin{enumerate}
 \item $g$ is surjective.
 \item $g$ is a bijection on solutions, and $S_x$ is a solution for $x$, if and only if $g^{-1}(S_x)$ is a solution to $f(x)$. 
-\item $c \subset c' \iff g(c) \subset g(c')$. 
+\item $c \subset c' \Rightarrow g(c) \subset g(c')$ and if $g(c) \subset S$, then $c \subset g^{-1}(S)$.
+\item $|c| \geq |g(c)|$, with equality for minimal clues.   
 \end{enumerate} 
 This type of reduction generalizes the General Clue Reduction, since we can specify a special subset of clues. Given a reduction, we can solve an instance $x$ of $A$ in the following manner:
 \begin{enumerate}
@@ -336,20 +339,19 @@ $\mathsf{FCP}$ 3SAT is $\Sigma_2$-complete.
 \end{theorem} 
 
 \begin{proof}
-We reduce from $\mathsf{FCP}$ 3SAT via a Special Subset Clue reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
+We reduce from $\mathsf{FCP}$ 3SAT via a general clue reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
 \[ 
 (x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
 \]
 
 where the last term indicates we keep recursing until each clause has at most $3$ variables. Note that on each step we reduce the number of variables in the longest clause by at least $1$, so after $O(n)$ steps (per clause) we will have a valid 3SAT instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \leftrightarrow \overline{z_i}$. 
 
-$C_B'$ will be the set of clues containing no $z$ variables. The algorithm $M$ 
-
 Now I will define $g$. $g$ will take a clue for 3SAT, or a partial assignment of the variables in $f(\phi)$ and give a partial assignment of the variables in $\phi$, it does this by mapping each variable individually. $g$ is the identity on the $x_i$ variables, and $g$ maps $z_i$ to $\overline{x_i}$. We check the properties of $g$:
 \begin{enumerate}
 \item $g$ is surjective. If there is any clue of $\phi$, it is also a clue of $f(\phi)$. 
 \item $g$ is bijective on solutions. An assignment of $f(\phi)$ gives the assignment for $\phi$, and that same assignment uniquely describes the assignments for $z_i$, so $g$ bijectively maps them.
-\item $g$ preserves subsets. This comes from the fact that $g$ maps individual assignments of the variables. 
+\item $g$ maps variables to variables, so $c \subset c' \Rightarrow g(c) \subset g(c')$. If $g(c) \subset S$, then $c \subset g^{-1}(S)$. 
+\item $|c| \geq |g(c)|$ since for each variable in $c$, there is at most one variable in $g(c)$. The inequality becomes an equality for minimal clues since we will never have $x_i$ and $z_i$ in a minimal clue.
 \end{enumerate}
 \end{proof}
 
@@ -439,7 +441,8 @@ Now $g$ maps the triangles in variable graphs to the corresponding assignment an
 \begin{itemize}
 \item $g$ is surjective, since the variable assignments correspond to variable gadget partitions.
 \item $g$ is a bijection on solutions, since once the variable graphs are partitioned, we force the first true literal to be $F$-partitioned. 
-\item Since we are mapping individual triangles, subsets are preserved.
+\item Since we are mapping individual triangles, subsets are preserved. $g(c) \subset S$, then $g^{-1}(S)$ presents a full triangle partition from $C_B'$, so $c \subset g^{-1}(S)$. 
+\item We are projecting certain triangles to variables, so there is at most one variable per triangle. In minimal clue sets, we will need exactly one variable per triangle.
 \end{itemize}
 \end{proof}
 
@@ -543,7 +546,14 @@ $\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete.
 \end{lemma}
 
 \begin{proof} 
-We will show a general clue reduction via $\mathsf{FCP}$ Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described in Lemma~\ref{lem:sudoku_reduction}. Let $C_B$ be the set of set of clues of Sudoku. We define $g$, by mapping a clue of Sudoku indicating that location $(i,j)$ contains $S(i,j)$ to the clue saying that the $(i, j/n)$ position of the Latin Square is $S(i, j)/n$. This mapping is surjective, bijective on solutions by the lemma above and preserves subsets. Therefore, $\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete. 
+We will show a general clue reduction via $\mathsf{FCP}$ Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described in Lemma~\ref{lem:sudoku_reduction}. Let $C_B$ be the set of set of clues of Sudoku. We define $g$, by mapping a clue of Sudoku indicating that location $(i,j)$ contains $S(i,j)$ to the clue saying that the $(i, j/n)$ position of the Latin Square is $S(i, j)/n$. 
+\begin{enumerate}
+\item $g$ is surjective. Each Latin Square clue came from a clue of Sudoku.
+\item $g$ is bijective on solutions. Each solution to Sudoku gives a solution to Latin Squares, and the solution is unique since all other numbers are parts of the instance. 
+\item $g$ maps each clue to another clue. So subsets are always preserved. $c \subset c' \iff g(c) \subset g(c')$. 
+\item $g$ maps each clue to one clue. So $|c| = |g(c)|$. 
+\end{enumerate}
+. Therefore, $\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete. 
 \end{proof}
 
 \section{$\mathsf{FCP}$ Versions of Easy Problems}
