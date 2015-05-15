@@ -255,26 +255,56 @@ We define a special type of reductions that will allow us to reduce between $\ma
 
 \subsubsection{General Clue Reduction}
 
-We need a function mapping instances of $A$ to instances of $B$, $f: I_A \rightarrow I_B$ such that $x \in A \iff f(x) \in B$. This is the usual notion of reduction. We also want a function $g$ mapping the clues of $B$, $C_B$, to clues of $A$, $C_A$. We require that $g$ is surjective, $g$ is a bijection on solutions, and subsets are preserved. If $c$ and $c'$ are clues, then $c \subset c' \iff g(c) \subset g(c')$. We also require that if $c$ is a clue set for $f(x)$, then $g(c)$ is a clue set for $x$. All these functions are computable in polynomial time.
+\begin{definition}
+Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue sets $C_A$ and $C_B$. We say $A$ reduces to $B$ via a general clue reduction if
+\begin{enumerate}
+\item We have $f: I_A \rightarrow I_B$ where $x \in A \iff f(x) \in B$.
+\item We have $g: C_B \rightarrow C_A$ such that:
+\begin{itemize}
+\item $g$ is surjective. 
+\item $g$ is a bijection on solutions.
+\item $c \subset c' \Rightarrow g(c) \subset g(c')$. In addition, if $g(c) \subset S$ is a solution of $x \in A$, then $c \subset g^{-1}(S')$.
+\item $|c| = |g(c)|$. 
+\end{itemize}
+\end{enumerate}
+\end{definition}
+Note that $f$ is the usual notion of reduction. We add $g$ so that we can map minimal clues to minimal clues. Once we have a general clue reduction from $A$ to $B$, then we solve $\mathsf{FCP} A$ using $\mathsf{FCP} B$. On input $x \in I_A$:
+\begin{enumerate}
+\item Let $f(x)$ be the instance of $B$ mapped by the reduction.
+\item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
+\item Use $g: C_B \rightarrow C_A$ to get the clue $g(c_{f(x)})$ of $x$.
+\end{enumerate}
 
-On input $x$, we find the minimum clue problem for $f(x)$, $c_{f(x)}$ and then use $g$ to get a clue $c_x$ for $x$.  
-
-\begin{theorem}
-\label{thm:reduction}
-Suppose $A$ reduces to $B$ with a general clue reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
-\end{theorem}
+\begin{lemma}
+Let $x \in I_A$ and $f$, $g$ and $c_{f(x)}$ be as defined above. Then $g(c_{f(x)})$ is a minimal clue set for instance $x$.
+\end{lemma}
 
 \begin{proof}
-We want to show that if $c_{f(x)}$ is a minimum clue set, then $g(c_{f(x)})$ is a minimum clue set as well.
+We want to show that if $c_{f(x)}$ is a minimum clue set, then $g(c_{f(x)})$ is a minimum clue set as well. We need to fullfill three conditions:
+\begin{enumerate}
+\item $g(c_{f(x)})$ is a clue of $x$. 
+\item $g(c_{f(x)})$ has a unique superset solution.
+\item $g(c_{f(x)})$ is minimal.
+\end{enumerate}
 
-First, we show that $g(c_{f(x)})$ is a clue. This is true because $c_{f(x)}$ is a clue. That is, there exists some solution $S_{f(x)}$ such that $c_{f(x)} \subset S_{f(x)}$, which means that $g(c_{f(x)}) \subset g(S_{f(x)})$, which is a solution.
+1. $c_{f(x)}$ is a clue for $f(x)$, so $c_{f(x)} \subset S_{f(x)}$ for some solution $S_{f(x)}$. 
+\begin{align} c_{f(x)} \subset S_{f(x)} \Rightarrow g(c_{f(x)}) \subset g(S_{f(x)}) \end{align}
+Since $g$ preserves subsets.
 
-Second, we need to show that $g(c_{f(x)})$ has a unique superset solution. Suppose there were two different solutions, $S_x^{(1)}$ and $S_{x}^{(2)}$, then $g(c_{f(x)}) \subset S_x^{(1)}, S_x^{(2)}$. This implies $c_{f(x)} \subset S_{f(x)}^{(1)}, S_{f(x)}^{(2)}$ because $g$ is surjective, and because solutions have inverses. Therfore, $c_{f(x)}$ is not unique.
+2. If $g(c_{f(x)})$ had two different solutions, $S_x^{(1)}, S_x^{(2)}$, 
+\begin{align}
+g(c_{f(x)}) \subset S_x^{(1)}&& g(c_{f(x)}) \subset S_x^{(2)} \\
+c_{f(x)} \subset g^{-1}(S_x^{(1)}) && c_{f(x)} \subset g^{-1}(S_x^{(2)})
+\end{align}
+Since $g^{-1}$ preserves subsets on solutions. So $c_{f(x)}$ would have two different solutions.
 
-Third, we need to show that $g(c_{f(x)})$ is minimal. Suppose there was some other $c' \subset g(c_{f(x)})$, since the $g$ is surjective, there exists some other $c_{f(x)}' \subset c_{f(x)}$ which is smaller. So by assumption, this must have two distinct solutions. But then mapping them again gives us two distinct solutions for $c'$. 
-
-Therefore, $g(c_{f(x)})$ is a minimal clue set with a unique superset solution for $x$.
+3. Suppose $|g(c_{f(x)})|$ is not minimal. Let $c_x$ be the minimal clue for $x$. So $|c_x| < |g(c_{f(x)})|$. $g$ is surjective, so let $c' \in C_B$ with $g(c') = c_x$. So $|c'| < |c_{f(x)}|$. $c_{f(x)}$ is a minimal clue for $f(x)$ by assumption. Therefore, either $c'$ has no solution, or more than one solution. We know that $c'$ has at least one solution since $c_x$ has a solution, and $g^{-1}$ is a bijection and maintains subsets. If $c'$ had two solutions, then $c_x$ would have two solutions. Therefore, $|g(c_{f(x)})|$ is minimal.
 \end{proof}
+
+\begin{corollary}
+\label{thm:reduction}
+Suppose $A$ reduces to $B$ with a general clue reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
+\end{corollary}
 
 One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. In general, this constraint is too strong, so we define a different kind of reduction which will have more requirements, but which will apply to a greater variety of cases.
 
@@ -284,9 +314,45 @@ One downside to the General Clue Reduction is that it requires the solutions to 
 \item $g$ is a bijection on solutions, and $S_x$ is a solution for $x$, if and only if $g^{-1}(S_x)$ is a solution to $f(x)$. 
 \item $c \subset c' \iff g(c) \subset g(c')$. 
 \end{enumerate} 
-This type of reduction generalizes the General Clue Reduction, since we can specify a special subset of clues. Now on an input instance of $A$, we first map it to an input instance of $B$ using $f$. Then we solve $\mathsf{FCP} B$ and use the algorithm $M$ to transform the minimal clue into a minimal clue in the set $C_B'$. Then we transform the clue back to a clue for $A$. 
+This type of reduction generalizes the General Clue Reduction, since we can specify a special subset of clues. Given a reduction, we can solve an instance $x$ of $A$ in the following manner:
+\begin{enumerate}
+\item Let $f(x)$ be the instance of $B$ mapped by the reduction.
+\item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
+\item Apply $M$ to $c_{f(x)}$ to get $c_{f(x)}' \in C_B'$. 
+\item Use $g: C_B' \rightarrow C_A$ to get the clue $g(c_{f(x)}')$ of $x$.
+\end{enumerate}
 
-A Special Subset Clue Reduction is like a General Clue Reduction. We restrict the problem to have a specific kind of clues, and we give a way to tranform the clues. The proof of correctness is exactly the same as in Theorem~\ref{thm:reduction}.
+A Special Subset Clue Reduction is like a General Clue Reduction. We restrict the problem to have a specific kind of clues, and we give a way to tranform the clues. 
+
+\begin{theorem}
+\label{thm:special_reduc}
+Suppose $A$ reduces to $B$ with a special subset clue reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
+\end{theorem}
+
+The proof is very similar to Theorem~\ref{thm:reduction}. 
+
+\begin{proof}
+We want to show that $g(c_{f(x)}')$ is a minimal clue for $x$. The three properties are: 
+\begin{enumerate}
+\item $g(c_{f(x)}')$ is a clue of $x$. 
+\item $g(c_{f(x)}')$ has a unique superset solution.
+\item $g(c_{f(x)}')$ is minimal.
+\end{enumerate}
+The three conditions are proved in the same way as in Theorem~\ref{thm:reduction}. 
+
+1. $c_{f(x)}'$ is a clue. Let $S_{f(x)}$ be the corresponding solution. 
+\begin{align} c_{f(x)}' \subset S_{f(x)} \rightarrow g(c_{f(x)}') \subset g(S_{f(x)}) \end{align}
+Since $g$ is a bijection on solutions, we know $g(c_{f(x)}')$ is a clue.
+
+2. If $g(c_{f(x)}')$ had two different solutions, $S_x^{(1)}, S_x^{(2)}$, 
+\begin{align}
+g(c_{f(x)}') \subset S_x^{(1)}&& g(c_{f(x)}') \subset S_x^{(2)} \\
+c_{f(x)}' \subset g^{-1}(S_x^{(1)}) && c_{f(x)}' \subset g^{-1}(S_x^{(2)})
+\end{align}
+Since $g$ is a bijection on solutions, $c_{f(x)}'$ would not have a unique solution.
+
+3. If $g(c_{f(x)'})$ was not minimal.
+\end{proof}
 
 \subsection{3SAT}
 
@@ -295,12 +361,14 @@ $\mathsf{FCP}$ 3SAT is $\Sigma_2$-complete.
 \end{theorem} 
 
 \begin{proof}
-We reduce from $\mathsf{FCP}$ 3SAT via a general clue reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
+We reduce from $\mathsf{FCP}$ 3SAT via a Special Subset Clue reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
 \[ 
 (x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
 \]
 
-where the last term indicates we keep recursing until each clause has at most $3$ variables. Note that on each step we reduce the number of variables in the longest clause by at least $1$, so after $O(n)$ steps (per clause) we will have a valid 3SAT instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \iff \overline{z_i}$. 
+where the last term indicates we keep recursing until each clause has at most $3$ variables. Note that on each step we reduce the number of variables in the longest clause by at least $1$, so after $O(n)$ steps (per clause) we will have a valid 3SAT instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \leftrightarrow \overline{z_i}$. 
+
+$C_B'$ will be the set of clues containing no $z$ variables. The algorithm $M$ 
 
 Now I will define $g$. $g$ will take a clue for 3SAT, or a partial assignment of the variables in $f(\phi)$ and give a partial assignment of the variables in $\phi$, it does this by mapping each variable individually. $g$ is the identity on the $x_i$ variables, and $g$ maps $z_i$ to $\overline{x_i}$. We check the properties of $g$:
 \begin{enumerate}
