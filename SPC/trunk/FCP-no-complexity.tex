@@ -453,11 +453,11 @@ The Latin Squares problem is the following:
 \textbf{Instance}: An $n \times n$ grid, with some entries filled in with the numbers $1$ to $n$.\\
 \textbf{Question}: Can we fill in the remainder of the grid while enforcing that no row or column repeat a number?
 \end{quote}
-The problem is $\NP$-complete. Here, we study its  $\mathsf{FCP}$ version, which asks what is the smallest number of numbers we must fill in so the latin square becomes uniquely solvable. This problem is $\Sigma_2$-complete. 
+The problem was shown to be $\NP$-complete by Colbourn \cite{colbourn1984complexity}. Here, we study its  $\mathsf{FCP}$ version, which asks what is the smallest number of numbers we must fill in so the latin square becomes uniquely solvable. This problem is $\Sigma_2$-complete. 
 
-Before showing the main result of this section, we introduce some definitions and notation from \cite{colbourn1984complexity} that will make the proof easier to follow. For simplicity, we will refer to the entry on the $i$-th row and $j$-th column of the Latin Square as $L(i,j)$. 
+We give a quick summary of Colbourn's main ideas which will help the reader understand the $\Sigma_2$ reduction. There are two main steps in his proof. In the first, Colbourn shows that completing partial Latin Squares is equivalent to partitioning tripartite graphs into triangles, a problem similar to the one above which he shows is $\NP$-complete. In the second step, he uses embedding techniques to reduce triangle partitions of tripartite graphs to Latin Squares completion. 
 
-Colbourn \cite{colbourn1984complexity} first argues that it suffices to consider the cases where we are given a tripartite graph and are asked to decide whether or not a triangle partition of it exists. He introduces the concept of a defect graph $G(P)$, a tripartite graph that has a triangle partition if and only if it's originating Latin Square $P$ is completable. 
+A \emph{triangle partition} of a graph $G$ is a partition of the edge set into sets such that each contains the edges of a triangle. Colbourn \cite{colbourn1984complexity} first argues that it suffices to consider the cases where we are given a tripartite graph and are asked to decide whether or not a triangle partition of it exists. He introduces the concept of a defect graph $G(P)$, a tripartite graph that has a triangle partition if and only if it's originating Latin Square $P$ is completable. 
 
 Suppose we are given a partial Latin Square $P$ of order $n$. The \textbf{defect graph $G(P) = (V,E)$} of $P$ is the graph whose vertex set is given by $\{ r_i | \text{ row } i \text{ contains an empty square} \} \cup \{ c_j | \text{ column } j \text{ contains an empty square} \} \cup \{ e_k | \text{ element } k\text{ appears less than } n \text{ times } \} $. The edge set of $G(P)$ is defined as follows: 
 
@@ -467,7 +467,17 @@ Suppose we are given a partial Latin Square $P$ of order $n$. The \textbf{defect
 	\item If column $j$ does not have item $k$ then we add an edge between $c_j$ and $e_k$.
 \end{itemize}
 
-Colbourn \cite{colbourn1984complexity} shows that $G(P)$ has a triangle partition if, and only if, $P$ has a valid solution. One direction is obvious by construction. The other direction  consists of showing that every uniform tripartite graph is the defect graph of some partial Latin Square. Colbourn \cite{colbourn1984complexity} proves this by introducing Latin Frameworks $LG(G)$, which are arrays constructed from tripartite graphs $G$. The idea of Latin Frameworks is to revert the operations of defect graphs. Colbourn shows  that given an $n$-vertex uniform tripartite graph one can recover an order $2n$ Latin Square whose solutions match and the construction can be done in polynomial time. 
+Colbourn \cite{colbourn1984complexity} shows that $G(P)$ has a triangle partition if, and only if, $P$ has a valid solution. He then modifies Holyer's argument to show that finding a triangle partition of a tripartite graph is $\NP$-complete. He makes some minor modifications which force the graph to be tripartite. These modifications can be found in \cite{colbourn1984complexity} and do not affect the $\Sigma_2$-completeness proof above. 
+
+Next, Colbourn shows the reduction between the problem he introduced and Latin Squares completion. Let $G = (V, E)$ be a tripartite graph with partition $V = V_1 \cup V_2 \cup V_3$ and $V_1 = \{r_1,...,r_x\}$, $V_2 = \{c_1,...,c_y\}$ and $V_3 = \{e_1,...,e_z\}$. A \emph{Latin Framework} of such a tripartite graph, denoted as $LF(G;r,s,t)$ is an $r \times s$ array whose entries can be empty or contain one of the numbers from $\{1, ... ,t \}$, with each row and column containing a number at most once. Given $G$, we build $LF(G)$ according to these rules: 
+
+\begin{itemize}
+	\item If $(r_i, c_j) \in E$, then the $(i,j)$ entry of $LF(G;r,s,t)$ is empty. Otherwise it contains a number from $\{1,2,...,t\}$. 
+	\item If $(r_i, e_k) \in E$ then row $i$ of $LF(G;r,s,t)$ does not contain element $k$. 
+	\item If $(c_j, e_k) \in E$ then column $j$ of $LF(G:r,s,t)$ does not contain element $k$. 
+\end{itemize}
+
+If all dimensions of the Latin Framework are equal, $G$ is the defect graph of $LF(G;r ,r, r)$. Therefore, if we could show that arbitrary Latin Frameworks could be reduced to this case with a small blowup in size we would be done. Colbourn uses some embedding techniques to show that any uniform tripartite graph $G$ of $n$ vertices per partition has a Latin Framework $LF(G;2n,2n,2n)$ which can be constructed in polynomial time. This completes the reduction. 
 
 \begin{theorem}
 $\mathsf{FCP}$ Latin Squares is $\Sigma_2$-complete.
@@ -476,11 +486,10 @@ $\mathsf{FCP}$ Latin Squares is $\Sigma_2$-complete.
 \begin{proof}
 We do this via reduction from $\mathsf{FCP}$ TrianglePartition. Throughout this proof we will be using constructions and results from \cite{colbourn1984complexity}.
 
-Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition. If it is uniform, we can write down a Latin framework $LF(G)$ in polynomial time \cite{colbourn1984complexity}. This Latin framework is constructed so that $G$ is the defect graph of $LF(G)$. We then simply map via $f$ instances of defect graphs $G$ to partial Latin Squares. This map is bijective, as shown by Colbourn \cite{colbourn1984complexity}. As Colbourn shows, there is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to its Latin Square. 
+Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition as argued by Colbourn. If it is uniform, we can write down a Latin framework $LF(G)$ in polynomial time \cite{colbourn1984complexity}. This Latin framework is constructed so that $G$ is the defect graph of $LF(G)$. We then simply map via $f$ instances of defect graphs $G$ to partial Latin Squares. This map is bijective, as shown by Colbourn \cite{colbourn1984complexity}. There is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to its Latin Square. 
 
-The mapping $g$ sends Latin Squares clues $L(i,j) = k$ to triangles with vertices $(i,j,k)$ on different parts of the partition. Each clue is mapped, by construction, bijectively to a triangle (since the triangle takes into account the row, column and number of the clue). The function $g$ preserves subsets since we are mapping filled squares to triangles individually. Finally, it is surjective since it maps a Latin Squares clue to a valid Triangle Partition clue. This completes the proof.
+For simplicity, we will refer to the entry on the $i$-th row and $j$-th column of the Latin Square as $L(i,j)$. The mapping $g$ sends Latin Squares clues $L(i,j) = k$ to triangles with vertices $(i,j,k)$ on different parts of the partition. Each clue is mapped, by construction, bijectively to a triangle (since the triangle takes into account the row, column and number of the clue). The function $g$ preserves subsets since we are mapping filled squares to triangles individually. Finally, it is surjective since it maps a Latin Squares clue to a valid Triangle Partition clue. This completes the proof.
 
-[need to complete some more stuff?]
 \end{proof}
 
 \subsection{Sudoku}
