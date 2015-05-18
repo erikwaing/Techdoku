@@ -588,8 +588,11 @@ For any search problem, the related counting problem asks for the number of vali
 
 \subsection{$\mathsf{FCP}$ 2SAT} 
 
+
+In this section, we consider the $\mathsf{FCP}$ version of the 2-satisfiability ($2SAT$) problem. The problem, which gives a 2-CNF Boolean formula and asks for a satisfying assignment, has a known polynomial time solution. However, the \emph{counting} version of the problem is a well-known $\sharp \mathsf{P}$-complete problem. In this section, we show $\mathsf{FCP}-2SAT$ is $\mathsf{NP}$-complete, lending credence to the idea that $\sharp \mathsf{P}$-hardness and $\mathsf{FCP}$-hardness are related. Formally, $\mathsf{FCP}-2SAT$ is formulated as follows.
+
 \begin{quote}
-\textbf{Instance}: a 2-CNF Boolean formula $\phi$ on variables $x_1, ..., x_n$. \\
+\textbf{Instance}: A 2-CNF Boolean formula $\phi$ on variables $x_1, ..., x_n$. \\
 \textbf{Question}: Does there exist a setting of $k$ variables so that the remaining formula is uniquely satisfiable?
 \end{quote}
 
@@ -605,9 +608,9 @@ The clue of size $k$ is the certificate. Since $2SAT$ can be satified in polynom
 $\mathsf{FCP} 2SAT$ is \NP-hard.
 \end{theorem}
 
-We reduce from the NP-hard problem of determining whether a graph has an independent dominating set of size at most $k$. The problem gives a graph $G = (V,E)$ and asks for the smallest subset of vertices $S \subseteq V$ such that $S$ is an independent dominating set and $|S| \leq k$. To state the constraints more clearly, such a set $S$ has the property that every vertex has a vertex in $S$ adjacent to it (every vertex is dominated), and does not have any edges $(u,v)$ where $u,v \in S$ (independence). \\
+We reduce from the NP-hard problem of determining whether a graph has an independent dominating set of size at most $k$ (MIDS). The problem gives a graph $G = (V,E)$ and asks for the smallest subset of vertices $S \subseteq V$ such that $S$ is an independent dominating set and $|S| \leq k$. In other words, such a set $S$ has the property that every vertex has a vertex in $S$ adjacent to it (dominated), and does not include any vertex pairs $u$ and $v$ where $(u,v)$ is an edge in the graph (independent). \\
 
-\noindent\textbf{Problem:} Given a graph $G = (V, E)$. Does there exists $S \subset V$, with $|S| \leq k$ such that 
+\noindent\textbf{Problem:} Given a graph $G = (V, E)$. Does there exist $S \subset V$, with $|S| \leq k$ such that 
 \begin{itemize}
 \item $\forall v \in V$, either $v \in S$ or $(u, v) \in E$, $u \in S$ 
 \item $u, v \in S$ implies that there is no edge between $u$ and $v$. 
