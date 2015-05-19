@@ -104,28 +104,28 @@ For example, if the problem is to find a Hamiltonian cycle in a given graph $G =
 
 A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper). The input to the problem is an idea of a partially filled puzzle, and the output is the least number of additional clues needed for the puzzle to be uniquely solvable.
 
-We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\NP$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\Sigma_2$-complete.
+We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\NP$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples of problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\Sigma_2$-complete.
 
 The paper is organized as follows. In Section~\ref{sec:relatedwork}, we discuss previous research done on this problem for the specific cases of Sudoku, Latin Squares, and graph coloring. We note that while fewest clues problems has been studied extensively, it is almost always done so with respect to a certain problem. In Section~\ref{sec:prelim}, we motivate and formally define the transformation $\mathsf{FCP}$. We state what it means for a problem to be a fewest clues problem, and provide a framework for reducing between these problems. In Section~\ref{sec:The Problems}, we consider $\mathsf{FCP}$ versions of the SAT, 3SAT, Triangle Partition, Latin Squares and Sudoku completion problems, and show why these problems are $\Sigma_2$-complete. Then in Section~\ref{sec:easyproblems} we discuss how the $\mathsf{FCP}$ transformation affects problems with polynomial time algorithms. Finally, in Section~\ref{sec:conclusion} we give concluding remarks and ideas for further research.
 
 \section{Related Work}
 \label{sec:relatedwork}
 
-Our work touches upon three major areas: Another Problem Solution, boolean formula minimization, and critical sets. 
+Our work touches upon three major areas: Another Problem Solution, Boolean formula minimization, and critical sets. 
 
 \subsection{The Another Solution Problem ($\mathsf{ASP}$)}
 
 Our approach the $\mathsf{FCP}$ transformation is related to the \emph{Another Solution Problem} ($\mathsf{ASP}$) \cite{Seta01}. For a given problem, the $\mathsf{ASP}$ version asks: given an instance and a solution for that instance, find another solution for that instance. There is a notion of an $\mathsf{ASP}$-reduction, defined in \cite{Seta01}. If $\mathsf{ASP} A$ can be $\mathsf{ASP}$-reduced to $\mathsf{ASP} B$, then $\mathsf{NP}$-hardness of $\mathsf{ASP} A$ implies $\mathsf{NP}$-hardness of $\mathsf{ASP} B$. In a follow-up paper, \cite{takayuki2003complexity} shows $\mathsf{ASP}$-completeness of Slither Link, Sudoku (or Number Place), and Fillomino. We use a similar approach to analyzing hardness of $\mathsf{FCP}$-hard problems. 
 
-We consider the $\mathsf{FCP}$ version of the boolean satisfiability problem ($SAT$), and show that it is $\Sigma_2$-complete. We then define an $\mathsf{FCP}$-reduction similar in flavor to an $\mathsf{ASP}$-reduction, and show $\Sigma_2$-completenss of various $\mathsf{FCP}$ problems with these reductions.
+We consider the $\mathsf{FCP}$ version of the Boolean satisfiability problem ($\SAT$), and show that it is $\Sigma_2$-complete. We then define an $\mathsf{FCP}$-reduction similar in flavor to an $\mathsf{ASP}$-reduction, and show $\Sigma_2$-completenss of various $\mathsf{FCP}$ problems with these reductions.
 
 \subsection{Boolean Formula Minimization}
 
-Our approach to showing $\Sigma_2$-hardness of boolean formula minimization has many connections to boolean formula minimization. \cite{umans}\cite{umans2001minimum} explores the problem of Minimum Equivalent Expression and Shortest Implicant. The problem is very similar to the problem we consider when applied to SAT. In the shortest implicant problem, they ask for the minimum number of variables needed so that the formula is always satisfiable, no matter what assignment the other variables receive. They show this problem is $\Sigma_2$-complete.  
+Our approach to showing $\Sigma_2$-hardness of Boolean formula minimization has many connections to Boolean formula minimization. \cite{umans}\cite{umans2001minimum} explores the problem of Minimum Equivalent Expression and Shortest Implicant. The problem is very similar to the problem we consider when applied to SAT. In the Shortest Implicant problem, they ask for the minimum number of variables needed so that the formula is always satisfiable, no matter what assignment the other variables receive. They show this problem is $\Sigma_2$-complete.  
 
 \subsection{Critical Sets}
 
-Another line of research which is also very similar has been that of determining the size of critical sets. \cite{Cooper:2014:CSS:2612293.2612628} defines critical sets in much the same way we do; determining the fewest number of clues needed to obtain a unique solution. They focus on colorings on graphs. They can think of the Sudoku graph. This is a graph with $n^2$ vertices (one for each square), which has edges between vertices whose corresponding squares cannot be the same values. They ask for the smallest number of vertices needed to color in order for the remaining graph to have a unique $n$ color coloring. This is phrasing the problem of \cite{mcguire2012there} in graph and coloring notation. 
+Another line of research which is also very similar has been that of determining the size of critical sets. \cite{Cooper:2014:CSS:2612293.2612628} defines critical sets in much the same way we do; determining the fewest number of clues needed to obtain a unique solution. They focus on colorings on graphs. They can think of the Sudoku puzzle as a graph. This is a graph with $n^2$ vertices (one for each square), which has edges between vertices whose corresponding squares cannot be the same values. They ask for the smallest number of vertices needed to color in order for the remaining graph to have a unique $n$ color coloring. This is phrasing the problem of \cite{mcguire2012there} in graph and coloring notation. 
 
 They prove some results regarding the sizes of critical sets for graph colorings and show that the problem is $\NP$-hard. Our results improve on these results by showing that these graph colorings are in fact $\Sigma_2$-complete, which fully characterizes their complexity.
 
@@ -138,7 +138,7 @@ They prove some results regarding the sizes of critical sets for graph colorings
 
 \subsection{Definitions}
 
-For a given instance of $x$ of a \emph{search} problem A, we can think of the set of solutions to $x$ as a set of polynomial-size strings. For example, for the case of $SAT$, an instance consists of a specific $SAT$ formula on variables $x_1,x_2,\dots,x_n$. Solutions can be written as indexed length-$n$ strings of boolean values, where the value at index $i$ is the assignment to variable $x_i$. In this case, a $\emph{clue}$ for the problem would be an assignment of a specific index to some boolean value. For general problems, the precise definition of a clue depends on how solutions are encoded as strings.
+For a given instance of $x$ of a \emph{search} problem A, we can think of the set of solutions to $x$ as a set of polynomial-size strings. For example, for the case of $\SAT$, an instance consists of a specific $\SAT$ formula on variables $x_1,x_2,\dots,x_n$. Solutions can be written as indexed length-$n$ strings of Boolean values, where the value at index $i$ is the assignment to variable $x_i$. In this case, a $\emph{clue}$ for the problem would be an assignment of a specific index to some Boolean value. For general problems, the precise definition of a clue depends on how solutions are encoded as strings.
 
 We say that a solution to $x$ \emph{satisfies} a set of clues if each clue matches the solution at that clue's index. For example, in the case of SAT on variables $x_1,x_2,\dots,x_5$, then the solution $``01011"$ would match the clue set $\{x_1 = 0,x_3 = 0,x_4 = 1\}$.
 
@@ -174,7 +174,7 @@ Usually, we will talk about $\NP$ search problems which we transform to $\mathsf
 
 \begin{theorem}
 \label{thm:satinsig2}
-If some language $L \in \NP$, then $\mathsf{FCP} L \in \Sigma_2$. 
+If $L \in \NP$, then $\mathsf{FCP} L \in \Sigma_2$. 
 \end{theorem}
 
 \begin{proof}
@@ -185,39 +185,39 @@ For some polynomial time algorithm $A$. The corresponding $\mathsf{FCP} L$ quest
 Where $A'$ checks that $c_y \subset y$, that $c_y \subset y' \neq y$, and that $A(x,y) = 1$, $A(x, y') = 0$ and that $|c_y| \leq k$. In other words, $c_y$ is a clue of $y$, and $y'$ is another solution. $A'$ checks that $c_y$ has at most $k$ elements, and that it is a clue of the solution $y$, and that there are no other solutions. 
 \end{proof}
 
-We could generlize our statement a bit. The above proof says that if $L \in NTIME[f(n)]$, then $\mathsf{FCP} L \in \Sigma_2 NTIME[f(n)]$, when $f(n) > n$. 
+We could generlize our statement a bit. The above proof says that if $L \in \NTIME[f(n)]$, then $\mathsf{FCP} L \in \Sigma_2 \NTIME[f(n)]$, when $f(n) > n$. 
 
-\subsection{$\mathsf{FCP}$ SAT}
+\subsection{$\mathsf{FCP} \SAT$}
 
-The $\mathsf{FCP}$ SAT problem is the following:
+The $\mathsf{FCP} \SAT$ problem is the following:
 \begin{quote}
 \textbf{Instance}: A Boolean formula $\phi$, and a number $k$.\\
 \textbf{Question}: Does there exists a partial assignment of at most $k$ variables such that the remaining formula $\phi'$ has only one satisfying assignment?
 \end{quote}
 
-From Theorem~\ref{thm:satinsig2}, we know that $\mathsf{FCP}$ SAT $\in \Sigma_2$. We now wish to show that $\mathsf{FCP}$ SAT is $\Sigma_2$-complete. We take the following $\Sigma_2$ complete problem: QSAT 
+From Theorem~\ref{thm:satinsig2}, we know that $\mathsf{FCP} \SAT$ $\in \Sigma_2$. We now wish to show that $\mathsf{FCP} \SAT$ is $\Sigma_2$-complete. We take the following $\Sigma_2$ complete problem: QSAT 
 \begin{quote}
 \textbf{Instance}: $\phi$ a Boolean function on $x$ and $y$ sets of variables. \\ 
 \textbf{Question}: Does there exists a setting of the $x$ variables, such that for all the setting of the $y$ variables, $\phi(x,y) = 0$? Equivalently,$\exists x \forall y \phi(x,y) = 0$?
 \end{quote}
-We will write this problem as an equivalent $\mathsf{FCP}$ SAT question.
+We will write this problem as an equivalent $\mathsf{FCP} \SAT$ question.
 
-First, we take add a unique solution. We look at the modified question, $UQSAT$:
+First, we add a unique solution. We look at the modified question, UQSAT:
 \begin{quote} 
 \textbf{Instance}: A Boolean formula $\phi$ on $x$ and $y$ sets of variables. \\
 \textbf{Question}: Does there exists a setting of the variables in $x$ such that $phi(x)$ has a unique solution on the $y$'s?
 \end{quote}
 
 \begin{lemma}
-$UQSAT$ is $\Sigma_2$-hard.
+UQSAT is $\Sigma_2$-hard.
 \end{lemma}
 
 \begin{proof}
-We will want to reduce from $QSAT$. We do this by starting with the expression $\phi(x,y)$ and transform it into an expression $\phi'(x, y, z)$, where $z$ is an additional variable. We show
+We will want to reduce from QSAT. We do this by starting with the expression $\phi(x,y)$ and transform it into an expression $\phi'(x, y, z)$, where $z$ is an additional variable. We show
 \[ \exists x \forall y \phi(x,y) = 0 \leftrightarrow \exists x \forall y\cup \{z\} \left(\phi'(x, 0, 0) = 1 \right) \wedge \left((y \neq 0 \vee z \neq 0 ) \rightarrow \phi'(x, y, z) = 0 \right). \]
 The expression $\phi'(x, 0, 0)$ corresponds to setting all variables in $y$ to $0$ as well as $z$ to 0. The expression $y \neq 0$ is short-hand for $\bigvee_{y_i \in y} y_i \neq 0$. 
 
-The left-hand side is $QSAT$. The right-hand side says that once we set $x$, $\phi'$ has only one solution at $y=0$ and $z = 0$. Running $UQSAT$ on $\phi'$ with variables $x$ and $y \cup \{z\}$ will be true if and only if $QSAT$ on $\phi$, $x$ and $y$ is true. Therefore, showing the above expression is true proves the lemma.
+The left-hand side is QSAT. The right-hand side says that once we set $x$, $\phi'$ has only one solution at $y=0$ and $z = 0$. Running UQSAT on $\phi'$ with variables $x$ and $y \cup \{z\}$ will be true if and only if QSAT on $\phi$, $x$ and $y$ is true. Therefore, showing the above expression is true proves the lemma.
 
 We let 
 \begin{align}
@@ -225,26 +225,26 @@ We let
 		    C_1 &=\left(\phi(x, y) \wedge (z = 1)\right) \\
 		   C_2 &=  \left( y = 0 \wedge z = 0 \right) 
 \end{align}
-Note that $\phi'(x, 0, 0) = 1$. If $\exists x \forall y \phi(x, y)= 0$, then there is a setting of $x$ such that the $C_1 = 0$. The only way to satisfy $\phi'$ is through setting $y = 0$ and $z = 0$. If for any setting of $x$, there exists a setting of $y$ such that $\phi(x, y) = 1$, then we have some setting of $\phi'(x, y, 1) = 1$. So $UQSAT$ would also be false since that assignment as well as $x, 0, 0$ evaluate to true.
+Note that $\phi'(x, 0, 0) = 1$. If $\exists x \forall y \phi(x, y)= 0$, then there is a setting of $x$ such that the $C_1 = 0$. The only way to satisfy $\phi'$ is through setting $y = 0$ and $z = 0$. If for any setting of $x$, there exists a setting of $y$ such that $\phi(x, y) = 1$, then we have some setting of $\phi'(x, y, 1) = 1$. So UQSAT would also be false since that assignment as well as $x, 0, 0$ evaluate to true.
 \end{proof}
 
 \begin{proposition}
 \label{prop:fcpsatsigmacomp}
-$\mathsf{FCP} $SAT is $\Sigma_2$-hard.
+$\mathsf{FCP} \SAT$ is $\Sigma_2$-hard.
 \end{proposition}
 
 \begin{proof}
-We will reduce from $UQSAT$. For a given $\phi(x, y)$ with $|x| = k$, we ask, does there exists a setting of $2k$ variables such that $\phi'(x, x', y) = \phi(x, y) \vee \bigvee_i (x_i = x_i')$ has a unique solution?
+We will reduce from UQSAT. For a given $\phi(x, y)$ with $|x| = k$, we ask, does there exists a setting of $2k$ variables such that $\phi'(x, x', y) = \phi(x, y) \vee \bigvee_i (x_i = x_i')$ has a unique solution?
 
 First we prove one direction: $\exists x$ such that $\phi(x,y)$ has a unique satisfying assignment on $y$'s implies that $\exists x, x'$ such that $\phi'(x,x',y)$ has a unique satisfying assignment on $y$'s.
-Suppose $\exists x$ such that $\phi(x,y)$ has a unique satisfying assignment on $y$'s. Let $\hat{x}$ be the one such assignment on $x$. Let $x = \hat{x}$, and for all $i$, we let $x_i' \neq x_i$. The remaining formula $\phi'(x, x', y)$ on $y$s has a unique solution. This is because once we set $x$ and $x'$, 
+Suppose $\exists x$ such that $\phi(x,y)$ has a unique satisfying assignment on $y$'s. Let $\hat{x}$ be one such assignment on $x$. Let $x = \hat{x}$, and for all $i$, we let $x_i' \neq x_i$. The remaining formula $\phi'(x, x', y)$ on $y$s has a unique solution. This is because once we set $x$ and $x'$, 
 \[ \phi(x, y) \leftrightarrow \phi'(x,x',y) \]
 
 Now we prove the other direction: If for every $x$, $\phi(x,y)$ does not have a unique solution on the $y$'s, then for any assignment of $2k$ variables, $\phi'(x,x',y)$ does not have a unique solution on the remaining variables. 
-Suppose for any setting of $x$, there is more than one setting of $y$s with a satisfying assignment. In other words, $\phi(x, y) \notin UQSAT$. Let $C$ be a set of variable assignments, where $|C| \leq 2k$. If $x, x' \subset C$, then we know that for all $i$, $x_i \neq x_i'$. If they were for one such $i$, then any other assignment on the remaining variables will satisfy $\phi'(x,x',y)$. Furthermore, there will be more than one setting of $y$'s to satisfy $\phi'(x,x',y)$ since multiple $y$'s can satisfy $\phi(x,y)$. However, if some $y_i \in y$ is set, so $y \cap C \neq \emptyset$, there will be some $x_i$ or $x_i'$ not in $C$. Setting $x_i = x_i'$ will allow an arbitrary setting of the remaining variables. $\phi'$ therefore does not have a unique satisfying assignment. If $\phi(x,y)$ has no satisfying assignment, then $\phi'(x,x',y)$ has either 0 or many satisfying assignments. This finishes the reduction.
+Suppose for any setting of $x$, there is more than one setting of $y$s with a satisfying assignment. In other words, $\phi(x, y) \notin$ UQSAT. Let $C$ be a set of variable assignments, where $|C| \leq 2k$. If $x, x' \subset C$, then we know that for all $i$, $x_i \neq x_i'$. If they were for one such $i$, then any other assignment on the remaining variables will satisfy $\phi'(x,x',y)$. Furthermore, there will be more than one setting of $y$'s to satisfy $\phi'(x,x',y)$ since multiple $y$'s can satisfy $\phi(x,y)$. However, if some $y_i \in y$ is set, so $y \cap C \neq \emptyset$, there will be some $x_i$ or $x_i'$ not in $C$. Setting $x_i = x_i'$ will allow an arbitrary setting of the remaining variables. $\phi'$ therefore does not have a unique satisfying assignment. If $\phi(x,y)$ has no satisfying assignment, then $\phi'(x,x',y)$ has either 0 or many satisfying assignments. This finishes the reduction.
 \end{proof}
 
-Having shown that $\mathsf{FCP}$ SAT is $\Sigma_2$-complete, we will be able to reduce $\mathsf{FCP}$ problems to $\mathsf{FCP}$ SAT.
+Having shown that $\mathsf{FCP} \SAT$ is $\Sigma_2$-complete, we will be able to reduce $\mathsf{FCP}$ problems to $\mathsf{FCP} \SAT$.
 
 \section{Complete Problems}
 \label{sec:The Problems}
