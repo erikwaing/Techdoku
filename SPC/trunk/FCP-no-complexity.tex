@@ -305,15 +305,15 @@ Having shown that $\mathsf{FCP} \SAT$ is $\Sigma_2$-complete, we will be able to
 
 \subsection{Reductions}
 
-We define a special type of reductions that will allow us to reduce between $\mathsf{FCP}$ problems. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the General Clue Reduction.
+We define a special type of reductions that will allow us to reduce between $\mathsf{FCP}$ problems. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2^P$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the General Clue Reduction.
 
-\subsubsection{General Clue Reduction}
+\subsubsection{General Clue Reduction.}
 
-\begin{definition}
-Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue sets $C_A$ and $C_B$. We say $A$ reduces to $B$ via a general clue reduction if
+\begin{definition}\label{def:GCR}
+Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue sets $C_A$ and $C_B$. We say $A$ reduces to $B$ via a General Clue Reduction if
 \begin{enumerate}
-\item We have $f: I_A \rightarrow I_B$ where $x \in A \iff f(x) \in B$.
-\item We have $g: C_B \rightarrow C_A$ such that:
+\item There exists a function $f: I_A \rightarrow I_B$ where $x \in A \iff f(x) \in B$.
+\item There exists a function $g: C_B \rightarrow C_A$ such that:
 \begin{itemize}
 \item $g$ is surjective. 
 \item $g$ is a bijection on solutions.
@@ -322,68 +322,80 @@ Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue set
 \end{itemize}
 \end{enumerate}
 \end{definition}
-Note that $f$ is the usual notion of reduction. We add $g$ so that we can map minimal clues to minimal clues. Once we have a general clue reduction from $A$ to $B$, then we solve $\mathsf{FCP} A$ using $\mathsf{FCP} B$. On input $x \in I_A$:
-\begin{enumerate}
-\item Let $f(x)$ be the instance of $B$ mapped by the reduction.
-\item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
-\item Use $g: C_B \rightarrow C_A$ to get the clue $g(c_{f(x)})$ of $x$.
-\end{enumerate}
+Note that $f$ is the usual notion of reduction. We require $g$ so that we can map minimal clues in $B$ to minimal clues in $A$. Throughout this section we will exclusively use mappings $f, g$ to refer to these functions. 
 
-\begin{lemma}
-Let $x \in I_A$ and $f$, $g$ and $c_{f(x)}$ be as defined above. Then $g(c_{f(x)})$ is a minimal clue set for instance $x$.
+\begin{lemma}\label{lemmaMinClue}
+Let $x \in I_A$ and $f$, $g$ and $c_{f(x)}$ be as in definition \ref{def:GCR}. Then $g(c_{f(x)})$ is a minimal clue set for instance $x$.
 \end{lemma}
 
 \begin{proof}
-We want to show that if $c_{f(x)}$ is a minimum clue set, then $g(c_{f(x)})$ is a minimum clue set as well. We need to fullfill three conditions:
+We want to show that if $c_{f(x)}$ is a minimum clue set of $B$, then $g(c_{f(x)})$ is a minimum clue set of $A$. We need to satisfy the following three conditions:
 \begin{enumerate}
 \item $g(c_{f(x)})$ is a clue of $x$. 
 \item $g(c_{f(x)})$ has a unique superset solution.
 \item $g(c_{f(x)})$ is minimal.
 \end{enumerate}
 
-1. $c_{f(x)}$ is a clue for $f(x)$, so $c_{f(x)} \subset S_{f(x)}$ for some solution $S_{f(x)}$. 
-\begin{align} c_{f(x)} \subset S_{f(x)} \Rightarrow g(c_{f(x)}) \subset g(S_{f(x)}) \end{align}
-Since $g$ preserves subsets.
-
-2. If $g(c_{f(x)})$ had two different solutions, $S_x^{(1)}, S_x^{(2)}$, 
-\begin{align}
-g(c_{f(x)}) \subset S_x^{(1)}&& g(c_{f(x)}) \subset S_x^{(2)} \\
-c_{f(x)} \subset g^{-1}(S_x^{(1)}) && c_{f(x)} \subset g^{-1}(S_x^{(2)})
-\end{align}
-Since $g^{-1}$ preserves subsets on solutions. So $c_{f(x)}$ would have two different solutions.
-
-3. Suppose $|g(c_{f(x)})|$ is not minimal. Let $c_x$ be the minimal clue for $x$. So $|c_x| < |g(c_{f(x)})|$. $g$ is surjective, so let $c' \in C_B$ with $g(c') = c_x$. So $|c'| < |c_{f(x)}|$. $c_{f(x)}$ is a minimal clue for $f(x)$ by assumption. Therefore, either $c'$ has no solution, or more than one solution. We know that $c'$ has at least one solution since $c_x$ has a solution, and $g^{-1}$ is a bijection and maintains subsets. If $c'$ had two solutions, then $c_x$ would have two solutions. Therefore, $|g(c_{f(x)})|$ is minimal.
+\begin{enumerate}
+\item Since $c_{f(x)}$ is a clue for $f(x)$, $c_{f(x)} \subset S_{f(x)}$ for some solution $S_{f(x)}$. Because $g$ preserves subsets we have that 
+\begin{align*} c_{f(x)} \subset S_{f(x)} \Rightarrow g(c_{f(x)}) \subset g(S_{f(x)}) \end{align*}
+which is what we wanted to show. 
+\item Suppose for the sake of contradiction that $g(c_{f(x)})$ had two different superset solutions, $S_x^{(1)}, S_x^{(2)}$. Then we would have that
+\begin{align*}
+g(c_{f(x)}) \subset S_x^{(1)}, && g(c_{f(x)}) \subset S_x^{(2)}, \\
+c_{f(x)} \subset g^{-1}(S_x^{(1)}), && c_{f(x)} \subset g^{-1}(S_x^{(2)}).
+\end{align*}
+But $g^{-1}$ preserves subsets on solutions, which means that $c_{f(x)}$ would have two different solutions. Hence, we get a contradiction. 
+\item Suppose for the sake of contradiction $|g(c_{f(x)})|$ is not minimal. Let $c_x$ be the minimal clue for $x$ with $|c_x| < |g(c_{f(x)})|$. Since $g$ is surjective, there exists $c' \in C_B$ with $g(c') = c_x$. This implies $|c'| < |c_{f(x)}|$. By assumption, $c_{f(x)}$ is a minimal clue for $f(x)$. Therefore, either $c'$ has no solution, or more than one solution. But we know that $c'$ has at least one solution since $c_x$ has a solution, and $g^{-1}$ is a bijection that preserves subsets. If $c'$ had two solutions, then $c_x$ would have two solutions as well. Therefore, we get a contradiction and conclude that $|g(c_{f(x)})|$ must be minimal.
+\end{enumerate}
 \end{proof}
 
-\begin{corollary}
-\label{thm:reduction}
-Suppose $A$ reduces to $B$ with a general clue reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
-\end{corollary}
-
-One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. In general, this constraint is too strong, so we define a different kind of reduction which will have more requirements, but which will apply to a greater variety of cases.
-
-\subsubsection{Special Subset Clue Reduction} This will be similar to the General Clue reduction, except we only look at a particular subset of clues.
-
-We will first need a function $f: I_A \rightarrow I_B$ such that $x \in I_A$ has a solution if and only if $f(x) \in I_B$ has a solution. We additionally specify $C_B' \subset C_B$ and an algorithm $M$ that maps any minimal clue set in $C_B$ into a minimal clue set in $C_B'$ of the same size which runs in polynomial time. We will now let $g: C_B' \rightarrow C_A$ which satisfies the following properties:
-\begin{enumerate}
-\item $g$ is surjective.
-\item $g$ is a bijection on solutions, and $S_x$ is a solution for $x$, if and only if $g^{-1}(S_x)$ is a solution to $f(x)$. 
-\item $c \subset c' \Rightarrow g(c) \subset g(c')$ and if $g(c) \subset S$, then $c \subset g^{-1}(S)$.
-\item $|c| \geq |g(c)|$, with equality for minimal clues.   
-\end{enumerate} 
-This type of reduction generalizes the General Clue Reduction, since we can specify a special subset of clues. Given a reduction, we can solve an instance $x$ of $A$ in the following manner:
+Once we have a General Clue Reduction from $A$ to $B$, we can solve $\mathsf{FCP} A$ using $\mathsf{FCP} B$. On input $x \in I_A$:
 \begin{enumerate}
 \item Let $f(x)$ be the instance of $B$ mapped by the reduction.
 \item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
-\item Apply $M$ to $c_{f(x)}$ to get $c_{f(x)}' \in C_B'$. 
+\item Use $g: C_B \rightarrow C_A$ to get the clue $g(c_{f(x)})$ of $x$.
+\end{enumerate}
+
+Lemma \ref{lemmaMinClue} guarantees the correctness of this procedure. We can apply this algorithm to show the following result. 
+
+\begin{corollary}
+\label{thm:reduction}
+Suppose $A$ reduces to $B$ with a General Clue Reduction and $\mathsf{FCP} A$ is $\Sigma_2^P$-hard, then $\mathsf{FCP} B$ is $\Sigma_2^P$-hard. 
+\end{corollary}
+
+\subsubsection{Special Subset Clue Reduction.} 
+
+One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. This constraint is too strong, which is why we define a different kind of reduction with more requirements, but will be applicable to a greater variety of cases.
+
+\begin{definition}\label{def:SSCR}
+Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue sets $C_A$ and $C_B$. We say $A$ reduces to $B$ via a Special Subset Clue Reduction if
+\begin{enumerate}
+\item There exists a function $f: I_A \rightarrow I_B$ where $x \in A \iff f(x) \in B$.
+\item There exists a subject $C_B' \subseteq C_B$ and a function $g: C_B' \rightarrow C_A$ such that:
+\begin{itemize}
+\item $g$ is surjective. 
+\item $g$ is a bijection on solutions, and $S_x$ is a solution for $x$, if and only if $g^{-1}(S_x)$ is a solution to $f(x)$. .
+\item $c \subset c' \Rightarrow g(c) \subset g(c')$. In addition, if $g(c) \subset S$ is a solution of $x \in A$, then $c \subset g^{-1}(S')$.
+\item $|c| \geq |g(c)|$, with equality for minimal clues. 
+\end{itemize}
+\item There exists a polynomial time algorithm $M$ that maps any minimal clue set in $C_B$ into a minimal clue set in $C_B'$ of the same size. 
+\end{enumerate}
+\end{definition}
+
+Given a Special Subset Clue Reduction from $A$ to $B$ we can solve an instance $x$ of $A$ in the following manner:
+\begin{enumerate}
+\item Let $f(x)$ be the instance of $B$ mapped by the reduction.
+\item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
+\item Use $M$ on input $c_{f(x)} \in C_B$ to get $c_{f(x)}' \in C_B'$. 
 \item Use $g: C_B' \rightarrow C_A$ to get the clue $g(c_{f(x)}')$ of $x$.
 \end{enumerate}
 
-A Special Subset Clue Reduction is like a General Clue Reduction. We restrict the problem to have a specific kind of clues, and we give a way to tranform the clues. 
+As a result of this procedure we get the following corollary: 
 
 \begin{corollary}
 \label{thm:special_reduc}
-Suppose $A$ reduces to $B$ with a special subset clue reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
+Suppose $A$ reduces to $B$ with a Special Subset Clue Reduction and $\mathsf{FCP} A$ is $\Sigma_2^P$-hard, then $\mathsf{FCP} B$ is $\Sigma_2^P$-hard. 
 \end{corollary}
 
 \subsection{3SAT}
@@ -393,7 +405,7 @@ $\mathsf{FCP}$ 3SAT is $\Sigma_2$-complete.
 \end{theorem} 
 
 \begin{proof}
-We reduce from $\mathsf{FCP}$ 3SAT via a general clue reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
+We reduce from $\mathsf{FCP}$ 3SAT via a General Clue Reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
 \[ 
 (x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
 \]
@@ -421,7 +433,7 @@ The reduction for 3SAT above also works for NAE 3SAT. $x_i = \overline{z_i}$ whi
 
 The Triangle Partition problem is the following:
 \begin{quote}
-\textbf{Instance}: A undirected graph $G = (V, E)$.\\
+\textbf{Instance}: An undirected graph $G = (V, E)$.\\
 \textbf{Question}: Can we partition $E$ into disjoint triangles?
 \end{quote}
 
@@ -435,7 +447,7 @@ Holyer \cite{holyer1981np} showed this problem is $\NP$-complete. His main tool 
 
 The $\mathsf{FCP}$ version of the problem is to find the fewest number of triangles we must give in order for there to be a unique triangle partition. For example, in $H_{3,p}$ (Figure~\ref{fig:holyergraph}), once you specify one triangle in the partition, there is only one way to partition the graph in accordance with that triangle.
 
-We claim $\mathsf{FCP}$ Triangle Partition is $\Sigma_2$-complete. We give a quick summary of Holyer's reduction which highlights the ideas we will use to show $\Sigma_2$ completeness. 
+We claim $\mathsf{FCP}$ Triangle Partition is $\Sigma_2^P$-complete. We give a quick summary of Holyer's reduction which highlights the ideas we will use to show it is $\Sigma_2^P$-complete. 
 
 \subsubsection{Holyer's Reduction for Triangle Partition}
 %
@@ -460,11 +472,11 @@ Holyer uses the graph $H_{3,p}$ in Figure~\ref{fig:holyergraph} to represent var
 \end{minipage}
 \end{figure}
 
-The authors also use the graphs to make clauses. They show a way to join three $H_{3,p}$ graphs such that exactly one of them will be $F$-partitioned. The three graphs will correspond to literals in the clause. Then they give a way to combine the literals with the variables such that if a literal is set to an $F$-partition, then corresponding variable must be set to either a $T$-partition (in the case where the literal is positive), or an $F$-partition (if the literal is negative). However, if the literal is a $T$-partition, then it does not matter what the variable is set to. 
+The authors also use the graphs to make clauses. They show a way to join three $H_{3,p}$ graphs such that exactly one of them will be $F$-partitioned. The three graphs will correspond to literals in the clause. Then they give a way to combine the literals with the variables such that if a literal is set to an $F$-partition, the corresponding variable must be set to either a $T$-partition (in the case where the literal is positive), or an $F$-partition (if the literal is negative). However, if the literal is a $T$-partition, then it does not matter what the variable is set to. 
 
 In particular, there are three important properties of Holyer's reduction which we utilize:
 \begin{enumerate}
-\item We have variable and literal gadgets which are a graph which can be partitioned in two possible ways, we call one $T$-partitioned (corresponding to setting the variable to true) and $F$-partitioned (corresponding to setting the variable to false).  
+\item We have variable and literal gadgets. These are graphs which can be partitioned in two possible ways. A graph is $T$-partitioned if it corresponds to setting that variable to true and $F$-partitioned otherwise.  
 \item A clause gadget is a join between three literal gadgets. The clause gadget has a triangle partition if exactly one of the literals is $F$-partitioned.
 \item A literal is joined with a variable. If the literal is $F$-partitioned, then there are two options:
 \begin{itemize}
@@ -472,30 +484,31 @@ In particular, there are three important properties of Holyer's reduction which 
 \item If the literal is the negative variable, then the variable must be $F$-partitioned.
 \end{itemize}
 \end{enumerate}
-So the argument is: if the graph can be triangle partitioned, then each clause is satisfied by at least one literal. That literal gadget will be $F$-partitioned and it will cause the variable to take a particular partition, giving it its assignment. 
+
+If there exists a triangle partition of the graph, then each clause is satisfied by at least one literal. That literal gadget will be $F$-partitioned and it will cause the variable to take a particular partition, giving it its assignment. 
 
 \begin{theorem}
-$\mathsf{FCP}$ Triangle Partition is $\Sigma_2$-complete.
+$\mathsf{FCP}$ Triangle Partition is $\Sigma_2^P$-complete.
 \end{theorem}
 
 \begin{proof}
-We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We will show a special subset clue reduction from $\mathsf{FCP}$ 3SAT. 
+We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We will show a Special Subset Clue Reduction from $\mathsf{FCP}$ 3SAT. 
 
-We define $f$ to map instances of 3SAT to Triangle Partition as in \cite{holyer1981np}.
+We let $f$ map instances of 3SAT to Triangle Partition as in \cite{holyer1981np}.
 
-We let the special clue set $C_B'$ be the clues where if a triangle appears in a literal graph, then a triangle appears in a literal graph of the same clause which corresponds to an $F$-partition, and the $F$-partition corresponds to the first true literal.
+We let the special clue set $C_B'$ be the subset of clues where if a triangle appears in a literal graph, then a triangle appears in a literal graph of the same clause which corresponds to an $F$-partition and the $F$-partition corresponds to the first true literal.
 
-The algorithm $M$: 
+Consider the following algorithm $M$ mapping instances of $C_B$ to $C_B'$. Suppose we are given a clue $c_x \in C_B$. 
 \begin{enumerate}
-\item If we get a clue with a triangle in a literal corresponding to a $T$-partition, we exchange it with a triangle for a literal in the same clause corresponding to an $F$-partition. This does not change the solution since the $F$-partition triangle must appear and it implies the $T$-partition triangle. 
-\item If the $F$-partition literal corresponds to the second or third true literal in the clause, then exchange it for the $F$-partition triangle corresponding to the first true literal in the clause. This changes the solution to the triangle partition, but doens't change the variable graphs, only that particular clause graph, and the solution is still unique.
+\item If the clue contains a triangle in a literal corresponding to a $T$-partition, we exchange it with a triangle for a literal in the same clause corresponding to an $F$-partition. This does not change the solution since the $F$-partition triangle must appear and it implies the $T$-partition triangle. 
+\item If the $F$-partition literal corresponds to the second or third true literal in the clause, then exchange it for the $F$-partition triangle corresponding to the first true literal in the clause. Even though this changes the solution to the triangle partition it doesn't change the variable graphs, only that particular clause graph. This implies that the solution is still unique.
 \end{enumerate}
 
-Now $g$ maps the triangles in variable graphs to the corresponding assignment and the $F$-partition literals to the correspoding variable assignments. We check the conditions for $g$.
+We define $g: C_B' \rightarrow C_A$ to map triangles in variable graphs to the corresponding assignment and the $F$-partition literals to the corresponding variable assignments. We check that $g$ satisfies the requirements for a Special Subset Clue Reduction.
 \begin{itemize}
-\item $g$ is surjective, since the variable assignments correspond to variable gadget partitions.
-\item $g$ is a bijection on solutions, since once the variable graphs are partitioned, we force the first true literal to be $F$-partitioned. 
-\item Since we are mapping individual triangles, subsets are preserved. $g(c) \subset S$, then $g^{-1}(S)$ presents a full triangle partition from $C_B'$, so $c \subset g^{-1}(S)$. 
+\item $g$ is surjective. This is true because the variable assignments correspond to variable gadget partitions.
+\item $g$ is a bijection on solutions. Once the variable graphs are partitioned we force the first true literal to be $F$-partitioned. 
+\item Because we are mapping individual triangles, subsets are preserved. If $g(c) \subset S$, then $g^{-1}(S)$ presents a full triangle partition from $C_B'$, so $c \subset g^{-1}(S)$. 
 \item We are projecting certain triangles to variables, so there is at most one variable per triangle. In minimal clue sets, we will need exactly one variable per triangle.
 \end{itemize}
 \end{proof}
@@ -507,12 +520,12 @@ The Latin Squares problem is the following:
 \textbf{Instance}: An $n \times n$ grid, with some entries filled in with the numbers $1$ to $n$.\\
 \textbf{Question}: Can we fill in the remainder of the grid with numbers from $1$ to $n$ while enforcing that no row or column repeat a number?
 \end{quote}
-The problem was shown to be $\NP$-complete by Colbourn \cite{colbourn1984complexity}. Here, we study its  $\mathsf{FCP}$ version, which asks what is the fewest number of entries that must be filled in so the Latin Square becomes uniquely solvable. This problem is $\Sigma_2$-complete. 
+The problem was shown to be $\NP$-complete by Colbourn \cite{colbourn1984complexity}. Here, we study its  $\mathsf{FCP}$ version, which asks what is the fewest number of entries that must be filled in so the Latin Square becomes uniquely solvable. We claim this problem is $\Sigma^P_2$-complete. 
 
 \subsubsection{Colbourn's Reduction for Latin Squares:}
-We give a quick summary of Colbourn's main ideas which will help the reader understand the $\Sigma_2$-completeness reduction. There are two main steps in his proof. In the first, Colbourn shows that completing partial Latin Squares is equivalent to partitioning tripartite graphs into triangles, a problem similar to the one in section \ref{S:TP} which they show is $\NP$-complete. In the second step, the authors use embedding techniques to reduce triangle partitions of tripartite graphs to Latin Square completion. 
+We give a quick summary of Colbourn's main ideas which will help the reader understand the $\Sigma^P_2$-completeness reduction. There are two main steps in his proof. In the first, Colbourn shows that completing partial Latin Squares is equivalent to partitioning tripartite graphs into triangles, a problem similar to the one in section \ref{S:TP} which is shown to be $\NP$-complete. In the second step, the authors use embedding techniques to reduce triangle partitions of tripartite graphs to Latin Square completion. 
 
-Colbourn \cite{colbourn1984complexity} first argues that in order to decide whether or not a triangle partition exists on a tripartite graph it suffices to consider the cases where the graph is uniform. We say a tripartite graph $G = (V_1 \cup V_2 \cup V_3, E)$ is \emph{uniform} if any vertex $x \in V_1$ (symmetrically $V_2, V_3$) has the following property: it has the same number of neighbors on the other two parts of the partition. 
+We say a tripartite graph $G = (V_1 \cup V_2 \cup V_3, E)$ is \emph{uniform} if any vertex $x \in V_1$ (symmetrically $V_2, V_3$) has the following property: it has the same number of neighbors on the other two parts of the partition.  Colbourn \cite{colbourn1984complexity} argues that in order to decide if a triangle partition exists on a tripartite graph it suffices to consider the cases where the graph is uniform. A tripartite graph with a triangle partition must be uniform. 
 
 Throughout this section we refer to the entry on the $i$-th row and $j$-th column of a Latin Square as $L(i,j)$. The authors introduce the concept of a defect graph $G(P)$, a tripartite graph that has a triangle partition if and only if its originating Latin Square $P$ is completable. 
 
@@ -541,7 +554,7 @@ Colbourn \cite{colbourn1984complexity} shows the following lemma:
 A partially completed Latin Square $P$ has a valid solution if and only if its defect graph $G(P)$ has a triangle partition. 
  \end{lemma}
  
-The authors show a modification of Holyer's proof that Triangle Parition is $\NP$-complete to show that finding a triangle partition of a tripartite graph is also $\NP$-complete. They make some minor modifications which force the graph to be tripartite. Note that Holyer's building blocks, $H_{3,p}$, are 3-colorable (i.e. tripartite) if and only if $p \equiv 0 (\mod 3)$. So in the modified proof, $p$ is chosen so that it always satisfies this property. Moreover, when the partitions are decided to maintain vertices of the same color. This does not alter Holyer's proof, but it guarantees that the graph remains 3-colorable. 
+The authors show a modification of Holyer's proof that Triangle Partition is $\NP$-complete to show that finding a triangle partition of a tripartite graph is also $\NP$-complete. They make some minor modifications which force the graph to be tripartite. Note that Holyer's building blocks, $H_{3,p}$, are 3-colorable (i.e. tripartite) if and only if $p \equiv 0 (\mod 3)$. So in the modified proof, $p$ is chosen so that it always satisfies this property. Moreover, when the partitions are decided to maintain vertices of the same color. This does not alter Holyer's proof, but it guarantees that the graph remains 3-colorable. 
 
 Next, Colbourn shows the reduction from the problem of finding triangle partitions in tripartite graphs to Latin Squares completion by introducing the concept of a Latin Framework. 
 
@@ -555,18 +568,17 @@ Let $G = (V, E)$ be a tripartite graph with partition $V = V_1 \cup V_2 \cup V_3
 \end{itemize}
 \end{definition}
 
-If all dimensions of the Latin Framework are equal, $G$ is the defect graph of $LF(G;r ,r, r)$. Therefore, it suffices to show that arbitrary Latin Frameworks can be reduced to this case with a small blowup in size. Consider the following Lemma, shown by Coulborn: 
+If all dimensions of the Latin Framework are equal, $G$ is the defect graph of $LF(G;r ,r, r)$. Therefore, it suffices to show that arbitrary Latin Frameworks can be reduced to this case with a small blowup in size. Consider the following Lemma, shown by Colbourn: 
 
 \begin{lemma}
-For an $n$-vertex uniform tripartite graph $G$, there is a Latin Framework $LF(G;n,n,2n)$. 
+For an $n$-vertex uniform tripartite graph $G$, there is a Latin Framework $LF(G;n,n,2n) L$. 
 \end{lemma} 
 
 \begin{proof}
-Construct the following $n \times n$ array $L$. If $(r_i, c_j) \in E$, leave $L(i,j)$ blank. Otherwise, Let $L(i,j) = 1 + n + ((i+j) \mod n)$. Then $L$ is a Latin Framework with the claimed dimensions
+Construct the following $n \times n$ array $L$. If $(r_i, c_j) \in E$, leave $L(i,j)$ blank. Otherwise, Let $L(i,j) = 1 + n + ((i+j) \mod n)$. Then $L$ is a Latin Framework with the claimed dimensions since we are using numbers from $1$ to $2n$. 
 \end{proof}
 
 Colbourn uses the following embedding technique, whose proof we omit, to show that any $n$-vertex uniform tripartite graph $G$ has a Latin Framework $LF(G;2n,2n,2n)$ which can be constructed in polynomial time. 
-
 
 \begin{lemma}
 Let $L$ be an $LF(G;r,s,t)$ for a uniform tripartite graph $G$. Let $R(k)$ be the number of times element $k$ appears in $L$ plus half the degree of $e_k$ in $G$. Then, whenever $R(k) \geq r + s - t$ for all $1 \leq k \leq t$, $L$ can be extended to an $LF(G;r, s+1, t) L'$ in which $R'(k) \geq r + (s+1) - t$ for all $1 \leq k \leq t$. 
@@ -575,28 +587,34 @@ Let $L$ be an $LF(G;r,s,t)$ for a uniform tripartite graph $G$. Let $R(k)$ be th
 Once we have a Latin Framework $LF(G;n, n, 2n)$ we can add columns until we have $2n$ of them. We can then take the transpose of the array and add rows until we get $2n$ of them as well. This allows us to construct Latin Frameworks of equal dimensions given $n$-vertex uniform tripartite graphs. 
 
 \begin{theorem}
-$\mathsf{FCP}$ Latin Squares is $\Sigma_2$-complete.
+$\mathsf{FCP}$ Latin Squares is $\Sigma_2^P$-complete.
 \end{theorem}
 
 \begin{proof}
-We do this via a general FCP reduction from $\mathsf{FCP}$ TrianglePartition.
+We do this via a general FCP reduction from $\mathsf{FCP}$ Triangle Partition.
 
-Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition as argued by Colbourn. If it is uniform, we can write down a Latin Framework $LF(G;2n,2n,2n)$ in polynomial time \cite{colbourn1984complexity}. This Latin Framework is constructed so that $G$ is the defect graph of $LF(G;2n,2n,2n)$. We then map via $f$ instances of defect graphs $G$ to partial Latin Squares. This map is bijective as stated in lemma \ref{TP:lemma}. There is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to its Latin Square. 
+Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition as argued by Colbourn. If it is uniform, we can write down a Latin Framework $LF(G;2n,2n,2n)$ in polynomial time \cite{colbourn1984complexity}. This Latin Framework is constructed so that $G$ is the defect graph of $LF(G;2n,2n,2n)$. We then map via $f$ instances of defect graphs $G$ to partial Latin Squares. This map is bijective as stated in lemma \ref{TP:lemma}. There is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to their Latin Squares. 
 
-The mapping on clue sets $g$ sends Latin Squares clues $L(i,j) = k$ to triangles with vertices $(i,j,k)$ on different parts of the partition. Each clue is mapped, by construction, bijectively to a triangle (since the triangle takes into account the row, column and number of the clue). The function $g$ preserves subsets since we are mapping filled squares to triangles individually. Finally, it is surjective since it maps a Latin Squares clue to a valid Triangle Partition clue. This completes the proof.
+The mapping on clue sets $g$ sends Latin Squares clues $L(i,j) = k$ to triangles with vertices $(i,j,k)$ on different parts of the partition. 
+\begin{itemize}
+	\item $g$ is surjective. It maps a Latin Squares clue to a valid Triangle Partition clue
+	\item $g$ is bijective on solutions. By construction, the triangle takes into account the row, column and number of the clue.
+	\item $g$ preserves subsets. We are mapping filled squares to triangles individually.
+	\item $g$ preserves the sizes of clues. Again, it maps filled squares to triangles individually. 
+\end{itemize}
 
 \end{proof}
 
 \subsection{Sudoku}
 
-In Sudoku, or Number Place, we are given a $9 \times 9$ grid consisting of nine $3 \times 3$ bolded blocks. Some entries have been filled in with a number from $1$ to $9$. The goal of the game is to fill in the rest of the grid with numbers from $1$ to $9$ while enforcing that no row, column or bolded square repeats a numbers. We generalize Sudoku in the following manner:
+The Sudoku problem is the following: 
 
 \begin{quote}
 \textbf{Instance}: A board of $n^2 \times n^2$ numbers in the range of $1$ to $n^2$, divided into $n^2$ blocks of size $n \times n$.\\
 \textbf{Question}: Can we fill up the remaining squares with numbers in the range $1$ to $n^2$ such that each row, column and $n \times n$ block does not have repeated numbers?
 \end{quote}
 
-The $\mathsf{FCP}$ version of the problem asks for the least number of additional numbers we must give in order to have the Sudoku be uniquely solvable. We will show this problem is $\Sigma_2$-complete by providing a reduction from $\mathsf{FCP}$ Latin Squares. 
+The $\mathsf{FCP}$ version of the problem asks for the least number of additional numbers we must give in order to have the Sudoku be uniquely solvable. We will show this problem is $\Sigma_2^P$-complete by providing a General Clue Reduction from $\mathsf{FCP}$ Latin Squares. 
 
 Before showing the main result of this section, we will exhibit a particular way to fill a Sudoku puzzle. Next, we will show how this particular solution can be used to explicitly map instances of Sudoku to instances of Latin Squares. For simplicity, throughout this argument we will be using numbers in the range $0$ through $n^2 - 1$. This does not change the problem. The $n^2$ symbols in Sudoku have no relation to each other, only their equality or inequality. We will refer to the entry on the $i$-th row and $j$-th column of a Sudoku puzzle as $S(i,j)$.
 
@@ -643,21 +661,21 @@ The proof of Lemma~\ref{lem:sudoku_reduction} is also in \cite{takayuki2003compl
 \caption{Latin square taken from parts of $S_0$.}
 \end{figure}
 
-Lemma ~\ref{lem:sudoku_reduction} gives us the reduction from Latin Square to Sudoku. Given a Latin Square, we can create a Sudoku instance $S$ from the lemma. This is the reduction from \cite{takayuki2003complexity}.
+Lemma ~\ref{lem:sudoku_reduction} gives us the reduction from Latin Square completion to Sudoku completion. Given a Latin Square, we can create a Sudoku instance $S$ from the lemma. This is the reduction from \cite{takayuki2003complexity}.
 
 \begin{lemma} 
-$\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete.
+$\mathsf{FCP}$ Sudoku is $\Sigma_2^P$-complete.
 \end{lemma}
 
 \begin{proof} 
-We will show a general clue reduction via $\mathsf{FCP}$ Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described in Lemma~\ref{lem:sudoku_reduction}. Let $C_B$ be the set of set of clues of Sudoku. We define $g$, by mapping a clue of Sudoku indicating that location $(i,j)$ contains $S(i,j)$ to the clue saying that the $(i, j/n)$ position of the Latin Square is $S(i, j)/n$. 
-\begin{enumerate}
+We will show a General Clue Reduction via $\mathsf{FCP}$ Latin Squares. We use the injective map from instances of Latin Square to instances of Sudoku described in Lemma~\ref{lem:sudoku_reduction}. Let $C_B$ be the set of set of clues of Sudoku. We define $g$, by mapping a clue of Sudoku indicating that location $(i,j)$ contains $S(i,j)$ to the clue saying that the $(i, j/n)$ position of the Latin Square is $S(i, j)/n$. 
+\begin{itemize}
 \item $g$ is surjective. Each Latin Square clue came from a clue of Sudoku.
 \item $g$ is bijective on solutions. Each solution to Sudoku gives a solution to Latin Squares, and the solution is unique since all other numbers are parts of the instance. 
-\item $g$ maps each clue to another clue. So subsets are always preserved. $c \subset c' \iff g(c) \subset g(c')$. 
-\item $g$ maps each clue to one clue. So $|c| = |g(c)|$. 
-\end{enumerate}
-. Therefore, $\mathsf{FCP}$ Sudoku is $\Sigma_2$-complete. 
+\item $g$ maps each clue to another clue. So subsets are always preserved: $c \subset c' \iff g(c) \subset g(c')$. 
+\item $g$ maps each clue to one clue. Therefore the size of a clue set is preserved. 
+\end{itemize}
+Therefore, $\mathsf{FCP}$ Sudoku is $\Sigma_2^P$-complete. 
 \end{proof}
 
 \section{$\mathsf{FCP}$ Versions of Easy Problems}
