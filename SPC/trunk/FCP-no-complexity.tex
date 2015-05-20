@@ -97,24 +97,9 @@ The difficulty of many pencil and paper puzzles is closely correlated with the n
 
 In 2012, McGuire, Tugermann, and Civario confirmed the long-standing conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. On the other hand, there exists an online database with over 50,000 uniquely solvable 17-clue Sudoku puzzles. Thus, McGuire et al. completely solved the problem of finding the fewest number of clues necessary to solve a Sudoku. However, their result followed from a year-long computation, prompting the question: for what other problems is it hard to determine the fewest number of necessary clues?
 
-In this paper, we consider the general problem of determining the fewest number of clues 
+In this paper, we focus on asking this fewest clues question for problems in $\mathsf{NP}$, where ``clues" are parts of certificates / solutions. For example, if the problem is to find a Hamiltonian cycle in a given graph, our question would be to determine the minimum number of graph edges (clues) that must be specified such that exactly one Hamiltonian cycle contains all the  specify before only one Hamiltonian cycle contains all specified edges. 
 
-question of determining the fewest number of necessary clues wh formulated for general computational problems. Thus, for any given problem $A$
-
-
-
-On the other hand, Sudoku
-
-It had long been known that 17 clues were sufficient. There exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed. They arrived at this answer following a year-long computation. Is there any notion of computatational hardness to these sorts of problems?
-
-We consider a following generalization of the above Sudoku question: 
-\begin{quote}
-For any given problem, what is the fewest number of clues necessary to make it uniquely solvable?
-\end{quote}
-
-For example, if the problem is to find a Hamiltonian cycle in a given graph $G = (V,E)$, our question would be to determine the minimum number of edges you must specify before only one Hamiltonian cycle contains all of these edges. This general problem is motivated by possible applications to puzzle-making. 
-
-A puzzle-maker for a newspaper might want to make a puzzle that contains as few clues as possible, but is still uniquely solvable (as the puzzle-maker might want to publish the answer in the next day's paper). The input to the problem is an idea of a partially filled puzzle, and the output is the least number of additional clues needed for the puzzle to be uniquely solvable.
+We call this the ``Fewest Clues Problem" ($\mathsf{FCP}$), and we treat $\mathsf{FCP}$ as a transformation of problems. 
 
 We formalize this problem by defining the ``Fewest Clues Problem" ($\mathsf{FCP}$). We treat $\mathsf{FCP}$ as a transformation of problems. We use this framework to analyze the $\mathsf{FCP}$ versions of classic $\NP$-hard problems such as SAT and 3SAT, as well as $\NP$-hard puzzle problems such as Latin square completion and Sudoku completion. We show that for many $\NP$-hard problems, their $\mathsf{FCP}$ versions are $\Sigma_2$-complete, and give examples of problems with polynomial time algorithms whose $\mathsf{FCP}$ versions are $\Sigma_2$-complete.
 
