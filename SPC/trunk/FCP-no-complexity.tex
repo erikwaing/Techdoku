@@ -453,7 +453,7 @@ Colbourn \cite{colbourn1984complexity} first argues that in order to decide whet
 Throughout this section we refer to the entry on the $i$-th row and $j$-th column of a Latin Square as $L(i,j)$. The authors introduce the concept of a defect graph $G(P)$, a tripartite graph that has a triangle partition if and only if its originating Latin Square $P$ is completable. 
 
 \begin{definition}
-Suppose we are given a partial Latin Square $P$ of order $n$. The \textbf{defect graph $G(P) = (V,E)$} of $P$ is the graph whose vertex set is given by $$\{ r_i | \text{ row } i \text{ contains an empty square} \} \cup \{ c_j | \text{ column } j \text{ contains an empty square} \} $$
+Suppose we are given a partial Latin Square $P$ of order $n$. The defect graph $G(P) = (V,E)$ of $P$ is the graph whose vertex set is given by $$\{ r_i | \text{ row } i \text{ contains an empty square} \} \cup \{ c_j | \text{ column } j \text{ contains an empty square} \} $$
 $$ \cup \{ e_k | \text{ element } k\text{ appears less than } n \text{ times } \} .$$ 
 
 The edge set of $G(P)$ is defined as follows: 
@@ -465,6 +465,13 @@ The edge set of $G(P)$ is defined as follows:
 \end{itemize}
 \end{definition}
 
+\begin{figure}
+\centering
+\label{fig:LStoTrianglePartitionExample}
+\includegraphics[width=0.5\linewidth]{latinsquare_to_triangle_part_2.pdf}
+\caption{Example of a $3\times 3$ Latin Square and its defect graph. We highlight the correspondence between a triangle in the graph and an entry of the grid.}
+\end{figure}
+
 Colbourn \cite{colbourn1984complexity} shows the following lemma: 
 \begin{lemma}\label{TP:lemma}
 A partially completed Latin Square $P$ has a valid solution if and only if its defect graph $G(P)$ has a triangle partition. 
@@ -472,7 +479,7 @@ A partially completed Latin Square $P$ has a valid solution if and only if its d
  
 The authors show a modification of Holyer's proof that Triangle Parition is $\NP$-complete to show that finding a triangle partition of a tripartite graph is also $\NP$-complete. They make some minor modifications which force the graph to be tripartite. Note that Holyer's building blocks, $H_{3,p}$, are 3-colorable (i.e. tripartite) if and only if $p \equiv 0 (\mod 3)$. So in the modified proof, $p$ is chosen so that it always satisfies this property. Moreover, when the partitions are decided to maintain vertices of the same color. This does not alter Holyer's proof, but it guarantees that the graph remains 3-colorable. 
 
-Next, Colbourn shows the reduction between the problem of finding triangle partitions in tripartite graphs and Latin Squares completion by introducing the concept of a Latin Framework. 
+Next, Colbourn shows the reduction from the problem of finding triangle partitions in tripartite graphs to Latin Squares completion by introducing the concept of a Latin Framework. 
 
 \begin{definition} 
 Let $G = (V, E)$ be a tripartite graph with partition $V = V_1 \cup V_2 \cup V_3$ and $V_1 = \{r_1,...,r_x\}$, $V_2 = \{c_1,...,c_y\}$ and $V_3 = \{e_1,...,e_z\}$. A \emph{Latin Framework} of such a tripartite graph, denoted as $LF(G;r,s,t)$ is an $r \times s$ array whose entries can be empty or contain one of the numbers from $\{1, ... ,t \}$, with each row and column containing a number at most once. Given $G$, we build $LF(G;r,s,t)$ according to these rules: 
