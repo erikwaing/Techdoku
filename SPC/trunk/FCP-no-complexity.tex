@@ -258,9 +258,9 @@ Having shown that $\mathsf{FCP} \SAT$ is $\Sigma_2$-complete, we will be able to
 
 \subsection{Reductions}
 
-We define a special type of reductions that will allow us to reduce between $\mathsf{FCP}$ problems. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the General Clue Reduction.
+We define a special type of reductions that will allow us to reduce between $\mathsf{FCP}$ problems. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2^P$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the General Clue Reduction.
 
-\subsubsection{General Clue Reduction}
+\subsubsection{General Clue Reduction.}
 
 \begin{definition}\label{def:GCR}
 Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue sets $C_A$ and $C_B$. We say $A$ reduces to $B$ via a General Clue Reduction if
@@ -275,14 +275,9 @@ Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue set
 \end{itemize}
 \end{enumerate}
 \end{definition}
-Note that $f$ is the usual notion of reduction. We require $g$ so that we can map minimal clues in $B$ to minimal clues in $A$. Once we have a General Clue Reduction from $A$ to $B$, we can solve $\mathsf{FCP} A$ using $\mathsf{FCP} B$. On input $x \in I_A$:
-\begin{enumerate}
-\item Let $f(x)$ be the instance of $B$ mapped by the reduction.
-\item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
-\item Use $g: C_B \rightarrow C_A$ to get the clue $g(c_{f(x)})$ of $x$.
-\end{enumerate}
+Note that $f$ is the usual notion of reduction. We require $g$ so that we can map minimal clues in $B$ to minimal clues in $A$. 
 
-\begin{lemma}
+\begin{lemma}\label{lemmaMinClue}
 Let $x \in I_A$ and $f$, $g$ and $c_{f(x)}$ be as in definition \ref{def:GCR}. Then $g(c_{f(x)})$ is a minimal clue set for instance $x$.
 \end{lemma}
 
@@ -298,45 +293,62 @@ We want to show that if $c_{f(x)}$ is a minimum clue set of $B$, then $g(c_{f(x)
 \item Since $c_{f(x)}$ is a clue for $f(x)$, $c_{f(x)} \subset S_{f(x)}$ for some solution $S_{f(x)}$. Because $g$ preserves subsets we have that 
 \begin{align*} c_{f(x)} \subset S_{f(x)} \Rightarrow g(c_{f(x)}) \subset g(S_{f(x)}) \end{align*}
 which is what we wanted to show. 
-\item Suppose for the sake of contradiction that $g(c_{f(x)})$ had two different solutions, $S_x^{(1)}, S_x^{(2)}$. Then we would have that
+\item Suppose for the sake of contradiction that $g(c_{f(x)})$ had two different superset solutions, $S_x^{(1)}, S_x^{(2)}$. Then we would have that
 \begin{align*}
 g(c_{f(x)}) \subset S_x^{(1)}, && g(c_{f(x)}) \subset S_x^{(2)}, \\
 c_{f(x)} \subset g^{-1}(S_x^{(1)}), && c_{f(x)} \subset g^{-1}(S_x^{(2)}).
 \end{align*}
 But $g^{-1}$ preserves subsets on solutions, which means that $c_{f(x)}$ would have two different solutions. Hence, we get a contradiction. 
-\item Suppose for the sake of contradiction $|g(c_{f(x)})|$ is not minimal. Let $c_x$ be the minimal clue for $x$, so that $|c_x| < |g(c_{f(x)})|$. Since $g$ is surjective, there exists $c' \in C_B$ with $g(c') = c_x$. This implies $|c'| < |c_{f(x)}|$. By assumption, $c_{f(x)}$ is a minimal clue for $f(x)$. Therefore, either $c'$ has no solution, or more than one solution. But we know that $c'$ has at least one solution since $c_x$ has a solution, and $g^{-1}$ is a bijection and preserves subsets. If $c'$ had two solutions, then $c_x$ would have two solutions. Therefore, $|g(c_{f(x)})|$ is minimal.
+\item Suppose for the sake of contradiction $|g(c_{f(x)})|$ is not minimal. Let $c_x$ be the minimal clue for $x$ with $|c_x| < |g(c_{f(x)})|$. Since $g$ is surjective, there exists $c' \in C_B$ with $g(c') = c_x$. This implies $|c'| < |c_{f(x)}|$. By assumption, $c_{f(x)}$ is a minimal clue for $f(x)$. Therefore, either $c'$ has no solution, or more than one solution. But we know that $c'$ has at least one solution since $c_x$ has a solution, and $g^{-1}$ is a bijection that preserves subsets. If $c'$ had two solutions, then $c_x$ would have two solutions as well. Therefore, we get a contradiction and conclude that $|g(c_{f(x)})|$ must be minimal.
 \end{enumerate}
 \end{proof}
 
-\begin{corollary}
-\label{thm:reduction}
-Suppose $A$ reduces to $B$ with a General Clue Reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
-\end{corollary}
-
-One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. In general, this constraint is too strong, so we define a different kind of reduction which will have more requirements, but which will apply to a greater variety of cases.
-
-\subsubsection{Special Subset Clue Reduction} This will be similar to the General Clue Reduction, except we only look at a particular subset of clues.
-
-We will first need a function $f: I_A \rightarrow I_B$ such that $x \in I_A$ has a solution if and only if $f(x) \in I_B$ has a solution. We additionally specify $C_B' \subset C_B$ and an algorithm $M$ that maps any minimal clue set in $C_B$ into a minimal clue set in $C_B'$ of the same size which runs in polynomial time. We will now let $g: C_B' \rightarrow C_A$ which satisfies the following properties:
-\begin{enumerate}
-\item $g$ is surjective.
-\item $g$ is a bijection on solutions, and $S_x$ is a solution for $x$, if and only if $g^{-1}(S_x)$ is a solution to $f(x)$. 
-\item $c \subset c' \Rightarrow g(c) \subset g(c')$ and if $g(c) \subset S$, then $c \subset g^{-1}(S)$.
-\item $|c| \geq |g(c)|$, with equality for minimal clues.   
-\end{enumerate} 
-This type of reduction generalizes the General Clue Reduction, since we can specify a special subset of clues. Given a reduction, we can solve an instance $x$ of $A$ in the following manner:
+Once we have a General Clue Reduction from $A$ to $B$, we can solve $\mathsf{FCP} A$ using $\mathsf{FCP} B$. On input $x \in I_A$:
 \begin{enumerate}
 \item Let $f(x)$ be the instance of $B$ mapped by the reduction.
 \item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
-\item Apply $M$ to $c_{f(x)}$ to get $c_{f(x)}' \in C_B'$. 
+\item Use $g: C_B \rightarrow C_A$ to get the clue $g(c_{f(x)})$ of $x$.
+\end{enumerate}
+
+Lemma \ref{lemmaMinClue} guarantees the correctness of this procedure. We can apply this algorithm to show the following result. 
+
+\begin{corollary}
+\label{thm:reduction}
+Suppose $A$ reduces to $B$ with a General Clue Reduction and $\mathsf{FCP} A$ is $\Sigma_2^P$-hard, then $\mathsf{FCP} B$ is $\Sigma_2^P$-hard. 
+\end{corollary}
+
+\subsubsection{Special Subset Clue Reduction.} 
+
+One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. This constraint is too strong, which is why we define a different kind of reduction with more requirements, but will be applicable to a greater variety of cases.
+
+\begin{definition}\label{def:SSCR}
+Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue sets $C_A$ and $C_B$. We say $A$ reduces to $B$ via a Special Subset Clue Reduction if
+\begin{enumerate}
+\item There exists a function $f: I_A \rightarrow I_B$ where $x \in A \iff f(x) \in B$.
+\item There exists a subject $C_B' \subseteq C_B$ and a function $g: C_B' \rightarrow C_A$ such that:
+\begin{itemize}
+\item $g$ is surjective. 
+\item $g$ is a bijection on solutions, and $S_x$ is a solution for $x$, if and only if $g^{-1}(S_x)$ is a solution to $f(x)$. .
+\item $c \subset c' \Rightarrow g(c) \subset g(c')$. In addition, if $g(c) \subset S$ is a solution of $x \in A$, then $c \subset g^{-1}(S')$.
+\item $|c| \geq |g(c)|$, with equality for minimal clues. 
+\end{itemize}
+\item There exists a polynomial time algorithm $M$ that maps any minimal clue set in $C_B$ into a minimal clue set in $C_B'$ of the same size. 
+\end{enumerate}
+\end{definition}
+
+Given a Special Subset Clue Reduction from $A$ to $B$ we can solve an instance $x$ of $A$ in the following manner:
+\begin{enumerate}
+\item Let $f(x)$ be the instance of $B$ mapped by the reduction.
+\item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
+\item Use $M$ on input $c_{f(x)} \in C_B$ to get $c_{f(x)}' \in C_B'$. 
 \item Use $g: C_B' \rightarrow C_A$ to get the clue $g(c_{f(x)}')$ of $x$.
 \end{enumerate}
 
-A Special Subset Clue Reduction is like a General Clue Reduction. We restrict the problem to have a specific kind of clues, and we give a way to tranform the clues. 
+As a result of this procedure we get the following corollary: 
 
 \begin{corollary}
 \label{thm:special_reduc}
-Suppose $A$ reduces to $B$ with a Special Subset Clue Reduction and $\mathsf{FCP} A$ is $\Sigma_2$-hard, then $\mathsf{FCP} B$ is $\Sigma_2$-hard. 
+Suppose $A$ reduces to $B$ with a Special Subset Clue Reduction and $\mathsf{FCP} A$ is $\Sigma_2^P$-hard, then $\mathsf{FCP} B$ is $\Sigma_2^P$-hard. 
 \end{corollary}
 
 \subsection{3SAT}
