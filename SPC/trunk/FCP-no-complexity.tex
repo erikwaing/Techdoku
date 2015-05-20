@@ -99,7 +99,6 @@ In 2012, McGuire, Tugermann, and Civario confirmed the long-standing conjecture 
 
 In this paper, we focus on asking this fewest clues question for problems in $\mathsf{NP}$, where ``clues" are fragments of problem solutions. For example, if the problem is to find a Hamiltonian cycle in a given graph, our question would be to determine the minimum number of graph edges (clues) that must be specified such that exactly one Hamiltonian cycle contains all the  specify before only one Hamiltonian cycle contains all specified edges. We call this the ``Fewest Clues Problem" ($\mathsf{FCP}$) and we treat $\mathsf{FCP}$ as a transformation of problems. 
 
-
 \subsection{Definitions}
 
 For a given instance of $x$ of a \emph{search} problem A, we can think of the set of solutions to $x$ as a set of polynomial-size strings. For example, for the case of $\SAT$, an instance consists of a specific $\SAT$ formula on variables $x_1,x_2,\dots,x_n$. Solutions can be written as indexed length-$n$ strings of Boolean values, where the value at index $i$ is the assignment to variable $x_i$. In this case, a $\emph{clue}$ for the problem would be an assignment of a specific index to some Boolean value. For general problems, the precise definition of a clue depends on how solutions are encoded as strings.
