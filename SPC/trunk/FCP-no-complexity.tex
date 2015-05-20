@@ -162,24 +162,37 @@ They prove some results regarding the sizes of critical sets for graph colorings
 
 \subsection{Upper Bounds}
 
-Usually, we will transform problems in $\NP$ to their $\mathsf{FCP}$ versions. We can obtain an immediate upper bound.
+Usually, we will study problems in $\NP$ and their $\mathsf{FCP}$ transformation.
 
 \begin{theorem}
 \label{thm:satinsig2}
-If $L \in \NP$, then $\mathsf{FCP} L \in \Sigma_2$. 
+If $L \in \NP$, then $\mathsf{FCP} L \in \Sigma_2^P$. 
 \end{theorem}
 
 \begin{proof}
-We can write the $\mathsf{FCP}$ question in terms of a $\Sigma_2$ question. The original $\NP$ question for $L$ is
+We will write $\mathsf{FCP} L$ in terms of a $\Sigma_2^P$ question. The original $\NP$ question for $L$ is
 \[ x \in L \leftrightarrow \exists y, A(x, y) = 1 \]
-$A$ is a polynomial time algorithm, and the length of $y$ is some polynomial in the length of $x$. Alternatively, we can think of $L$ as the relation $R = \{ (x, y) | A(x,y) = 1 \}$. On input $x$, we ask whether there exists some $y$ such that $(x, y) \in R$. $\mathsf{FCP} L$ asks for some given $x$ and $k$, whether there exists $k$ indexed characters $c_y$ such that there is only one $y$ with $c_y \subset y$ such that $(x,y) \in R$. 
+$A$ is a polynomial time algorithm, and the length of $y$ is some polynomial in the length of $x$. Alternatively, we think of the relation $R = \{ (x, y) | A(x,y) = 1 \}$. Then, $L = \{ x | (x,y) \in R \}$. 
 
-Therefore, the $\mathsf{FCP} L$ question is
+The $\NP$ question for $L$ asks: for some given $x$, does there exists some $y$ such that $(x, y) \in R$?
+
+$\mathsf{FCP} L$ asks: for some given $x$ and $k$, does there exists at most $k$ indexed characters, $c_y$, such that only one $y$ with $c_y \subset y$ has $(x,y) \in R$. 
+
+In logical notation, the $\mathsf{FCP} L$ question is
 \[ (x, k) \in \mathsf{FCP} L \leftrightarrow \exists c_y, y \forall y' A'(x, c_y, y, y') = 1 \]
-Where $A'$ checks that $c_y \subset y$, that $c_y \subset y' \neq y$, and that $A(x,y) = 1$, $A(x, y') = 0$ and that $|c_y| \leq k$. In other words, $c_y$ is a clue of $y$, and $y'$ is another solution. $A'$ checks that $c_y$ has at most $k$ elements, and that it is a clue of the solution $y$, and that there are no other solutions. 
+$A'$ checks the following:
+\begin{itemize}
+\item $c_y \subset y$, $|c_y| \leq k$
+\item $c_y \subset y' \neq y$ 
+\item $A(x,y) = 1$
+\item $A(x, y') = 0$ 
+\end{itemize}
+$c_y$ contains the clues for $y$. $y'$ is another solution. $A'$ checks $c_y$ has at most $k$ elements, that it is a clue of the solution $y$, and that there are no other solutions.
 \end{proof}
 
-We could generlize our statement a bit. The above proof says that if $L \in \NTIME[f(n)]$, then $\mathsf{FCP} L \in \Sigma_2 \NTIME[f(n)]$, when $f(n) > n$. 
+We could generlize Theorem~\ref{thm:satinsig2}. The proof of Theorem~\ref{thm:satinsig2} proves the following claim.
+\begin{claim} If $L \in \NTIME[f(n)]$, then $\mathsf{FCP} L \in \Sigma_2 \NTIME[f(n)]$, when $f(n) > n$.
+\end{claim}
 
 \subsection{$\mathsf{FCP} \SAT$}
 
