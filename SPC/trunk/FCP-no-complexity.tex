@@ -473,7 +473,7 @@ Colbourn \cite{colbourn1984complexity} shows the following lemma:
 A partially completed Latin Square $P$ has a valid solution if and only if its defect graph $G(P)$ has a triangle partition. 
  \end{lemma}
  
-The authors show a modification of Holyer's proof that Triangle Parition is $\NP$-complete to show that finding a triangle partition of a tripartite graph is also $\NP$-complete. They make some minor modifications which force the graph to be tripartite. These modifications can be found in \cite{colbourn1984complexity} and do not affect the $\Sigma_2$-completeness proof above. 
+The authors show a modification of Holyer's proof that Triangle Parition is $\NP$-complete to show that finding a triangle partition of a tripartite graph is also $\NP$-complete. They make some minor modifications which force the graph to be tripartite. Note that Holyer's building blocks, $H_{3,p}$, are 3-colorable (i.e. tripartite) if and only if $p \equiv 0 (\mod 3)$. So in the modified proof, $p$ is chosen so that it always satisfies this property. Moreover, when the partitions are decided to maintain vertices of the same color. This does not alter Holyer's proof, but it guarantees that the graph remains 3-colorable. 
 
 Next, Colbourn shows the reduction between the problem of finding triangle partitions in tripartite graphs and Latin Squares completion by introducing the concept of a Latin Framework. 
 
@@ -487,7 +487,24 @@ Let $G = (V, E)$ be a tripartite graph with partition $V = V_1 \cup V_2 \cup V_3
 \end{itemize}
 \end{definition}
 
-If all dimensions of the Latin Framework are equal, $G$ is the defect graph of $LF(G;r ,r, r)$. Therefore, it suffices to show that arbitrary Latin Frameworks can be reduced to this case with a small blowup in size we would be done. Colbourn uses some embedding techniques to show that any uniform tripartite graph $G$ of $n$ vertices per partition has a Latin Framework $LF(G;2n,2n,2n)$ which can be constructed in polynomial time. This completes the reduction. 
+If all dimensions of the Latin Framework are equal, $G$ is the defect graph of $LF(G;r ,r, r)$. Therefore, it suffices to show that arbitrary Latin Frameworks can be reduced to this case with a small blowup in size. Consider the following Lemma, shown by Coulborn: 
+
+\begin{lemma}
+For an $n$-vertex uniform tripartite graph $G$, there is a Latin Framework $LF(G;n,n,2n)$. 
+\end{lemma} 
+
+\begin{proof}
+Construct the following $n \times n$ array $L$. If $(r_i, c_j) \in E$, leave $L(i,j)$ blank. Otherwise, Let $L(i,j) = 1 + n + ((i+j) \mod n)$. Then $L$ is a Latin Framework with the claimed dimensions
+\end{proof}
+
+Colbourn uses the following embedding technique, whose proof we omit, to show that any $n$-vertex uniform tripartite graph $G$ has a Latin Framework $LF(G;2n,2n,2n)$ which can be constructed in polynomial time. 
+
+
+\begin{lemma}
+Let $L$ be an $LF(G;r,s,t)$ for a uniform tripartite graph $G$. Let $R(k)$ be the number of times element $k$ appears in $L$ plus half the degree of $e_k$ in $G$. Then, whenever $R(k) \geq r + s - t$ for all $1 \leq k \leq t$, $L$ can be extended to an $LF(G;r, s+1, t) L'$ in which $R'(k) \geq r + (s+1) - t$ for all $1 \leq k \leq t$. 
+\end{lemma} 
+
+Once we have a Latin Framework $LF(G;n, n, 2n)$ we can add columns until we have $2n$ of them. We can then take the transpose of the array and add rows until we get $2n$ of them as well. This allows us to construct Latin Frameworks of equal dimensions given $n$-vertex uniform tripartite graphs. 
 
 \begin{theorem}
 $\mathsf{FCP}$ Latin Squares is $\Sigma_2$-complete.
