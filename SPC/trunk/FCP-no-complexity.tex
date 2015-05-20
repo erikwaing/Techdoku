@@ -93,7 +93,19 @@ We study the problem of finding the fewest number of clues needed for a particul
 \section{Introduction}
 \label{sec:introduction}
 
-In 2012, McGuire, Tugermann, and Civario confirmed the conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. It had long been known that 17 clues were sufficient. There exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed. They arrived at this answer following a year-long computation. Is there any notion of computatational hardness to these sorts of problems?
+The difficulty of many pencil and paper puzzles is closely correlated with the number of clues or hints given. A standard example of this is the famous Sudoku puzzle, where the puzzle solver is given a $9 \times 9$ subgrid divided into nine $3 \times 3$ subgrids, along with certain squares of the puzzle filled in with digits. The goal is to fill in each square of the grid with digits so that each of row, column, and each of the nine $3 \times 3$ subgrids contains all the digits. Sudoku puzzles are usually required to be uniquely solvable given the initial clues.
+
+In 2012, McGuire, Tugermann, and Civario confirmed the long-standing conjecture that there are no uniquely solvable 16-clue Sudoku puzzles \cite{mcguire2012there}. On the other hand, there exists an online database with over 50,000 uniquely solvable 17-clue Sudoku puzzles. Thus, McGuire et al. completely solved the problem of finding the fewest number of clues necessary to solve a Sudoku. However, their result followed from a year-long computation, prompting the question: for what other problems is it hard to determine the fewest number of necessary clues?
+
+In this paper, we consider the general problem of determining the fewest number of clues 
+
+question of determining the fewest number of necessary clues wh formulated for general computational problems. Thus, for any given problem $A$
+
+
+
+On the other hand, Sudoku
+
+It had long been known that 17 clues were sufficient. There exists an online database containing over 50,000 such puzzles. Thus, the result by McGuire et al. completely solves the problem of determining the minimum number of Sudoku clues needed. They arrived at this answer following a year-long computation. Is there any notion of computatational hardness to these sorts of problems?
 
 We consider a following generalization of the above Sudoku question: 
 \begin{quote}
