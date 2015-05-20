@@ -103,7 +103,7 @@ In this paper, we focus on asking this fewest clues question for problems in $\m
 
 \subsection{Definitions}
 
-For a given instance of $x$ of a \emph{search} problem A, we can think of the set of solutions to $x$ as a set of polynomial-size strings. For example, for the case of $\SAT$, an instance consists of a specific $\SAT$ formula on variables $x_1,x_2,\dots,x_n$. Solutions can be written as indexed length-$n$ strings of Boolean values, where the value at index $i$ is the assignment to variable $x_i$. In this case, a $\emph{clue}$ for the problem would be an assignment of a specific index to some Boolean value. For general problems, the precise definition of a clue depends on how solutions are encoded as strings.
+For a given instance of $x$ of an $\NP$ \emph{search} problem A, the solutions to $x$ can be written as polynomial-length strings. Consider the boolean satisfiability problem ($\SAT$), where an instance consists of a specific $\SAT$ formula on variables $x_1,\dots,x_n$. Solutions can be written as indexed length-$n$ strings of Boolean values, where the value at index $i$ is the assignment to variable $x_i$. A $\emph{clue}$ for the problem would be an assignment of a specific index to some Boolean value. For general problems, the precise definition of a clue depends on how solutions are encoded as strings.
 
 We say that a solution to $x$ \emph{satisfies} a set of clues if each clue matches the solution at that clue's index. For example, in the case of SAT on variables $x_1,x_2,\dots,x_5$, then the solution $``01011"$ would match the clue set $\{x_1 = 0,x_3 = 0,x_4 = 1\}$.
 
