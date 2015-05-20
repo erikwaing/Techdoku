@@ -162,7 +162,7 @@ They prove some results regarding the sizes of critical sets for graph colorings
 
 \subsection{Upper Bounds}
 
-Usually, we will talk about $\NP$ search problems which we transform to $\mathsf{FCP}$ versions. We can obtain an immediate upper bound.
+Usually, we will transform problems in $\NP$ to their $\mathsf{FCP}$ versions. We can obtain an immediate upper bound.
 
 \begin{theorem}
 \label{thm:satinsig2}
@@ -172,7 +172,9 @@ If $L \in \NP$, then $\mathsf{FCP} L \in \Sigma_2$.
 \begin{proof}
 We can write the $\mathsf{FCP}$ question in terms of a $\Sigma_2$ question. The original $\NP$ question for $L$ is
 \[ x \in L \leftrightarrow \exists y, A(x, y) = 1 \]
-For some polynomial time algorithm $A$. The corresponding $\mathsf{FCP} L$ question is
+$A$ is a polynomial time algorithm, and the length of $y$ is some polynomial in the length of $x$. Alternatively, we can think of $L$ as the relation $R = \{ (x, y) | A(x,y) = 1 \}$. On input $x$, we ask whether there exists some $y$ such that $(x, y) \in R$. $\mathsf{FCP} L$ asks for some given $x$ and $k$, whether there exists $k$ indexed characters $c_y$ such that there is only one $y$ with $c_y \subset y$ such that $(x,y) \in R$. 
+
+Therefore, the $\mathsf{FCP} L$ question is
 \[ (x, k) \in \mathsf{FCP} L \leftrightarrow \exists c_y, y \forall y' A'(x, c_y, y, y') = 1 \]
 Where $A'$ checks that $c_y \subset y$, that $c_y \subset y' \neq y$, and that $A(x,y) = 1$, $A(x, y') = 0$ and that $|c_y| \leq k$. In other words, $c_y$ is a clue of $y$, and $y'$ is another solution. $A'$ checks that $c_y$ has at most $k$ elements, and that it is a clue of the solution $y$, and that there are no other solutions. 
 \end{proof}
