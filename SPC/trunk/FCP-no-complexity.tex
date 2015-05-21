@@ -150,7 +150,7 @@ Previous work by \cite{Cooper:2014:CSS:2612293.2612628} studies the problem of f
 We consider the $\mathsf{FCP}$ version of the Boolean satisfiability problem ($\SAT$), and show that it is $\Sigma_2$-complete. We then define an $\mathsf{FCP}$-reduction similar in flavor to an $\mathsf{ASP}$-reduction, and show $\Sigma_2$-completenss of various $\mathsf{FCP}$ problems with these reductions.\\
 
 
-\cite{Ghandehari2005121} did a similar type of analysis, where they bound the size of the smallest critical set for Latin Squares. \cite{colbourn1984computational} also analyzes the complexity of recognizing critical sets. They ask exactly the ASP question for Latin Squares, and show it is $\NP$-complete.
+\cite{Ghandehari2005121} did a similar type of analysis, where they bound the size of the smallest critical set for Latin Squares. \cite{1984computational} also analyzes the complexity of recognizing critical sets. They ask exactly the ASP question for Latin Squares, and show it is $\NP$-complete.
 
 
 \section{The $\mathsf{FCP}$ Transformation}
@@ -299,7 +299,7 @@ Having shown that $\mathsf{FCP} \SAT$ is $\Sigma_2$-complete, we will be able to
 
 \subsection{Reductions}
 
-We define a special type of reductions that will allow us to reduce between $\mathsf{FCP}$ problems. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2^P$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the General Clue Reduction.
+We define a special type of reductions that will allow us to reduce between $\mathsf{FCP}$ problems. This will make it easy to show that certain $\mathsf{FCP}$ versions of $\NP$-complete problems are $\Sigma_2^P$-complete by using their Karp style reductions and showing that they satisfy additional properties. We formalize this notion with the General Clue Reduction and the Special Subset Clue Reduction. 
 
 \subsubsection{General Clue Reduction.}
 
@@ -318,16 +318,24 @@ Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue set
 \end{definition}
 Note that $f$ is the usual notion of reduction. We require $g$ so that we can map minimal clues in $B$ to minimal clues in $A$. Throughout this section we will exclusively use mappings $f, g$ to refer to these functions. 
 
+Once we have a General Clue Reduction from $A$ to $B$, we can solve $\mathsf{FCP} A$ using $\mathsf{FCP} B$. On input $x \in I_A$:
+\begin{enumerate}
+\item Let $f(x)$ be the instance of $B$ mapped by the reduction.
+\item Find a minimal clue for $f(x)$. Let $c_{f(x)}$ be such clue. 
+\item Use $g: C_B \rightarrow C_A$ to get the clue $g(c_{f(x)})$ of $x$.
+\end{enumerate}
+
 \begin{lemma}\label{lemmaMinClue}
-Let $x \in I_A$ and $f$, $g$ and $c_{f(x)}$ be as in definition \ref{def:GCR}. Then $g(c_{f(x)})$ is a minimal clue set for instance $x$.
+Let $x \in I_A$ and $f$, $g$ and $c_{f(x)}$ be as in Definition \ref{def:GCR}. Then $g(c_{f(x)})$ is a minimal clue set for instance $x$.
 \end{lemma}
+
 
 \begin{proof}
 We want to show that if $c_{f(x)}$ is a minimum clue set of $B$, then $g(c_{f(x)})$ is a minimum clue set of $A$. We need to satisfy the following three conditions:
 \begin{enumerate}
 \item $g(c_{f(x)})$ is a clue of $x$. 
 \item $g(c_{f(x)})$ has a unique superset solution.
-\item $g(c_{f(x)})$ is minimal.
+\item $|g(c_{f(x)})|$ is minimal.
 \end{enumerate}
 
 \begin{enumerate}
@@ -340,16 +348,9 @@ g(c_{f(x)}) \subset S_x^{(1)}, && g(c_{f(x)}) \subset S_x^{(2)}, \\
 c_{f(x)} \subset g^{-1}(S_x^{(1)}), && c_{f(x)} \subset g^{-1}(S_x^{(2)}).
 \end{align*}
 But $g^{-1}$ preserves subsets on solutions, which means that $c_{f(x)}$ would have two different solutions. Hence, we get a contradiction. 
-\item Suppose for the sake of contradiction $|g(c_{f(x)})|$ is not minimal. Let $c_x$ be the minimal clue for $x$ with $|c_x| < |g(c_{f(x)})|$. Since $g$ is surjective, there exists $c' \in C_B$ with $g(c') = c_x$. This implies $|c'| < |c_{f(x)}|$. By assumption, $c_{f(x)}$ is a minimal clue for $f(x)$. Therefore, either $c'$ has no solution, or more than one solution. But we know that $c'$ has at least one solution since $c_x$ has a solution, and $g^{-1}$ is a bijection that preserves subsets. If $c'$ had two solutions, then $c_x$ would have two solutions as well. Therefore, we get a contradiction and conclude that $|g(c_{f(x)})|$ must be minimal.
+\item Suppose for the sake of contradiction $|g(c_{f(x)})|$ is not minimal. Let $c_x$ be the minimal clue for $x$ with $|c_x| < |g(c_{f(x)})|$. Since $g$ is surjective, there exists $c' \in C_B$ with $g(c') = c_x$. This implies $|c'| < |c_{f(x)}|$. By assumption, $c_{f(x)}$ is a minimal clue for $f(x)$. Therefore, either $c'$ has no solution, or more than one solution. But we know that $c'$ has at least one solution since $c_x$ has a solution, and $g^{-1}$ is a bijection that preserves subsets on solutions. If $c'$ had two solutions, then $c_x$ would have two solutions as well. Therefore, we get a contradiction and conclude that $|g(c_{f(x)})|$ must be minimal.
 \end{enumerate}
 \end{proof}
-
-Once we have a General Clue Reduction from $A$ to $B$, we can solve $\mathsf{FCP} A$ using $\mathsf{FCP} B$. On input $x \in I_A$:
-\begin{enumerate}
-\item Let $f(x)$ be the instance of $B$ mapped by the reduction.
-\item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
-\item Use $g: C_B \rightarrow C_A$ to get the clue $g(c_{f(x)})$ of $x$.
-\end{enumerate}
 
 Lemma \ref{lemmaMinClue} guarantees the correctness of this procedure. We can apply this algorithm to show the following result. 
 
@@ -360,7 +361,7 @@ Suppose $A$ reduces to $B$ with a General Clue Reduction and $\mathsf{FCP} A$ is
 
 \subsubsection{Special Subset Clue Reduction.} 
 
-One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. This constraint is too strong, which is why we define a different kind of reduction with more requirements, but will be applicable to a greater variety of cases.
+One downside to the General Clue Reduction is that it requires the solutions to the problems to be in bijection. This constraint is too strong. We define a different kind of reduction with more requirements, but more broadly applicable.
 
 \begin{definition}\label{def:SSCR}
 Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue sets $C_A$ and $C_B$. We say $A$ reduces to $B$ via a Special Subset Clue Reduction if
@@ -380,7 +381,7 @@ Suppose $A$ and $B$ are problems with instance sets $I_A$ and $I_B$ and clue set
 Given a Special Subset Clue Reduction from $A$ to $B$ we can solve an instance $x$ of $A$ in the following manner:
 \begin{enumerate}
 \item Let $f(x)$ be the instance of $B$ mapped by the reduction.
-\item Find a minimal clue for $f(x)$, $c_{f(x)}$. 
+\item Find a minimal clue for $f(x)$. Let $c_{f(x)}$ be such clue. 
 \item Use $M$ on input $c_{f(x)} \in C_B$ to get $c_{f(x)}' \in C_B'$. 
 \item Use $g: C_B' \rightarrow C_A$ to get the clue $g(c_{f(x)}')$ of $x$.
 \end{enumerate}
@@ -448,25 +449,25 @@ We claim $\mathsf{FCP}$ Triangle Partition is $\Sigma_2^P$-complete. We give a q
 % Fermi, do you think we need both paragraph version of summary and important properties?
 %
 % 
-Holyer uses the graph $H_{3,p}$ in Figure~\ref{fig:holyergraph} to represent variables and literals. Since each graph can only be partitioned in one of two ways, one way will correspond to a true setting, the other will correspond to a false setting. They call the two possible partitions the $T$-partition and the $F$-partition. 
+Holyer uses the graph $H_{3,p}$ (shown in Figure~\ref{fig:holyergraph}) to represent variables and literals. Each graph can only be partitioned in one of two ways. One way will correspond to a true setting, the other will correspond to a false setting. They called the two possible partitions the $T$-partition and the $F$-partition. 
 
 \begin{figure}
 \begin{minipage}{0.5\linewidth}
 \centering
 \includegraphics[scale=0.5]{Tpartition.pdf}
 \label{fig:tpart}
-\caption{$H_{3,p}$ partitioned like a $T$-partition. In a particular part of the graph, one triangle specified.}
+\caption{$H_{3,p}$ partitioned like a $T$-partition. In a particular part of the graph, one triangle 'pointing down' specified.}
 \end{minipage}
 \hfill
 \begin{minipage}{0.5\linewidth}
 \centering
 \label{fig:fpart}
 \includegraphics[scale=0.5]{Fpartition.pdf}
-\caption{$H_{3,p}$ partitioned like an $F$-partition. In a particular part of the graph, three triangles specified.}
+\caption{$H_{3,p}$ partitioned like an $F$-partition. In a particular part of the graph, three triangles 'pointing up' specified.}
 \end{minipage}
 \end{figure}
 
-The authors also use the graphs to make clauses. They show a way to join three $H_{3,p}$ graphs such that exactly one of them will be $F$-partitioned. The three graphs will correspond to literals in the clause. Then they give a way to combine the literals with the variables such that if a literal is set to an $F$-partition, the corresponding variable must be set to either a $T$-partition (in the case where the literal is positive), or an $F$-partition (if the literal is negative). However, if the literal is a $T$-partition, then it does not matter what the variable is set to. 
+The authors also use the graphs to make clauses. They show a way to join three $H_{3,p}$ graphs such that exactly one of them will be $T$-partitioned. The three graphs will correspond to literals in the clause. Then they give a way to combine the literals with the variables such that if a literal is set to an $F$-partition, the corresponding variable must be set to either a $T$-partition (in the case where the literal is positive), or an $F$-partition (if the literal is negative). However, if the literal is a $T$-partition, then it does not matter what the variable is set to. 
 
 In particular, there are three important properties of Holyer's reduction which we utilize:
 \begin{enumerate}
@@ -486,15 +487,15 @@ $\mathsf{FCP}$ Triangle Partition is $\Sigma_2^P$-complete.
 \end{theorem}
 
 \begin{proof}
-We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We will show a Special Subset Clue Reduction from $\mathsf{FCP}$ 3SAT. 
+We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We will show a Special Subset Clue Reduction from $\mathsf{FCP} 3\SAT$. 
 
-We let $f$ map instances of 3SAT to Triangle Partition as in \cite{holyer1981np}.
+We let $f$ map instances of $3\SAT$ to Triangle Partition as in \cite{holyer1981np}.
 
 We let the special clue set $C_B'$ be the subset of clues where if a triangle appears in a literal graph, then a triangle appears in a literal graph of the same clause which corresponds to an $F$-partition and the $F$-partition corresponds to the first true literal.
 
 Consider the following algorithm $M$ mapping instances of $C_B$ to $C_B'$. Suppose we are given a clue $c_x \in C_B$. 
 \begin{enumerate}
-\item If the clue contains a triangle in a literal corresponding to a $T$-partition, we exchange it with a triangle for a literal in the same clause corresponding to an $F$-partition. This does not change the solution since the $F$-partition triangle must appear and it implies the $T$-partition triangle. 
+\item  If $c_x$ contains a triangle which makes a literal be a T-partition, then another literal in that same clause must be F-partitioned. We can exchange the clues and maintain the same solution.
 \item If the $F$-partition literal corresponds to the second or third true literal in the clause, then exchange it for the $F$-partition triangle corresponding to the first true literal in the clause. Even though this changes the solution to the triangle partition it doesn't change the variable graphs, only that particular clause graph. This implies that the solution is still unique.
 \end{enumerate}
 
