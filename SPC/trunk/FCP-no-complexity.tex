@@ -491,15 +491,17 @@ We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for qu
 
 We let $f$ map instances of $3\SAT$ to Triangle Partition as in \cite{holyer1981np}.
 
-We let the special clue set $C_B'$ be the subset of clues where if a triangle appears in a literal graph, then a triangle appears in a literal graph of the same clause which corresponds to an $F$-partition and the $F$-partition corresponds to the first true literal.
+We define $C_B'$ to be the following: we only consider solutions to Triangle Partition where in each clause, the first true literal is $F$-partitioned. We do this to remove the ambiguity of how to partition the graph into triangles in the clause gadget. $C_B'$ will be the set of clues corresponding to those solutions with clues only in the variable graphs $H_{3,p}$. 
 
-Consider the following algorithm $M$ mapping instances of $C_B$ to $C_B'$. Suppose we are given a clue $c_x \in C_B$. 
+Consider the following algorithm $M$ mapping instances of $C_B$ to $C_B'$. Suppose we are given a clue $c_x \in C_B$, consisting of a set of triangles. 
 \begin{enumerate}
-\item  If $c_x$ contains a triangle which makes a literal be a T-partition, then another literal in that same clause must be F-partitioned. We can exchange the clues and maintain the same solution.
-\item If the $F$-partition literal corresponds to the second or third true literal in the clause, then exchange it for the $F$-partition triangle corresponding to the first true literal in the clause. Even though this changes the solution to the triangle partition it doesn't change the variable graphs, only that particular clause graph. This implies that the solution is still unique.
+\item Suppose there is a triangle $t$ in a literal graph $l_c$ for some clause $c$. Suppose $t$ is pointing down. This means that $t$ specifies that the graph $l_c$ is $T$-partitioned. Then there must exists some other literal in the same clause which is $F$-partitioned. Let's call this literal graph $l_c'$. $M$ exchanges $t$ for a triangle in $l_c'$ which faces up (corresponding to $l_c'$ being $F$-partitioned. 
+\item Now that all clues in the clauses correspond to triangles which are $F$-partitions in literal graphs, we exchange the triangles for a triangle in the variable graph which determines the assignment of the variable.
 \end{enumerate}
 
-We define $g: C_B' \rightarrow C_A$ to map triangles in variable graphs to the corresponding assignment and the $F$-partition literals to the corresponding variable assignments. We check that $g$ satisfies the requirements for a Special Subset Clue Reduction.
+We define $g: C_B' \rightarrow C_A$ to map triangles in variable graphs to the corresponding assignment. So if a variable graph $x$ contains a triangle facing up (corresponding to an $F$-partition), then we let $x$ be false. If the variable graph contains a triangle facing down (corresponding to a $T$-partition), then we let $x$ be true. 
+
+We check $g$ satisfies the requirements for a Special Subset Clue Reduction.
 \begin{itemize}
 \item $g$ is surjective. This is true because the variable assignments correspond to variable gadget partitions.
 \item $g$ is a bijection on solutions. Once the variable graphs are partitioned we force the first true literal to be $F$-partitioned. 
@@ -711,6 +713,24 @@ We reduce from the NP-hard problem of determining whether a graph has an indepen
 \item $\forall v \in V$, either $v \in S$ or $(u, v) \in E$, $u \in S$ 
 \item $u, v \in S$ implies that there is no edge between $u$ and $v$. 
 \end{itemize}
+
+\begin{figure}
+\label{fig:2SATgraph}
+\begin{minipage}{0.5\linewidth}
+\centering
+\includegraphics{2satreduct.pdf}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\linewidth}
+\centering
+\begin{equation}
+\begin{split}
+(\neg a \vee \neg b)&\wedge(\neg a \vee \neg c) \\ \wedge(\neg b \vee \neg c) &\wedge (\neg c \vee \neg d) \\ \wedge(\neg d \vee \neg e)
+\end{split}
+\end{equation}
+\end{minipage}
+\caption{Reduction from Minimum Independent Dominating Set to $\mathsf{FCP} 2\SAT$.}
+\end{figure}
 
 The reduction works as follows. For each edge $(u,v)$, we add the constraint $(\neg u \vee \neg v)$ to the 2SAT formula. We claim that a clue set for the resulting 2SAT formula where all clues set variables to be true can be transformed into an independent dominating set of size $k$. For the backwards direction, we claim that an independent dominating set of size $k$ can be turned into a clue set of size $k$. 
 
