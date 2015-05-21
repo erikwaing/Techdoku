@@ -326,7 +326,7 @@ Once we have a General Clue Reduction from $A$ to $B$, we can solve $\mathsf{FCP
 \end{enumerate}
 
 \begin{lemma}\label{lemmaMinClue}
-Let $x \in I_A$ and $f$, $g$ and $c_{f(x)}$ be as in Definition \ref{def:GCR}. Then $g(c_{f(x)})$ is a minimal clue set for instance $x$.
+Let $x \in I_A$ and $f$, $g$ be as in Definition \ref{def:GCR} and $c_{f(x)}$ as defined above. Then $g(c_{f(x)})$ is a minimal clue set for instance $x$.
 \end{lemma}
 
 
@@ -340,12 +340,12 @@ We want to show that if $c_{f(x)}$ is a minimum clue set of $B$, then $g(c_{f(x)
 
 \begin{enumerate}
 \item Since $c_{f(x)}$ is a clue for $f(x)$, $c_{f(x)} \subset S_{f(x)}$ for some solution $S_{f(x)}$. Because $g$ preserves subsets we have that 
-\begin{align*} c_{f(x)} \subset S_{f(x)} \Rightarrow g(c_{f(x)}) \subset g(S_{f(x)}) \end{align*}
-which is what we wanted to show. 
+\begin{align*} c_{f(x)} \subset S_{f(x)} \Rightarrow g(c_{f(x)}) \subset g(S_{f(x)}) \end{align*}.
+This implies $g$ maps solutions from one problem to another, which is what we wanted to show. 
 \item Suppose for the sake of contradiction that $g(c_{f(x)})$ had two different superset solutions, $S_x^{(1)}, S_x^{(2)}$. Then we would have that
 \begin{align*}
-g(c_{f(x)}) \subset S_x^{(1)}, && g(c_{f(x)}) \subset S_x^{(2)}, \\
-c_{f(x)} \subset g^{-1}(S_x^{(1)}), && c_{f(x)} \subset g^{-1}(S_x^{(2)}).
+g(c_{f(x)}) \subset S_x^{(1)} \rightarrow c_{f(x)} \subset g^{-1}(S_x^{(1)}) , \\
+g(c_{f(x)}) \subset S_x^{(2)} \rightarrow c_{f(x)} \subset g^{-1}(S_x^{(2)}).
 \end{align*}
 But $g^{-1}$ preserves subsets on solutions, which means that $c_{f(x)}$ would have two different solutions. Hence, we get a contradiction. 
 \item Suppose for the sake of contradiction $|g(c_{f(x)})|$ is not minimal. Let $c_x$ be the minimal clue for $x$ with $|c_x| < |g(c_{f(x)})|$. Since $g$ is surjective, there exists $c' \in C_B$ with $g(c') = c_x$. This implies $|c'| < |c_{f(x)}|$. By assumption, $c_{f(x)}$ is a minimal clue for $f(x)$. Therefore, either $c'$ has no solution, or more than one solution. But we know that $c'$ has at least one solution since $c_x$ has a solution, and $g^{-1}$ is a bijection that preserves subsets on solutions. If $c'$ had two solutions, then $c_x$ would have two solutions as well. Therefore, we get a contradiction and conclude that $|g(c_{f(x)})|$ must be minimal.
@@ -495,11 +495,11 @@ We define $C_B'$ to be the following: we only consider solutions to Triangle Par
 
 Consider the following algorithm $M$ mapping instances of $C_B$ to $C_B'$. Suppose we are given a clue $c_x \in C_B$, consisting of a set of triangles. 
 \begin{enumerate}
-\item Suppose there is a triangle $t$ in a literal graph $l_c$ for some clause $c$. Suppose $t$ is pointing down. This means that $t$ specifies that the graph $l_c$ is $T$-partitioned. Then there must exists some other literal in the same clause which is $F$-partitioned. Let's call this literal graph $l_c'$. $M$ exchanges $t$ for a triangle in $l_c'$ which faces up (corresponding to $l_c'$ being $F$-partitioned. 
-\item Now that all clues in the clauses correspond to triangles which are $F$-partitions in literal graphs, we exchange the triangles for a triangle in the variable graph which determines the assignment of the variable.
+\item Suppose there is a triangle $t$ in a literal graph $l_c$ for some clause $c$. Suppose $t$ is pointing down. This means that $t$ specifies that the graph $l_c$ is $T$-partitioned. Then there must exists some other literal in the same clause which is $F$-partitioned. Let's call this literal graph $l_c'$. $M$ exchanges $t$ for a triangle in $l_c'$ which points upwards (corresponding to $l_c'$ being $F$-partitioned). 
+\item Now that all clues in the clauses correspond to triangles which are $F$-partitioned in literal graphs, we exchange the triangles for a triangle in the variable graph which determines the assignment of the variable.
 \end{enumerate}
 
-We define $g: C_B' \rightarrow C_A$ to map triangles in variable graphs to the corresponding assignment. So if a variable graph $x$ contains a triangle facing up (corresponding to an $F$-partition), then we let $x$ be false. If the variable graph contains a triangle facing down (corresponding to a $T$-partition), then we let $x$ be true. 
+We define $g: C_B' \rightarrow C_A$ to map triangles in variable graphs to the corresponding assignment. So if a variable graph $x$ contains a triangle pointing upwards (corresponding to an $F$-partition), then we let $x$ be false. If the variable graph contains a triangle pointing downwards (corresponding to a $T$-partition), then we let $x$ be true. 
 
 We check $g$ satisfies the requirements for a Special Subset Clue Reduction.
 \begin{itemize}
