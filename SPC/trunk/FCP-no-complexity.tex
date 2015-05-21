@@ -393,23 +393,23 @@ As a result of this procedure we get the following corollary:
 Suppose $A$ reduces to $B$ with a Special Subset Clue Reduction and $\mathsf{FCP} A$ is $\Sigma_2^P$-hard, then $\mathsf{FCP} B$ is $\Sigma_2^P$-hard. 
 \end{corollary}
 
-\subsection{3SAT}
+\subsection{3$\SAT$}
 
 \begin{theorem}
-$\mathsf{FCP}$ 3SAT is $\Sigma_2$-complete. 
+$\mathsf{FCP} 3\SAT$ is $\Sigma_2^P$-complete. 
 \end{theorem} 
 
 \begin{proof}
-We reduce from $\mathsf{FCP}$ 3SAT via a General Clue Reduction. We will define a recursive mapping $f$ from instances of SAT to those of 3SAT. Suppose we are given a SAT formula $\phi$ with clauses $C_i$. If $|C_i| \leq 3$, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
+We reduce from $\mathsf{FCP} 3\SAT$ via a General Clue Reduction. We will define a recursive mapping $f$ from instances of $\SAT$ to those of $3\SAT$. Suppose we are given a $\SAT$ formula $\phi$ with clauses $\mathcal{C} = \{C_i\}$. If $C_i$ has at most three variables, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
 \[ 
 (x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
 \]
 
-where the last term indicates we keep recursing until each clause has at most $3$ variables. Note that on each step we reduce the number of variables in the longest clause by at least $1$, so after $O(n)$ steps (per clause) we will have a valid 3SAT instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \leftrightarrow \overline{z_i}$. 
+where the last term indicates we keep recursing until each clause has at most $3$ variables. On each step we reduce the number of variables in the longest clause by at least $1$. After $O(n)$ steps (per clause) we will have a valid $3\SAT$ instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \leftrightarrow \overline{z_i}$. 
 
-Now I will define $g$. $g$ will take a clue for 3SAT, or a partial assignment of the variables in $f(\phi)$ and give a partial assignment of the variables in $\phi$, it does this by mapping each variable individually. $g$ is the identity on the $x_i$ variables, and $g$ maps $z_i$ to $\overline{x_i}$. We check the properties of $g$:
+Now we will define $g$, the mapping between clue sets. $g$ a partial assignment of the variables in $f(\phi)$ and give a partial assignment of the variables in $\phi$, it does this by mapping each variable individually. $g$ is the identity on the $x_i$ variables, and maps $z_i$ to $\overline{x_i}$. We check the properties of $g$:
 \begin{enumerate}
-\item $g$ is surjective. If there is any clue of $\phi$, it is also a clue of $f(\phi)$. 
+\item $g$ is surjective. If there is any clue of $\phi$, it is also a clue of $f(\phi)$. 	
 \item $g$ is bijective on solutions. An assignment of $f(\phi)$ gives the assignment for $\phi$, and that same assignment uniquely describes the assignments for $z_i$, so $g$ bijectively maps them.
 \item $g$ maps variables to variables, so $c \subset c' \Rightarrow g(c) \subset g(c')$. If $g(c) \subset S$, then $c \subset g^{-1}(S)$. 
 \item $|c| \geq |g(c)|$ since for each variable in $c$, there is at most one variable in $g(c)$. The inequality becomes an equality for minimal clues since we will never have $x_i$ and $z_i$ in a minimal clue.
@@ -417,7 +417,7 @@ Now I will define $g$. $g$ will take a clue for 3SAT, or a partial assignment of
 \end{proof}
 
 \begin{corollary}
-Not-All-Equal 3SAT (NAE 3SAT) is $\Sigma_2$-complete.
+Not-All-Equal $3\SAT$ $\mathsf{(NAE} 3\SAT\mathsf{)}$ is $\Sigma_2^P$-complete.
 \end{corollary}
 
 \begin{proof}
