@@ -714,9 +714,20 @@ We reduce from the NP-hard problem of determining whether a graph has an indepen
 
 \begin{figure}
 \label{fig:2SATgraph}
+\begin{minipage}{0.5\linewidth}
 \centering
-\includegraphics[width=0.4\linewidth]{2satreduct.pdf}
-\caption{$(\neg a \vee \neg b)\wedge(\neg a \vee \neg c) \wedge(\neg b \vee \neg c) \wedge (\neg c \vee \neg d) \wedge(\neg d \vee \neg e)$}
+\includegraphics{2satreduct.pdf}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\linewidth}
+\centering
+\begin{equation}
+\begin{split}
+(\neg a \vee \neg b)&\wedge(\neg a \vee \neg c) \\ \wedge(\neg b \vee \neg c) &\wedge (\neg c \vee \neg d) \\ \wedge(\neg d \vee \neg e)
+\end{split}
+\end{equation}
+\end{minipage}
+\caption{Reduction from Minimum Independent Dominating Set to $\mathsf{FCP} 2\SAT$.}
 \end{figure}
 
 The reduction works as follows. For each edge $(u,v)$, we add the constraint $(\neg u \vee \neg v)$ to the 2SAT formula. We claim that a clue set for the resulting 2SAT formula where all clues set variables to be true can be transformed into an independent dominating set of size $k$. For the backwards direction, we claim that an independent dominating set of size $k$ can be turned into a clue set of size $k$. 
