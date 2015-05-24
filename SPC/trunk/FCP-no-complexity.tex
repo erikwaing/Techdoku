@@ -487,9 +487,26 @@ $\mathsf{FCP}$ Triangle Partition is $\Sigma_2^P$-complete.
 \end{theorem}
 
 \begin{proof}
-We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We will show a Special Subset Clue Reduction from $\mathsf{FCP} 3\SAT$. 
+We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We reduce from $3\SAT$.
 
-We let $f$ map instances of $3\SAT$ to Triangle Partition as in \cite{holyer1981np}.
+We let $f$ map instances of $3\SAT$ to Triangle Partition as in \cite{holyer1981np}. Suppose $c_{f(x)}$ is a minimal clue for the graph $f(x)$ (coming from the $3\SAT$ formula $x$). $c_{f(x)}$ consists of a set of triangles. Let 
+\[ c_{f(x)} = L \cup V \]
+Where $L$ contains the triangles in the literal graphs, and $V$ contains the triangles in the variable graphs. 
+
+\begin{claim}
+Without loss of generality, $L$ contains triangles facing up (i.e, they correspond to an $F$-partition).
+\end{claim}
+
+The above claim follows from the fact that exactly one literal from each clause will be $F$-partitioned. If there is a triangle $t \in L$, which is facing down, is part of literal $l_c$ (in clause $c$). Then $c$ contains some other literal $l_c'$ which is $F$-partitioned. Exchanging the triangle $t$ for some upwards facing triangle in $l_c'$ decreases the number of triangles in $L$ which are facing down. We can apply this until we have no downward facing triangles in $L$. 
+
+We then apply the following rule:
+\begin{itemize}
+\item Suppose $t \in L$ which faces up (corresponds to a literal which is an $F$-partition). $t$ is in some literal $l_c$ which represents the variable $x$. If $x$ is positive in $l_c$, then we exchange $t$ for some downward facing triangle in the variable graph for $x$. If $x$ appears negated in $l_c$, then replace $t$ by an upwards facing triangle in $x$.  
+\end{itemize}
+
+The above procedure ``transfers" the information from the literals to the variables. We know that an $F$-partitioned literal must be true in some clause. That particular variable will make the clause true, so we set the variable accordingly. 
+
+\begin{comment}
 
 We define $C_B'$ to be the following: we only consider solutions to Triangle Partition where in each clause, the first true literal is $F$-partitioned. We do this to remove the ambiguity of how to partition the graph into triangles in the clause gadget. $C_B'$ will be the set of clues corresponding to those solutions with clues only in the variable graphs $H_{3,p}$. 
 
@@ -508,6 +525,7 @@ We check $g$ satisfies the requirements for a Special Subset Clue Reduction.
 \item Because we are mapping individual triangles, subsets are preserved. If $g(c) \subset S$, then $g^{-1}(S)$ presents a full triangle partition from $C_B'$, so $c \subset g^{-1}(S)$. 
 \item We are projecting certain triangles to variables, so there is at most one variable per triangle. In minimal clue sets, we will need exactly one variable per triangle.
 \end{itemize}
+\end{comment}
 \end{proof}
 
 \subsection{Latin Squares}
