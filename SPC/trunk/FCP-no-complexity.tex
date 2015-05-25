@@ -504,7 +504,20 @@ We then apply the following rule:
 \item Suppose $t \in L$ which faces up (corresponds to a literal which is an $F$-partition). $t$ is in some literal $l_c$ which represents the variable $x$. If $x$ is positive in $l_c$, then we exchange $t$ for some downward facing triangle in the variable graph for $x$. If $x$ appears negated in $l_c$, then replace $t$ by an upwards facing triangle in $x$.  
 \end{itemize}
 
-The above procedure ``transfers" the information from the literals to the variables. We know that an $F$-partitioned literal must be true in some clause. That particular variable will make the clause true, so we set the variable accordingly. 
+The above procedure ``transfers" the information from the literals to the variables. We know that an $F$-partitioned literal must be true in some clause. That particular variable will make the clause true, so we set the variable accordingly. Note that we no longer have a unique Triangle Partition corresponding to these clues, since if there is a clause which has more than one true literal, there are multiple ways to partition that clause. Let's call the transformed clue $c_{f(x)}'$. Note that $c_{f(x)}'$ is a clue for the same solution $c_{f(x)}$ is a clue for.
+
+Now in order to make the clue for the $3\SAT$ formula, we say that if some triangle in the variable gadget for $x$ is downward facing (it makes the graph for $x$ $T$-partitioned), we let $x$ be true in $c_x$. If some triangle in the variable gadget for $x$ is upward facing (it makes the graph for $x$ $F$-partitioned), then we make $x$ be false in the clue, $c_x$. 
+
+We need to show three things:
+\begin{enumerate}
+\item $c_x$ is a clue.
+\item $c_x$ has a unique solution.
+\item $c_x$ is minimal.
+\end{enumerate}
+
+1. We know $c_x$ must be a clue, since the transformed $c_{f(x)}$ had a clue. \\
+2. Suppose $c_x$ has two satisfying assignments. Then if we partition the variable graphs according to the assignment, the partition is consistent with $c_{f(x)}'$. So the two assignments are consistent with $c_{f(x)}$. This is a contradiction.\\
+3. Suppose $c_x$ is not minimal, .... AND stuck here.
 
 \begin{comment}
 
