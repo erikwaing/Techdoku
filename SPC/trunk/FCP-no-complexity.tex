@@ -167,16 +167,16 @@ If $L \in \NP$, then $\mathsf{FCP} L \in \Sigma_2^P$.
 
 \begin{proof}
 We will write $\mathsf{FCP} L$ in terms of a $\Sigma_2^P$ question. The original $\NP$ question for $L$ is
-\[ x \in L \leftrightarrow \exists y, A(x, y) = 1 \]
-$A$ is a polynomial time algorithm, and the length of $y$ is some polynomial in the length of $x$. Alternatively, we think of the relation $R = \{ (x, y) | A(x,y) = 1 \}$. Then, $L = \{ x | (x,y) \in R \}$. 
+\[ x \in L \leftrightarrow \exists y, A(x, y) = 1, \]
+where $A$ is a polynomial time algorithm and the length of $y$ is some polynomial in the length of $x$. Alternatively, we think of the relation $R = \{ (x, y) | A(x,y) = 1 \}$. Then, $L = \{ x | (x,y) \in R \}$. 
 
 The $\NP$ question for $L$ asks: for some given $x$, does there exists some $y$ such that $(x, y) \in R$?
 
 $\mathsf{FCP} L$ asks: for some given $x$ and $k$, does there exists at most $k$ indexed characters, $c_y$, such that only one $y$ with $c_y \subset y$ has $(x,y) \in R$. 
 
 In logical notation, the $\mathsf{FCP} L$ question is
-\[ (x, k) \in \mathsf{FCP} L \leftrightarrow \exists c_y, y \forall y' A'(x, c_y, y, y') = 1 \]
-$A'$ checks the following:
+\[ (x, k) \in \mathsf{FCP} L \leftrightarrow \exists c_y, y \forall y' A'(x, c_y, y, y') = 1. \]
+The algorithm $A'$ checks the following:
 \begin{itemize}
 \item $c_y \subset y$, $|c_y| \leq k$
 \item $c_y \subset y' \neq y$ 
@@ -244,7 +244,7 @@ We reduce from $\QSAT$. We define a function $f$ from instances of $\QSAT$ to in
 \label{eq:fcondition}
 \begin{split}
 \exists x \forall y \phi(x,y) = 0 \leftrightarrow & \exists x \forall y\forall z \big(\phi'(x, 0, 0) = 1 \big)\\
- &\quad \wedge \big((y \neq 0 \vee z \neq 0 ) \rightarrow \phi'(x, y, z) = 0 \big) \\
+ &\quad \wedge \big((y \neq 0 \vee z \neq 0 ) \rightarrow \phi'(x, y, z) = 0 \big). \\
 \end{split}
 \end{equation}
 The expression ``$\phi'(x, 0, 0)$" corresponds to assigning all variables in $y$ to $0$ as well as $z$ to 0. The expression ``$y \neq 0$" is short-hand for ``$\bigvee_{y_i \in y} y_i \neq 0$". 
@@ -255,9 +255,9 @@ $\UQSAT$ on input $\phi'$ with variables $x$ and $y \cup \{z\}$ will be true if 
 
 Let $f$ map $\phi$ to $\phi'$ where
 \begin{align}
-\phi'(x, y, z) &= C_1 \vee C_2 \\
-		    C_1 &=\left(\phi(x, y) \wedge (z = 1)\right) \\
-		   C_2 &=  \left( y = 0 \wedge z = 0 \right) 
+\phi'(x, y, z) &= C_1 \vee C_2, \\
+		    C_1 &=\left(\phi(x, y) \wedge (z = 1)\right), \\
+		   C_2 &=  \left( y = 0 \wedge z = 0 \right). 
 \end{align}
 The expression ``$y = 0$" is short-hand for ``$\bigwedge_{y_i \in y} y_i = 0$". Note $\phi'(x, 0, 0) = 1$ because $C_2$ is satisfied when $y=0$ and $z = 0$. If $\exists x \forall y \phi(x, y)= 0$, then there is an assignment of variables in $x$ such that the $C_1 = 0$. If this is the case, the only way to satisfy $\phi'$ is by satisfying $C_2$. This happens when $y = 0$ and $z = 0$. So if the left-hand side of Equation~\ref{eq:fcondition} is true, then the right-hand side of Equation~\ref{eq:fcondition} is true.
 
@@ -281,10 +281,10 @@ First we prove the reverse direction. If for every assignment of variables in $x
  
 Let $C$ be any set of variable assignments, where $|C| \leq 2k$. I claim $x, x' \subset C$ and for all $i$, $x_i \neq x_i'$. If $x_i = x_i'$ for some $i$, the formula is satisfied for any assignment of the remaining variables. If some $y_i \in C$, then some $x_i$ or $x_i'$ is not in $C$, so there is a setting where $x_i = x_i'$. Again, the formula will be satisfied with many assignments. Therefore, the partial assignment of at most $2k$ variables will always be an assignment of variables in $x$ and $x'$ where $x_i \neq x_i'$. 
 
-Once we fix $x$ and $x'$ according to $C$, we satisfy the following equation. 
+Once we fix $x$ and $x'$ according to $C$, we satisfy the following equation: 
 \begin{equation}
 \label{eq:phiandphisame}
- \phi(x, y) \leftrightarrow \phi'(x,x',y) 
+ \phi(x, y) \leftrightarrow \phi'(x,x',y). 
 \end{equation}
 If for any $x$, $\phi(x,y)$ has either no satisfying assignments or multiple satisfying assignments, then $\phi'(x,x',y)$ will have either no satisisfying assignments, or multiple satisfying assignments. 
 
@@ -340,7 +340,7 @@ We want to show that if $c_{f(x)}$ is a minimum clue set of $B$, then $g(c_{f(x)
 
 \begin{enumerate}
 \item Since $c_{f(x)}$ is a clue for $f(x)$, $c_{f(x)} \subset S_{f(x)}$ for some solution $S_{f(x)}$. Because $g$ preserves subsets we have that 
-\begin{align*} c_{f(x)} \subset S_{f(x)} \Rightarrow g(c_{f(x)}) \subset g(S_{f(x)}) \end{align*}.
+\begin{align*} c_{f(x)} \subset S_{f(x)} \Rightarrow g(c_{f(x)}) \subset g(S_{f(x)}). \end{align*}
 This implies $g$ maps solutions from one problem to another, which is what we wanted to show. 
 \item Suppose for the sake of contradiction that $g(c_{f(x)})$ had two different superset solutions, $S_x^{(1)}, S_x^{(2)}$. Then we would have that
 \begin{align*}
@@ -402,7 +402,7 @@ $\mathsf{FCP} 3\SAT$ is $\Sigma_2^P$-complete.
 \begin{proof}
 We reduce from $\mathsf{FCP} 3\SAT$ via a General Clue Reduction. We will define a recursive mapping $f$ from instances of $\SAT$ to those of $3\SAT$. Suppose we are given a $\SAT$ formula $\phi$ with clauses $\mathcal{C} = \{C_i\}$. If $C_i$ has at most three variables, then we preserve the clause. Otherwise, if $C_i$ has $k$ variables $x_1,...,x_k$ we replace the original clause with 
 \[ 
-(x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k) 
+(x_1 \vee x_2 \vee z_2) \wedge (\overline{z_2} \vee \overline{x_2}) \wedge (z_2 \vee x_2) \wedge f(\overline{z_2}, x_3, ..., x_k), 
 \]
 
 where the last term indicates we keep recursing until each clause has at most $3$ variables. On each step we reduce the number of variables in the longest clause by at least $1$. After $O(n)$ steps (per clause) we will have a valid $3\SAT$ instance at the cost of adding variables and small clauses. It is not hard to see that the original clause and it's mapped version agree on solutions. Notice that by construction $x_i \leftrightarrow \overline{z_i}$. 
@@ -490,7 +490,7 @@ $\mathsf{FCP}$ Triangle Partition is $\Sigma_2^P$-complete.
 We refer the reader to \cite{holyer1981np}, \cite{colbourn1984complexity} for questions about notation. We reduce from $3\SAT$.
 
 We let $f$ map instances of $3\SAT$ to Triangle Partition as in \cite{holyer1981np}. Suppose $c_{f(x)}$ is a minimal clue for the graph $f(x)$ (coming from the $3\SAT$ formula $x$). $c_{f(x)}$ consists of a set of triangles. Let 
-\[ c_{f(x)} = L \cup V \]
+\[ c_{f(x)} = L \cup V. \]
 Where $L$ contains the triangles in the literal graphs, and $V$ contains the triangles in the variable graphs. 
 
 \begin{claim}
@@ -504,7 +504,7 @@ We then apply the following rule:
 \item Suppose $t \in L$ which faces up (corresponds to a literal which is an $F$-partition). $t$ is in some literal $l_c$ which represents the variable $x$. If $x$ is positive in $l_c$, then we exchange $t$ for some downward facing triangle in the variable graph for $x$. If $x$ appears negated in $l_c$, then replace $t$ by an upwards facing triangle in $x$.  
 \end{itemize}
 
-The above procedure ``transfers" the information from the literals to the variables. We know that an $F$-partitioned literal must be true in some clause. That particular variable will make the clause true, so we set the variable accordingly. Note that we no longer have a unique Triangle Partition corresponding to these clues, since if there is a clause which has more than one true literal, there are multiple ways to partition that clause. Let's call the transformed clue $c_{f(x)}'$. Note that $c_{f(x)}'$ is a clue for the same solution $c_{f(x)}$ is a clue for.
+The above procedure ``transfers" the information from the literals to the variables. We know that an $F$-partitioned literal must be true in some clause. That particular variable will make the clause true, so we set the variable accordingly. Note that we no longer have a unique Triangle Partition corresponding tÄo these clues, since if there is a clause which has more than one true literal, there are multiple ways to partition that clause. Let's call the transformed clue $c_{f(x)}'$. Note that $c_{f(x)}'$ is a clue for the same solution $c_{f(x)}$ is a clue for.
 
 Now in order to make the clue for the $3\SAT$ formula, we say that if some triangle in the variable gadget for $x$ is downward facing (it makes the graph for $x$ $T$-partitioned), we let $x$ be true in $c_x$. If some triangle in the variable gadget for $x$ is upward facing (it makes the graph for $x$ $F$-partitioned), then we make $x$ be false in the clue, $c_x$. 
 
@@ -582,7 +582,15 @@ Colbourn \cite{colbourn1984complexity} shows the following lemma:
 A partially completed Latin Square $P$ has a valid solution if and only if its defect graph $G(P)$ has a triangle partition. 
  \end{lemma}
  
-The authors show a modification of Holyer's proof that Triangle Partition is $\NP$-complete to show that finding a triangle partition of a tripartite graph is also $\NP$-complete. They make some minor modifications which force the graph to be tripartite. Note that Holyer's building blocks, $H_{3,p}$, are 3-colorable (i.e. tripartite) if and only if $p \equiv 0 (\mod 3)$. So in the modified proof, $p$ is chosen so that it always satisfies this property. Moreover, when the partitions are decided to maintain vertices of the same color. This does not alter Holyer's proof, but it guarantees that the graph remains 3-colorable. 
+The authors show a modification of Holyer's proof that Triangle Partition is $\NP$-complete to show that finding a triangle partition of a tripartite graph is also $\NP$-complete. 
+
+\begin{lemma}\label{TPTG:lemma} 
+$\mathsf{FCP}$ Triangle Partition of Tripartite Graphs is $\Sigma_2$-complete. 
+\end{lemma}
+
+\begin{proof}
+We use the same modifications that Colbourn uses to show the problem is $\NP$-complete. Note that Holyer's building blocks, $H_{3,p}$, are 3-colorable (i.e. tripartite) if and only if $p \equiv 0 (\mod 3)$. So in the modified proof, $p$ is chosen so that it always satisfies this property. Hence, the graph will always be tripartite. Moreover, when the partitions are decided to maintain vertices of the same color. This does not alter the proof in the previous section, but it guarantees that the graph remains 3-colorable. 
+\end{proof} 
 
 Next, Colbourn shows the reduction from the problem of finding triangle partitions in tripartite graphs to Latin Squares completion by introducing the concept of a Latin Framework. 
 
@@ -606,7 +614,7 @@ For an $n$-vertex uniform tripartite graph $G$, there is a Latin Framework $LF(G
 Construct the following $n \times n$ array $L$. If $(r_i, c_j) \in E$, leave $L(i,j)$ blank. Otherwise, Let $L(i,j) = 1 + n + ((i+j) \mod n)$. Then $L$ is a Latin Framework with the claimed dimensions since we are using numbers from $1$ to $2n$. 
 \end{proof}
 
-Colbourn uses the following embedding technique, whose proof we omit, to show that any $n$-vertex uniform tripartite graph $G$ has a Latin Framework $LF(G;2n,2n,2n)$ which can be constructed in polynomial time. 
+Note that we can always create an $n$-vertex uniform graph by simply adding isolated vertices to each partition until they have the same size. This allows us to assume without loss of generality that our graph will have $n$ vertices on each partition. Colbourn uses the following embedding technique, whose proof we omit, to show that any $n$-vertex uniform tripartite graph $G$ has a Latin Framework $LF(G;2n,2n,2n)$ which can be constructed in polynomial time. 
 
 \begin{lemma}
 Let $L$ be an $LF(G;r,s,t)$ for a uniform tripartite graph $G$. Let $R(k)$ be the number of times element $k$ appears in $L$ plus half the degree of $e_k$ in $G$. Then, whenever $R(k) \geq r + s - t$ for all $1 \leq k \leq t$, $L$ can be extended to an $LF(G;r, s+1, t) L'$ in which $R'(k) \geq r + (s+1) - t$ for all $1 \leq k \leq t$. 
@@ -619,7 +627,7 @@ $\mathsf{FCP}$ Latin Squares is $\Sigma_2^P$-complete.
 \end{theorem}
 
 \begin{proof}
-We do this via a general FCP reduction from $\mathsf{FCP}$ Triangle Partition.
+We do this via a general FCP reduction from $\mathsf{FCP}$ Triangle Partition of Tripartite Graphs.
 
 Given a tripartite graph $G$, we first check whether or not it is uniform. If it is not uniform, then there does not exist a triangle partition as argued by Colbourn. If it is uniform, we can write down a Latin Framework $LF(G;2n,2n,2n)$ in polynomial time \cite{colbourn1984complexity}. This Latin Framework is constructed so that $G$ is the defect graph of $LF(G;2n,2n,2n)$. We then map via $f$ instances of defect graphs $G$ to partial Latin Squares. This map is bijective as stated in lemma \ref{TP:lemma}. There is a triangle partition of $G$ if and only if we can complete the partial Latin Square $LF(G;2n,2n,2n)$. This implies that the triangle partitions of a defect graph $G$ are in one to one correspondence with the solutions to their Latin Squares. 
 
